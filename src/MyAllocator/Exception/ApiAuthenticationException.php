@@ -24,52 +24,9 @@
  * IN THE SOFTWARE.
  */
 
-// Tested on PHP 5.5.9
-//
-// Usage: 
-//
-//     require_once("/path/to/this/file");
-//     use MyAllocator\phpsdk\Api\HelloWorld;
-//
-//     $obj = new HelloWorld();
-//     echo $obj->sayHi('hi!') . "\n";
+namespace MyAllocator\phpsdk\Exception;
+use MyAllocator\phpsdk\Exception\MaException;
 
-echo "Loading config\n";
-
-//Required packages
-if (!function_exists('curl_init')) {
-  throw new Exception('MyAllocator needs the CURL PHP extension.');
-}
-
-if (!function_exists('json_decode')) {
-  throw new Exception('MyAllocator needs the JSON PHP extension.');
-}
-
-if (!function_exists('mb_detect_encoding')) {
-  throw new Exception('MyAllocator needs the Multibyte String PHP extension.');
-}
-
-// Resources
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Resource/*.php') as $file) {
-    require_once($file);
-}
-
-// Exceptions
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Exception/*.php') as $file) {
-    require_once($file);
-}
-
-// Utilities
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Util/*.php') as $file) {
-    require_once($file);
-}
-
-// Objects
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Object/*.php') as $file) {
-    require_once($file);
-}
-
-// APIs
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Api/*.php') as $file) {
-    require_once($file);
+class ApiAuthenticationException extends MaException
+{
 }

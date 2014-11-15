@@ -24,52 +24,30 @@
  * IN THE SOFTWARE.
  */
 
-// Tested on PHP 5.5.9
-//
-// Usage: 
-//
-//     require_once("/path/to/this/file");
-//     use MyAllocator\phpsdk\Api\HelloWorld;
-//
-//     $obj = new HelloWorld();
-//     echo $obj->sayHi('hi!') . "\n";
+namespace MyAllocator\phpsdk\Exception;
 
-echo "Loading config\n";
+class MaException extends \Exception
+{
+    public function __construct($message, $httpStatus=null, $httpBody=null, $jsonBody=null)
+    {
+        parent::__construct($message);
+        $this->httpStatus = $httpStatus;
+        $this->httpBody = $httpBody;
+        $this->jsonBody = $jsonBody;
+    }
 
-//Required packages
-if (!function_exists('curl_init')) {
-  throw new Exception('MyAllocator needs the CURL PHP extension.');
-}
+    public function getHttpStatus()
+    {
+        return $this->httpStatus;
+    }
 
-if (!function_exists('json_decode')) {
-  throw new Exception('MyAllocator needs the JSON PHP extension.');
-}
+    public function getHttpBody()
+    {
+        return $this->httpBody;
+    }
 
-if (!function_exists('mb_detect_encoding')) {
-  throw new Exception('MyAllocator needs the Multibyte String PHP extension.');
-}
-
-// Resources
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Resource/*.php') as $file) {
-    require_once($file);
-}
-
-// Exceptions
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Exception/*.php') as $file) {
-    require_once($file);
-}
-
-// Utilities
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Util/*.php') as $file) {
-    require_once($file);
-}
-
-// Objects
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Object/*.php') as $file) {
-    require_once($file);
-}
-
-// APIs
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Api/*.php') as $file) {
-    require_once($file);
+    public function getJsonBody()
+    {
+        return $this->jsonBody;
+    }
 }

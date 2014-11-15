@@ -1,0 +1,21 @@
+{
+    "name": "MyAllocator/phpsdk",
+    "description": "The MyAllocator PHP SDK.",
+    "license": "MIT",
+    "keywords": ["myallocator"],
+    "authors": [
+        {
+            "name": "Nathan Helenihi",
+            "email": "nathan.helenihi@cloudbeds.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyAllocator\\phpsdk\\": "src/MyAllocator"
+        }
+    }
+}

@@ -24,52 +24,52 @@
  * IN THE SOFTWARE.
  */
 
-// Tested on PHP 5.5.9
-//
-// Usage: 
-//
-//     require_once("/path/to/this/file");
-//     use MyAllocator\phpsdk\Api\HelloWorld;
-//
-//     $obj = new HelloWorld();
-//     echo $obj->sayHi('hi!') . "\n";
+namespace MyAllocator\phpsdk\Object;
 
-echo "Loading config\n";
+class Auth
+{
+    /**
+     * @var string The API version. 
+     */
+    public $version = '201408'; 
 
-//Required packages
-if (!function_exists('curl_init')) {
-  throw new Exception('MyAllocator needs the CURL PHP extension.');
-}
+    /**
+     * @var string The API base URL/HOST.
+     */
+    public $apiBase = 'api.myallocator.com';
 
-if (!function_exists('json_decode')) {
-  throw new Exception('MyAllocator needs the JSON PHP extension.');
-}
+    /**
+     * @var string Enable/Disable debugs.
+     */
+    public $debug = false;
 
-if (!function_exists('mb_detect_encoding')) {
-  throw new Exception('MyAllocator needs the Multibyte String PHP extension.');
-}
+    /**
+     * @var string The vendor id (Required without user credentials).
+     */
+    public $vendorId = null;
 
-// Resources
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Resource/*.php') as $file) {
-    require_once($file);
-}
+    /**
+     * @var string The vendor password (Required without user credentials).
+     */
+    public $vendorPassword = null;
 
-// Exceptions
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Exception/*.php') as $file) {
-    require_once($file);
-}
+    /**
+     * @var string The user id (Required without vendor credentials).
+     */
+    public $userId = null;
 
-// Utilities
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Util/*.php') as $file) {
-    require_once($file);
-}
+    /**
+     * @var string The user password (Required without vendor credentials).
+     */
+    public $userPassword = null;
 
-// Objects
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Object/*.php') as $file) {
-    require_once($file);
-}
+    /**
+     * @var string The MyAllocator property id.
+     */
+    public $propertyIdMyAllocator = null;
 
-// APIs
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Api/*.php') as $file) {
-    require_once($file);
+    /**
+     * @var string The system property id.
+     */
+    public $propertyIdSystem = null;
 }
