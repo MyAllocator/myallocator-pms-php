@@ -54,4 +54,41 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($auth->propertyIdSystem, $fxt['propertyIdSystem']);
         $this->assertEquals($auth->debug, $fxt['debug']);
     }
+
+    /**
+     * @author nathanhelenihi
+     * @group api
+     * @dataProvider fixtureObjectProperties
+     */
+    public function testGetAuthKeyVar(array $fxt)
+    {
+        $auth = new Auth();
+        $auth->vendorId = $fxt['vendorId'];
+        $auth->vendorPassword = $fxt['vendorPassword'];
+        $auth->userId = $fxt['userId'];
+        $auth->userPassword = $fxt['userPassword'];
+        $auth->propertyIdMyAllocator = $fxt['propertyIdMyAllocator'];
+        $auth->propertyIdSystem = $fxt['propertyIdSystem'];
+        $auth->debug = $fxt['debug'];
+
+        // Test valid authentication keys
+        $this->assertEquals($auth->vendorId, $auth->getAuthKeyVar('Auth/VendorId'));
+        $this->assertEquals($auth->vendorPassword, $auth->getAuthKeyVar('Auth/VendorPassword'));
+        $this->assertEquals($auth->userId, $auth->getAuthKeyVar('Auth/UserId'));
+        $this->assertEquals($auth->userPassword, $auth->getAuthKeyVar('Auth/UserPassword'));
+        $this->assertEquals($auth->propertyIdMyAllocator, $auth->getAuthKeyVar('Auth/PropertyId'));
+        $this->assertEquals($auth->propertyIdSystem, $auth->getAuthKeyVar('PMSPropertyId'));
+
+        // Test invalid key
+        try {
+            $auth->getAuthKeyVar('invalid_key');
+        } catch (Exception $e) {
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+        }
+
+        // Test api with no auth set
+        unset($auth);
+        $auth = new Auth();
+        $this->assertEquals(null, $auth->getAuthKeyVar('Auth/VendorId'));
+    }
 }

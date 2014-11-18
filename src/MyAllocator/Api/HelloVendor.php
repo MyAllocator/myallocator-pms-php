@@ -30,22 +30,22 @@ use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 
-class ChannelList extends Api
+class HelloVendor extends Api
 {
     /**
      * @var array Array of required authentication keys (string) for API method.
      */
     protected $auth_keys = array(
-        'Auth/VendorId',
+        'Auth/VendorId', 
         'Auth/VendorPassword'
     );
 
     /**
-     * Say Hello! (Requires valid user credentials)
+     * Say Hello! (Requires valid vendor credentials)
      *
      * @return string Server's response
      */
-    public function get()
+    public function sayHello()
     {
         $auth = $this->auth;
 
@@ -59,7 +59,7 @@ class ChannelList extends Api
         $requestor = new Requestor($auth);
         $url = Common::get_class_name(get_class());
         $params = array(
-            'ChannelList' => true
+            'hello' => 'world'
         );
         list($response, $auth) = $requestor->request('post', $url, $params, $this->auth_keys);
         $this->lastApiResponse = $response;

@@ -19,5 +19,8 @@
         <testsuite name="MyAllocator PHP SDK Exception Test Suite">
             <directory suffix=".php">./tests/Exception/</directory>
         </testsuite>
+        <testsuite name="MyAllocator PHP SDK Util Test Suite">
+            <directory suffix=".php">./tests/Util/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

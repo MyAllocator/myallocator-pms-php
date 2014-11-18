@@ -38,9 +38,14 @@ class Api
     protected $auth = null;
 
     /**
-     * @var string The class name as a string.
+     * @var array Array of required authentication keys (string) for API method.
      */
-    protected $id = null;
+    protected $auth_keys = array();
+
+    /**
+     * @var mixed The response from the last request.
+     */
+    private $lastApiResponse = null;
 
     public function __construct($cfg = null)
     {
@@ -62,20 +67,35 @@ class Api
                 $this->auth = $cfg['auth'];
             }
         }
-
-        if ($cfg == 'wee') {
-            throw new \Exception('weeee');
-        }
     }
 
+    /**
+     * Get the authentication object for the API.
+     *
+     * @return MyAllocator\phpsdk\Object\Auth API Authentication object.
+     */
     public function getAuth()
     {
         return $this->auth;
     }
 
+    /**
+     * Set the authentication object for the API.
+     *
+     * @param MyAllocator\phpsdk\Object\Auth API Authentication object.
+     */
     public function setAuth(Auth $auth)
     {
         $this->auth = $auth;
-        return true;
+    }
+
+    /**
+     * Get the last API response as array($rbody, $rcode).
+     *
+     * @return array
+     */
+    public static function getLastApiResponse()
+    {
+        return $this->lastApiResponse;
     }
 }

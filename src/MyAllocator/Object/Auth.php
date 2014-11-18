@@ -25,19 +25,10 @@
  */
 
 namespace MyAllocator\phpsdk\Object;
+use MyAllocator\phpsdk\Exception\ApiException;
 
 class Auth
 {
-    /**
-     * @var string The API version. 
-     */
-    public $version = '201408'; 
-
-    /**
-     * @var string The API base URL/HOST.
-     */
-    public $apiBase = 'api.myallocator.com';
-
     /**
      * @var string Enable/Disable debugs.
      */
@@ -72,4 +63,37 @@ class Auth
      * @var string The system property id.
      */
     public $propertyIdSystem = null;
+
+    /**
+     * Get the authentication variable from API key/parameter.
+     *
+     * @return mixed The requested API variable.
+     */
+    public function getAuthKeyVar($key)
+    {
+        switch ($key) {
+            case 'Auth/VendorId':
+                return $this->vendorId;
+                break;
+            case 'Auth/VendorPassword':
+                return $this->vendorPassword;
+                break;
+            case 'Auth/UserId':
+                return $this->userId;
+                break;
+            case 'Auth/UserPassword':
+                return $this->userPassword;
+                break;
+            case 'Auth/PropertyId':
+                return $this->propertyIdMyAllocator;
+                break;
+            case 'PMSPropertyId':
+                return $this->propertyIdSystem;
+                break;
+            default:
+                break;
+        }
+        $msg = 'Invalid Auth key requested: ' . $key;
+        throw new ApiException($msg);
+    }
 }

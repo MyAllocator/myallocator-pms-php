@@ -63,11 +63,13 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
+     * @dataProvider fixtureAuthCfgObject
      */
-    public function testSayHi()
+    public function testSayHello(array $fxt)
     {
-        $obj = new HelloWorld();
-        $str = 'hi';
-        $this->assertEquals($str, $obj->sayHi($str));
+        $obj = new HelloWorld($fxt);
+        $rsp = $obj->sayHello();
+        $this->assertEquals(array('hello'), array_keys($rsp));
+        $this->assertEquals('world', $rsp['hello']);
     }
 }

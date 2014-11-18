@@ -26,21 +26,32 @@
 
 namespace MyAllocator\phpsdk\Util;
 use MyAllocator\phpsdk\Object\Auth;
+use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiException;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 use MyAllocator\phpsdk\Exception\ApiConnectionException;
 use MyAllocator\phpsdk\Exception\InvalidRequestException;
 
 /**
- * The Requester class is responsible for preparing and sending an API reqest,
+ * The Requestor class is responsible for preparing and sending an API reqest,
  * as well as parsing and handling the response.
  */
-class Requester
+class Requestor
 {
     /**
      * @var MyAllocator\phpsdk\Object\Auth Authentication/Api data for the request.
      */
     private $auth = null;
+
+    /**
+     * @var string The MyAllocator API base url.
+     */
+    private $apiBase = 'api.myallocator.com';
+
+    /**
+     * @var string The API version. 
+     */
+    public $version = '201408';
 
     /**
      * @var mixed The response from the last request.
@@ -70,30 +81,46 @@ class Requester
      * @return array An array whose first element is the response and second
      *    element is the API key used to make the request.
      */
-    public function request($method, $url, $params=null)
+    public function request($method, $url, $params=null, $auth_keys=null)
     {
         if (!$params) {
             $params = array();
         }
 
-        list($rbody, $rcode, $auth) = $this->prepareRequest($method, $url, $params);
+        list($rbody, $rcode, $auth) = $this->prepareRequest($method, $url, $params, $auth_keys);
         $resp = $this->interpretResponse($rbody, $rcode);
         return array($resp, $auth);
     }
 
-    private function prepareRequest($method, $url, $params)
+    private function prepareRequest($method, $url, $params, $auth_keys = null)
     {
         $auth = $this->auth;
 
-        if ($auth == null) {
+        if ($auth_keys && $auth == null) {
             $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
                  . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
                  . 'See https://TODO for details.';
             throw new ApiAuthenticationException($msg);
         }
 
-        $absUrl = $this->apiUrl($url);
+        // Set authentication parameters
+        if ($auth_keys && !empty($auth_keys)) {
+            foreach ($auth_keys as $k) {
+                if (!isset($params[$k])) {
+                    $v = $auth->getAuthKeyVar($k);
+                    if (!$v) {
+                        $msg = 'Authentication key `'.$k.'` is required. HINT: Set your Auth data using '
+                             . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
+                             . 'See https://TODO for details.';
+                        throw new ApiAuthenticationException($msg);
+                    }
+                    $params[$k] = $v;
+                }
+            }
+        }
+
         $params = self::encodeObjects($params);
+        $absUrl = $this->apiUrl($url);
 
         list($rbody, $rcode) = $this->curlRequest(
             $method,
@@ -180,7 +207,7 @@ class Requester
 
     private function handleCurlError($errno, $message)
     {
-        $apiBase = $this->auth->apiBase;
+        $apiBase = $this->apiBase;
         switch ($errno) {
             case CURLE_COULDNT_CONNECT:
             case CURLE_COULDNT_RESOLVE_HOST:
@@ -216,21 +243,21 @@ class Requester
         }
     }
 
-    private static function apiUrl($url='')
+    private function apiUrl($url='')
     {
-        if (!$this->auth) {
+        if (!$url) {
             return false;
         }
 
         $absUrl = sprintf("https://%s/pms/v%d/json/%s", 
-                          $this->auth->apiBase,
-                          $this->auth->version,
+                          $this->apiBase,
+                          $this->version,
                           $url);
 
         return (string) $absUrl;
     }
 
-    private static function utf8($value)
+    public static function utf8($value)
     {
         if (is_string($value)
                 && mb_detect_encoding($value, "UTF-8", TRUE) != "UTF-8") {
@@ -240,7 +267,7 @@ class Requester
         }
     }
 
-    private static function encode($arr, $prefix=null)
+    public static function encode($arr, $prefix=null)
     {
         if (!is_array($arr))
             return $arr;
@@ -268,7 +295,7 @@ class Requester
     private static function encodeObjects($d)
     {
         if ($d instanceof Api) {
-            return self::utf8($d->id);
+            return self::utf8(Common::get_class_name(get_class($d)));
         } else if ($d === true) {
             return 'true';
         } else if ($d === false) {
