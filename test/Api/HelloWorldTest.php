@@ -38,7 +38,10 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
 
         $data = array();
         $data[] = array(array(
-            'auth' => $auth
+            'auth' => $auth,
+            'params' => array(
+                'hello' => 'world'
+            )
         ));
 
         return $data;
@@ -68,7 +71,7 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
     public function testSayHello(array $fxt)
     {
         $obj = new HelloWorld($fxt);
-        $rsp = $obj->sayHello();
+        $rsp = $obj->sayHello($fxt['params']);
         $this->assertEquals(array('hello'), array_keys($rsp));
         $this->assertEquals('world', $rsp['hello']);
     }

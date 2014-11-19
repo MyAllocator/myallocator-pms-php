@@ -43,7 +43,10 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new HelloUserVendor($fxt);
-        $rsp = $obj->sayHello();
+        $params = array(
+            'hello' => 'world'
+        );
+        $rsp = $obj->sayHello($params);
         $this->assertTrue(isset($rsp['hello']));
         $this->assertEquals('world', $rsp['hello']);
     }
@@ -56,7 +59,10 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
     {
         $obj = new HelloUserVendor();
         try {
-            $rsp = $obj->sayHello();
+            $params = array(
+                'hello' => 'world'
+            );
+            $rsp = $obj->sayHello($params);
         } catch (Exception $e) {
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
         }
@@ -74,7 +80,10 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
         $fxt['auth']->userId = '111';
         $fxt['auth']->userPassword = '111';
         $obj = new HelloUserVendor($fxt);
-        $rsp = $obj->sayHello();
+        $params = array(
+            'hello' => 'world'
+        );
+        $rsp = $obj->sayHello($params);
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertTrue(isset($rsp['Errors'][0]['ErrorMsg']));
         $this->assertEquals('Invalid vendor or vendor password', $rsp['Errors'][0]['ErrorMsg']);

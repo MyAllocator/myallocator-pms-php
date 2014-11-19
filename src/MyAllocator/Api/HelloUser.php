@@ -28,16 +28,27 @@ namespace MyAllocator\phpsdk\Api;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 
 class HelloUser extends Api
 {
     /**
-     * @var array Array of required authentication keys (string) for API method.
+     * @var array Array of required and optional authentication and argument 
+     *      keys (string) for API method.
      */
-    protected $auth_keys = array(
-        'Auth/UserId', 
-        'Auth/UserPassword'
+    protected $keys = array(
+        'auth' => array(
+            'req' => array(
+                'Auth/UserId', 
+                'Auth/UserPassword'
+            ),
+            'opt' => array()
+        ),
+        'args' => array(
+            'req' => array(
+                'hello'
+            ),
+            'opt' => array()
+        )
     );
 
     /**
@@ -45,23 +56,17 @@ class HelloUser extends Api
      *
      * @return string Server's response
      */
-    public function sayHello()
+    public function sayHello($params = null)
     {
-        $auth = $this->auth;
+        // Validate and sanitize parameters
+        $params = $this->validateApiParameters($this->keys, $params);
 
-        if (!$auth) {
-            $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
-                 . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                 . 'See https://TODO for details.';
-            throw new ApiAuthenticationException($msg);
-        }
-
-        $requestor = new Requestor($auth);
+        // Perform request
+        $requestor = new Requestor();
         $url = Common::get_class_name(get_class());
-        $params = array(
-            'hello' => 'world'
-        );
-        list($response, $auth) = $requestor->request('post', $url, $params, $this->auth_keys);
+        $response = $requestor->request('post', $url, $params);
+
+        // Return result
         $this->lastApiResponse = $response;
         return $response;
     }

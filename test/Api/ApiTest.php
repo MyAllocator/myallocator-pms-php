@@ -126,4 +126,167 @@ class ApiTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($cfg_set['auth'][$k], $obj_auth->$k);
         }
     }
+
+    public function fixtureValidateApiParameters()
+    {
+        $cfg_set['auth'] = array(
+            'vendorId' => '777',
+            'vendorPassword' => '888',
+            'userId' => '999',
+            'userPassword' => '1010',
+            'propertyIdMyAllocator' => '1111',
+            'propertyIdSystem' => '1212',
+            'debug' => false
+        );
+
+        $auth = new Auth();
+        $auth->vendorId = $cfg_set['auth']['vendorId'];
+        $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
+        $auth->userId = $cfg_set['auth']['userId'];
+        $auth->userPassword = $cfg_set['auth']['userPassword'];
+        $auth->propertyIdMyAllocator = $cfg_set['auth']['propertyIdMyAllocator'];
+        $auth->propertyIdSystem = $cfg_set['auth']['propertyIdSystem'];
+        $auth->debug = $cfg_set['auth']['debug'];
+
+        $keys = array(
+            'auth' => array(
+                'req' => array(
+                    'Auth/VendorId',
+                    'Auth/VendorPassword',
+                ),
+                'opt' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword',
+                )
+            ),
+            'args' => array(
+                'req' => array(
+                    'hello'
+                ),
+                'opt' => array(
+                    'goodbye'
+                )
+            )
+        );
+
+        $params = array(
+            'required' => array(
+                'hello' => 'world'
+            ),
+            'required_optional' => array(
+                'hello' => 'world',
+                'goodbye' => 'friend'
+            ),
+            'required_optional_extra' => array(
+                'extra1' => 1,
+                'hello' => 'world',
+                'goodbye' => 'friend',
+                'extra2' => 1
+            )
+        );
+
+        $data = array();
+        $data[] = array(array(
+            'auth' => $auth,
+            'keys' => $keys,
+            'params' => $params
+        ));
+
+        return $data;
+    }
+
+    /**
+     * @author nathanhelenihi
+     * @group api
+     * @dataProvider fixtureValidateApiParameters
+     */
+    public function testValidateApiParameters(array $fxt)
+    {
+        $obj = new Api();
+
+        // Null Auth
+        $keys = $fxt['keys'];
+        $params = $fxt['params']['required'];
+        $caught = false;
+        try {
+            $obj->validateApiParameters($keys, $params);
+        } catch (Exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('Should have thrown an exception');
+        }
+
+        unset($obj);
+        $cfg['auth'] = $fxt['auth'];
+        $obj = new Api($cfg);
+
+        // Null keys and parameters
+        $keys = null;
+        $params = null;
+        $caught = false;
+        try {
+            $obj->validateApiParameters($keys, $params);
+        } catch (Exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('Should have thrown an exception');
+        }
+
+        // Null keys
+        $keys = null;
+        $params = $fxt['params']['required'];
+        $caught = false;
+        try {
+            $obj->validateApiParameters($keys, $params);
+        } catch (Exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('Should have thrown an exception');
+        }
+
+        // Null params
+        $keys = $fxt['keys'];
+        $params = null;
+        $caught = false;
+        try {
+            $obj->validateApiParameters($keys, $params);
+        } catch (Exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('Should have thrown an exception');
+        }
+
+        // Required params
+        $keys = $fxt['keys'];
+        $params = $fxt['params']['required'];
+        $result = $obj->validateApiParameters($keys, $params);
+        $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
+        $this->assertEquals(count($result), count($params) + $num_auth_keys);
+
+        // Required and optional params
+        $keys = $fxt['keys'];
+        $params = $fxt['params']['required_optional'];
+        $result = $obj->validateApiParameters($keys, $params);
+        $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
+        $this->assertEquals(count($result), count($params) + $num_auth_keys);
+
+        // Required, optional, and extra params
+        $keys = $fxt['keys'];
+        $params = $fxt['params']['required_optional_extra'];
+        $result = $obj->validateApiParameters($keys, $params);
+        $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
+        $this->assertEquals(count($result), count($params) - 2 + $num_auth_keys);
+    }
 }

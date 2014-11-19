@@ -27,32 +27,42 @@
 namespace MyAllocator\phpsdk\Api;
 use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Object\Auth;
 
 class HelloWorld extends Api
 {
+    /**
+     * @var array Array of required and optional authentication and argument 
+     *      keys (string) for API method.
+     */
+    protected $keys = array(
+        'auth' => array(
+            'req' => array(),
+            'opt' => array()
+        ),
+        'args' => array(
+            'req' => array(
+                'hello'
+            ),
+            'opt' => array()
+        )
+    );
+
     /**
      * Say Hello! (No authentication required)
      *
      * @return string Server's response
      */
-    public function sayHello()
+    public function sayHello($params = null)
     {
-        $auth = $this->auth;
+        // Validate and sanitize parameters (No auth required)
+        $params = $this->validateApiParameters($this->keys, $params);
 
-        if (!$auth) {
-            $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
-                 . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                 . 'See https://TODO for details.';
-            throw new ApiAuthenticationException($msg);
-        }
-
-        $requestor = new Requestor($auth);
+        // Perform request
+        $requestor = new Requestor();
         $url = Common::get_class_name(get_class());
-        $params = array(
-            'hello' => 'world'
-        );
-        list($response, $auth) = $requestor->request('post', $url, $params);
+        $response = $requestor->request('post', $url, $params);
+
+        // Return result
         $this->lastApiResponse = $response;
         return $response;
     }

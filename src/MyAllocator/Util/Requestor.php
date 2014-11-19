@@ -25,7 +25,6 @@
  */
 
 namespace MyAllocator\phpsdk\Util;
-use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiException;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
@@ -38,11 +37,6 @@ use MyAllocator\phpsdk\Exception\InvalidRequestException;
  */
 class Requestor
 {
-    /**
-     * @var MyAllocator\phpsdk\Object\Auth Authentication/Api data for the request.
-     */
-    private $auth = null;
-
     /**
      * @var string The MyAllocator API base url.
      */
@@ -58,10 +52,7 @@ class Requestor
      */
     private $lastApiResponse = null;
 
-    public function __construct(Auth $auth = null)
-    {
-        $this->auth = $auth;
-    }
+    public function __construct() {}
 
     /**
      * Get the last API response as array($rbody, $rcode).
@@ -81,44 +72,19 @@ class Requestor
      * @return array An array whose first element is the response and second
      *    element is the API key used to make the request.
      */
-    public function request($method, $url, $params=null, $auth_keys=null)
+    public function request($method, $url, $params=null)
     {
         if (!$params) {
             $params = array();
         }
 
-        list($rbody, $rcode, $auth) = $this->prepareRequest($method, $url, $params, $auth_keys);
+        list($rbody, $rcode) = $this->prepareRequest($method, $url, $params);
         $resp = $this->interpretResponse($rbody, $rcode);
-        return array($resp, $auth);
+        return $resp;
     }
 
-    private function prepareRequest($method, $url, $params, $auth_keys = null)
+    private function prepareRequest($method, $url, $params)
     {
-        $auth = $this->auth;
-
-        if ($auth_keys && $auth == null) {
-            $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
-                 . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                 . 'See https://TODO for details.';
-            throw new ApiAuthenticationException($msg);
-        }
-
-        // Set authentication parameters
-        if ($auth_keys && !empty($auth_keys)) {
-            foreach ($auth_keys as $k) {
-                if (!isset($params[$k])) {
-                    $v = $auth->getAuthKeyVar($k);
-                    if (!$v) {
-                        $msg = 'Authentication key `'.$k.'` is required. HINT: Set your Auth data using '
-                             . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                             . 'See https://TODO for details.';
-                        throw new ApiAuthenticationException($msg);
-                    }
-                    $params[$k] = $v;
-                }
-            }
-        }
-
         $params = self::encodeObjects($params);
         $absUrl = $this->apiUrl($url);
 
@@ -128,7 +94,7 @@ class Requestor
             $params
         );
 
-        return array($rbody, $rcode, $auth);
+        return array($rbody, $rcode);
     }
 
     private function curlRequest($method, $absUrl, $params)
@@ -162,6 +128,9 @@ class Requestor
         $opts[CURLOPT_TIMEOUT] = 60;
         $opts[CURLOPT_HEADER] = false;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
+
+        //var_dump($absUrl);
+        //var_dump($opts[CURLOPT_POSTFIELDS]);
 
         curl_setopt_array($curl, $opts);
         $rbody = curl_exec($curl);

@@ -1,11 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\ChannelList;
+use MyAllocator\phpsdk\Api\PropertyList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class ChannelListTest extends PHPUnit_Framework_TestCase
+class PropertyListTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +12,8 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new ChannelList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\ChannelList', get_class($obj));
+        $obj = new PropertyList();
+        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -32,6 +31,7 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
+     * @group skip
      * @dataProvider fixtureAuthCfgObject
      */
     public function testGet(array $fxt)
@@ -40,12 +40,10 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new ChannelList($fxt);
-        $params = array(
-            'ChannelList' => true
-        );
-        $rsp = $obj->get($params);
-        $this->assertTrue(isset($rsp['Channels']));
-        $this->assertGreaterThan(20, count($rsp['Channels']));
+        $obj = new PropertyList($fxt);
+        $rsp = $obj->get();
+
+        //print_r($rsp);
+        $this->assertTrue(isset($rsp['Properties']));
     }
 }
