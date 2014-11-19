@@ -29,7 +29,7 @@ use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
 
-class HelloUserVendor extends Api
+class HelloVendorUser extends Api
 {
     /**
      * @var array Array of required and optional authentication and argument 
@@ -60,6 +60,9 @@ class HelloUserVendor extends Api
      */
     public function sayHello($params)
     {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
         // Validate and sanitize parameters
         $params = $this->validateApiParameters($this->keys, $params);
         

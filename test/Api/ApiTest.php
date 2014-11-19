@@ -22,8 +22,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
-            'propertyIdMyAllocator' => '1111',
-            'propertyIdSystem' => '1212',
+            'propertyId' => '1111',
+            'PMSPropertyId' => '1212',
             'debug' => false
         );
 
@@ -32,8 +32,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
         $auth->userId = $cfg_set['auth']['userId'];
         $auth->userPassword = $cfg_set['auth']['userPassword'];
-        $auth->propertyIdMyAllocator = $cfg_set['auth']['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $cfg_set['auth']['propertyIdSystem'];
+        $auth->propertyId = $cfg_set['auth']['propertyId'];
+        $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
         $auth->debug = $cfg_set['auth']['debug'];
 
         $data = array();
@@ -69,8 +69,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '222',
             'userId' => '333',
             'userPassword' => '444',
-            'propertyIdMyAllocator' => '555',
-            'propertyIdSystem' => '666',
+            'propertyId' => '555',
+            'PMSPropertyId' => '666',
             'debug' => true
         ));
 
@@ -106,8 +106,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
-            'propertyIdMyAllocator' => '1111',
-            'propertyIdSystem' => '1212',
+            'propertyId' => '1111',
+            'PMSPropertyId' => '1212',
             'debug' => false
         );
 
@@ -116,8 +116,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
         $auth->userId = $cfg_set['auth']['userId'];
         $auth->userPassword = $cfg_set['auth']['userPassword'];
-        $auth->propertyIdMyAllocator = $cfg_set['auth']['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $cfg_set['auth']['propertyIdSystem'];
+        $auth->propertyId = $cfg_set['auth']['propertyId'];
+        $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
         $auth->debug = $cfg_set['auth']['debug'];
         $obj->setAuth($auth);
 
@@ -134,8 +134,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
-            'propertyIdMyAllocator' => '1111',
-            'propertyIdSystem' => '1212',
+            'propertyId' => '1111',
+            'PMSPropertyId' => '1212',
             'debug' => false
         );
 
@@ -144,8 +144,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
         $auth->userId = $cfg_set['auth']['userId'];
         $auth->userPassword = $cfg_set['auth']['userPassword'];
-        $auth->propertyIdMyAllocator = $cfg_set['auth']['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $cfg_set['auth']['propertyIdSystem'];
+        $auth->propertyId = $cfg_set['auth']['propertyId'];
+        $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
         $auth->debug = $cfg_set['auth']['debug'];
 
         $keys = array(
@@ -256,6 +256,21 @@ class ApiTest extends PHPUnit_Framework_TestCase
         // Null params
         $keys = $fxt['keys'];
         $params = null;
+        $caught = false;
+        try {
+            $obj->validateApiParameters($keys, $params);
+        } catch (Exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('Should have thrown an exception');
+        }
+
+        // Empty array params
+        $keys = $fxt['keys'];
+        $params = array();
         $caught = false;
         try {
             $obj->validateApiParameters($keys, $params);

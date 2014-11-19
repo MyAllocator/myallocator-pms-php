@@ -54,6 +54,9 @@ class HelloWorld extends Api
      */
     public function sayHello($params = null)
     {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
         // Validate and sanitize parameters (No auth required)
         $params = $this->validateApiParameters($this->keys, $params);
 

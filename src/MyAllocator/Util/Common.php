@@ -56,8 +56,8 @@ abstract class Common
          *   export ma_vendorPassword=VALUE
          *   export ma_userId=VALUE
          *   export ma_userPassword=VALUE
-         *   export ma_propertyIdMyAllocator=VALUE
-         *   export ma_propertyIdSystem=VALUE
+         *   export ma_propertyId=VALUE
+         *   export ma_PMSPropertyId=VALUE
          */
         foreach ($keys as $k) {
             if (!($$k = getenv('ma_'.$k))) {
@@ -71,8 +71,8 @@ abstract class Common
         $auth->vendorPassword = isset($vendorPassword) ? $vendorPassword : null;
         $auth->userId = isset($userId) ? $userId: null;
         $auth->userPassword = isset($userPassword) ? $userPassword : null;
-        $auth->propertyIdMyAllocator = isset($propertyIdMyAllocator) ? $propertyIdMyAllocator : null;
-        $auth->propertyIdSystem = isset($propertyIdSystem) ? $propertyIdSystem : null;
+        $auth->propertyId = isset($propertyId) ? $propertyId : null;
+        $auth->PMSPropertyId = isset($PMSPropertyId) ? $PMSPropertyId : null;
         $auth->debug = $debug;
 
         return array(

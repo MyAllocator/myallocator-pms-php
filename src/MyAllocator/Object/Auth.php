@@ -57,12 +57,12 @@ class Auth
     /**
      * @var string The MyAllocator property id.
      */
-    public $propertyIdMyAllocator = null;
+    public $propertyId = null;
 
     /**
      * @var string The system property id.
      */
-    public $propertyIdSystem = null;
+    public $PMSPropertyId = null;
 
     /**
      * Get the authentication variable from API key/parameter.
@@ -85,10 +85,10 @@ class Auth
                 return $this->userPassword;
                 break;
             case 'Auth/PropertyId':
-                return $this->propertyIdMyAllocator;
+                return $this->propertyId;
                 break;
             case 'PMSPropertyId':
-                return $this->propertyIdSystem;
+                return $this->PMSPropertyId;
                 break;
             default:
                 break;

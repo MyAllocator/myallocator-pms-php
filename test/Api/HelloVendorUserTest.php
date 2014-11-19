@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\HelloUserVendor;
+use MyAllocator\phpsdk\Api\HelloVendorUser;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class HelloUserVendorTest extends PHPUnit_Framework_TestCase
+class HelloVendorUserTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +13,8 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new HelloUserVendor();
-        $this->assertEquals('MyAllocator\phpsdk\Api\HelloUserVendor', get_class($obj));
+        $obj = new HelloVendorUser();
+        $this->assertEquals('MyAllocator\phpsdk\Api\HelloVendorUser', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -42,7 +42,7 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new HelloUserVendor($fxt);
+        $obj = new HelloVendorUser($fxt);
         $params = array(
             'hello' => 'world'
         );
@@ -57,7 +57,7 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
      */
     public function testSayHelloAuthNull()
     {
-        $obj = new HelloUserVendor();
+        $obj = new HelloVendorUser();
         try {
             $params = array(
                 'hello' => 'world'
@@ -79,7 +79,7 @@ class HelloUserVendorTest extends PHPUnit_Framework_TestCase
         $fxt['auth']->vendorPassword = '111';
         $fxt['auth']->userId = '111';
         $fxt['auth']->userPassword = '111';
-        $obj = new HelloUserVendor($fxt);
+        $obj = new HelloVendorUser($fxt);
         $params = array(
             'hello' => 'world'
         );

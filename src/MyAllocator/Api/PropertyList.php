@@ -25,6 +25,7 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
+use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
 
@@ -39,27 +40,29 @@ class PropertyList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
+                'Auth/UserId',
+                'Auth/UserPassword'
             ),
             'opt' => array(
-                'Auth/UserId',
-                'Auth/UserPassword',
+                'Auth/PropertyId' // Property id on MyAllocator
             )
         ),
         'args' => array(
             'req' => array(),
-            'opt' => array(
-                'Auth/PropertyId'
-            )
+            'opt' => array()
         )
     );
 
     /**
-     * Get property or list of MA properties under a vendor or user account.
+     * Get property list for a vendor/user
      *
      * @return string Server's response
      */
     public function get($params = null)
     {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
         // Validate and sanitize parameters
         $params = $this->validateApiParameters($this->keys, $params);
 

@@ -58,6 +58,9 @@ class ChannelList extends Api
      */
     public function get($params = null)
     {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
         // Validate and sanitize parameters
         $params = $this->validateApiParameters($this->keys, $params);
 

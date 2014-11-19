@@ -22,8 +22,8 @@ class AuthTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
-            'propertyIdMyAllocator' => '1111',
-            'propertyIdSystem' => '1212',
+            'propertyId' => '1111',
+            'PMSPropertyId' => '1212',
             'debug' => true
         ));
 
@@ -42,16 +42,16 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $fxt['vendorPassword'];
         $auth->userId = $fxt['userId'];
         $auth->userPassword = $fxt['userPassword'];
-        $auth->propertyIdMyAllocator = $fxt['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $fxt['propertyIdSystem'];
+        $auth->propertyId = $fxt['propertyId'];
+        $auth->PMSPropertyId = $fxt['PMSPropertyId'];
         $auth->debug = $fxt['debug'];
 
         $this->assertEquals($auth->vendorId, $fxt['vendorId']);
         $this->assertEquals($auth->vendorPassword, $fxt['vendorPassword']);
         $this->assertEquals($auth->userId, $fxt['userId']);
         $this->assertEquals($auth->userPassword, $fxt['userPassword']);
-        $this->assertEquals($auth->propertyIdMyAllocator, $fxt['propertyIdMyAllocator']);
-        $this->assertEquals($auth->propertyIdSystem, $fxt['propertyIdSystem']);
+        $this->assertEquals($auth->propertyId, $fxt['propertyId']);
+        $this->assertEquals($auth->PMSPropertyId, $fxt['PMSPropertyId']);
         $this->assertEquals($auth->debug, $fxt['debug']);
     }
 
@@ -67,8 +67,8 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $fxt['vendorPassword'];
         $auth->userId = $fxt['userId'];
         $auth->userPassword = $fxt['userPassword'];
-        $auth->propertyIdMyAllocator = $fxt['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $fxt['propertyIdSystem'];
+        $auth->propertyId = $fxt['propertyId'];
+        $auth->PMSPropertyId = $fxt['PMSPropertyId'];
         $auth->debug = $fxt['debug'];
 
         // Test valid authentication keys
@@ -76,8 +76,8 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($auth->vendorPassword, $auth->getAuthKeyVar('Auth/VendorPassword'));
         $this->assertEquals($auth->userId, $auth->getAuthKeyVar('Auth/UserId'));
         $this->assertEquals($auth->userPassword, $auth->getAuthKeyVar('Auth/UserPassword'));
-        $this->assertEquals($auth->propertyIdMyAllocator, $auth->getAuthKeyVar('Auth/PropertyId'));
-        $this->assertEquals($auth->propertyIdSystem, $auth->getAuthKeyVar('PMSPropertyId'));
+        $this->assertEquals($auth->propertyId, $auth->getAuthKeyVar('Auth/PropertyId'));
+        $this->assertEquals($auth->PMSPropertyId, $auth->getAuthKeyVar('PMSPropertyId'));
 
         // Test invalid key
         try {

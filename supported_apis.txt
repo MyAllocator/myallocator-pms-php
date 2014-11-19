@@ -1,0 +1,24 @@
+Done ExpIssues ReqPerms
+
+[ ]     [ ]      [ ]  AssociateUserToPMS
+[ ]     [ ]      [ ]  BookingList
+[ ]     [x]      [ ]  BookingPaymentDownload [should not be able to use this call]
+[x]     [-]      [-]  ChannelList
+[ ]     [ ]      [ ]  ChannelMappingList
+[ ]     [ ]      [ ]  GetUpdateStatus
+[x]     [-]      [-]  HelloWorld
+[x]     [-]      [-]  HelloUser
+[x]     [-]      [-]  HelloVender
+[x]     [-]      [-]  HelloUserVendor
+[x]     [-]      [x]  PropertyCreate
+[x]     [-]      [-]  PropertyList
+[ ]     [ ]      [x]  PropertyModify
+[ ]     [ ]      [ ]  RoomAvailabilityList
+[x]     [-]      [-]  RoomList
+[ ]     [x]      [ ]  SetAllocation
+[ ]     [ ]      [ ]  SetRoomTypes [pending server side changes]
+[x]     [-]      [x]  UserCreate
+[x]     [-]      [x]  UserExists
+[x]     [-]      [x]  UserModify
+[ ]     [ ]      [ ]  UserPasswordRecover
+[x]     [-]      [-]  VendorSet

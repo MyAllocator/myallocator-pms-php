@@ -1,10 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\PropertyCreate;
+use MyAllocator\phpsdk\Api\UserModify;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
  
-class PropertyCreateTest extends PHPUnit_Framework_TestCase
+class UserModifyTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,8 +12,8 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyCreate();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyCreate', get_class($obj));
+        $obj = new UserModify();
+        $this->assertEquals('MyAllocator\phpsdk\Api\UserModify', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -35,29 +35,26 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testCreate(array $fxt)
+    public function testModify(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyCreate($fxt);
+        $obj = new UserModify($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No user id / password should fail
+        // No user id should fail
         $caught = false;
         try {
             $rsp = $obj->create(array(
-                'PropertyName' => 'PHP SDK Hotel A',
-                'ExpiryDate' => '2020-01-01',
-                'Currency' => 'USD',
-                'Country' => 'US',
-                'Breakfast' => 'EX'
+                'UserPassword' => 'phpsdkpassword',
+                'Email' => 'phpsdkuser@phpsdk.com',
+                'CustomerEmail' => 'phpsdkcustomer@phpsdk.com'
             ));
-            var_dump($rsp);
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -70,18 +67,28 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
         /*
          * Successful calls require special vendor permissions.
 
-        // Successful call
+        // Successful call without optional parameters
         $rsp = $obj->create(array(
-            'UserId' => 'phpsdk_property_A',
-            'UserPassword' => 'password', // update to real password
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2020-01-01',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
+            'UserId' => 'phpsdkuser',
+            'UserPassword' => 'password',
+            'Email' => 'phpsdkuser@phpsdk.com',
+            'CustomerEmail' => 'phpsdkuser@phpsdk.com'
+        ));
+
+        $this->assertTrue(isset($rsp['UserIdExists']));
+        $this->assertEquals($rsp['UserIdExists'], 'false');
+        $this->assertTrue(isset($rsp['Success']));
+        $this->assertEquals($rsp['Success'][0], 'true');
+
+        // Successful call with optional parameters
+        $rsp = $obj->modify(array(
+            //'UserId' => 'phpsdkuser',
+            'CustomerFirstName' => 'Nate'
         ));
 
         var_dump($rsp);
+        $this->assertTrue(isset($rsp['UserIdExists']));
+        $this->assertEquals($rsp['UserIdExists'], 'false');
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'][0], 'true');
 

@@ -22,8 +22,8 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
-            'propertyIdMyAllocator' => '1111',
-            'propertyIdSystem' => '1212',
+            'propertyId' => '1111',
+            'PMSPropertyId' => '1212',
             'debug' => false
         );
 
@@ -32,8 +32,8 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
         $auth->userId = $cfg_set['auth']['userId'];
         $auth->userPassword = $cfg_set['auth']['userPassword'];
-        $auth->propertyIdMyAllocator = $cfg_set['auth']['propertyIdMyAllocator'];
-        $auth->propertyIdSystem = $cfg_set['auth']['propertyIdSystem'];
+        $auth->propertyId = $cfg_set['auth']['propertyId'];
+        $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
         $auth->debug = $cfg_set['auth']['debug'];
 
         $data = array();

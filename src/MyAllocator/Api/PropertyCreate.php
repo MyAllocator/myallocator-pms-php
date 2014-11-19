@@ -30,11 +30,6 @@ use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiException;
 
-/*
- * An extra safeguard against accidental property creations.
- */
-define('PROPERTY_CREATE_ENABLED', 0);
-
 class PropertyCreate extends Api
 {
     /**
@@ -46,19 +41,19 @@ class PropertyCreate extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-            ),
-            'opt' => array(
                 'Auth/UserId',
-                'Auth/UserPassword',
-            )
+                'Auth/UserPassword'
+            ),
+            'opt' => array()
         ),
         'args' => array(
             'req' => array(
-                'UserId', // username
+                'UserId', // property username
+                'UserPassword', // property password
                 'PropertyName',
                 'ExpiryDate',
-                'Currency',
-                'Country'
+                'Currency', // 3-letter ISO 4217 currency code
+                'Country' // 2-letter ISO 3166-1 alpha-2 country code
             ),
             'opt' => array(
                 'Breakfast'
@@ -67,23 +62,30 @@ class PropertyCreate extends Api
     );
 
     /**
+     * @var boolean Whether or not the API is currently enabled/supported.
+     */
+    protected $enabled = false;
+
+    /**
      * Create a new MA property under a vendor or user account.
+     *
+     * NOTE: This API requires special vendor permissions. Please contact
+     * support@myallocator.com to learn how to get access. Once you have
+     * access, modify $enabled above to 'true'.
      *
      * @return string Server's response
      */
     public function create($params = null)
     {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
         // Validate and sanitize parameters
         $params = $this->validateApiParameters($this->keys, $params);
 
         // Perform request
         $requestor = new Requestor();
         $url = Common::get_class_name(get_class());
-
-        if (!PROPERTY_CREATE_ENABLED) {
-            throw new ApiException('Property create API is disabled!');
-        }
-
         $response = $requestor->request('post', $url, $params);
 
         // Return result

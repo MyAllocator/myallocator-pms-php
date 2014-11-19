@@ -3,6 +3,7 @@
 use MyAllocator\phpsdk\Api\PropertyList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
 class PropertyListTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +21,24 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword'
+            'vendorPassword',
+            'userId',
+            'userPassword'
+        ));
+        $data = array();
+        $data[] = array($auth);
+
+        return $data;
+    }
+
+    public function fixtureAuthCfgObjectProperty()
+    {
+        $auth = Common::get_auth_env(array(
+            'vendorId',
+            'vendorPassword',
+            'userId',
+            'userPassword',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -31,7 +49,6 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
-     * @group skip
      * @dataProvider fixtureAuthCfgObject
      */
     public function testGet(array $fxt)
@@ -40,10 +57,26 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
+        // Get information about all properties associated with a user/vendor.
         $obj = new PropertyList($fxt);
         $rsp = $obj->get();
+        $this->assertTrue(isset($rsp['Properties']));
+    }
 
-        //print_r($rsp);
+    /**
+     * @author nathanhelenihi
+     * @group api
+     * @dataProvider fixtureAuthCfgObjectProperty
+     */
+    public function testGetProperty(array $fxt)
+    {
+        if (!$fxt['from_env']) {
+            $this->markTestSkipped('Environment credentials not set.');
+        }
+
+        // Get information about a specific property.
+        $obj = new PropertyList($fxt);
+        $rsp = $obj->get();
         $this->assertTrue(isset($rsp['Properties']));
     }
 }
