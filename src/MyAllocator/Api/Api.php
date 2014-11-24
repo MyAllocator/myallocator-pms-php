@@ -26,6 +26,8 @@
 
 namespace MyAllocator\phpsdk\Api;
 use MyAllocator\phpsdk\Object\Auth as Auth;
+use MyAllocator\phpsdk\Util\Requestor;
+use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiException;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 
@@ -39,7 +41,17 @@ class Api
     /**
      * @var \MyAllocator\Object\Auth Authentication object for requester.
      */
-    protected $auth = null;
+    private $auth = null;
+
+    /**
+     * @var array API request parameters to be included in API request.
+     */
+    private $params = null;
+
+    /**
+     * @var mixed The response from the last request.
+     */
+    private $lastApiResponse = null;
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -55,11 +67,6 @@ class Api
             'opt' => array()
         )
     );
-
-    /**
-     * @var mixed The response from the last request.
-     */
-    private $lastApiResponse = null;
 
     public function __construct($cfg = null)
     {
@@ -81,6 +88,35 @@ class Api
                 $this->auth = $cfg['auth'];
             }
         }
+    }
+
+    /**
+     * Set the parameters to be used in the API request. Parameters may
+     * also be set at the time of API call via callApiWithParams().
+     *
+     * @param array $params API request parameters.
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+    }
+
+    /**
+     * Call the API using previously set parameters (if any).
+     */
+    public function callApi()
+    {
+        return $this->processRequest($this->params);
+    }
+
+    /**
+     * Call the API using provided parameters (if any).
+     *
+     * @param array $params API request parameters.
+     */
+    public function callApiWithParams($params = null)
+    {
+        return $this->processRequest($params);
     }
 
     /**
@@ -111,6 +147,16 @@ class Api
     }
 
     /**
+     * Determine if the API is enabled.
+     *
+     * @return booleam True if the API is enabled.
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Get the last API response as array($rbody, $rcode).
      *
      * @return array
@@ -121,63 +167,38 @@ class Api
     }
 
     /**
+     * Validate and process/send the API request.
+     *
+     * @param array $params API request parameters.
+     * @return array API response.
+     */
+    private function processRequest($params = null)
+    {
+        // Ensure this api is currently enabled/supported
+        $this->assertEnabled();
+
+        // Validate and sanitize parameters
+        $params = $this->validateApiParameters($this->keys, $params);
+
+        // Perform request
+        $requestor = new Requestor();
+        $url = Common::get_class_name(get_class());
+        $response = $requestor->request('post', $url, $params);
+
+        // Return result
+        $this->lastApiResponse = $response;
+        return $response;
+    }
+
+    /**
      * Assert the API is enabled.
      *
      * @throws MyAllocator\phpsdk\Exception\ApiException
      */
-    protected function assertEnabled()
+    private function assertEnabled()
     {
         if (!$this->enabled) {
             $msg = 'This API is not currently enabled/supported.';
-            throw new ApiException($msg);
-        }
-    }
-
-    /**
-     * Determine if the API is enabled.
-     *
-     * @return booleam True if the API is enabled.
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    private function assertKeysArrayValid($keys = null)
-    {
-        if ((!$keys) ||
-            (!is_array($keys)) ||
-            (!isset($keys['auth'])) || 
-            (!is_array($keys['auth'])) ||
-            (!isset($keys['auth']['req'])) || 
-            (!is_array($keys['auth']['req'])) ||
-            (!isset($keys['auth']['opt'])) || 
-            (!is_array($keys['auth']['opt'])) ||
-            (!isset($keys['args'])) || 
-            (!is_array($keys['args'])) ||
-            (!isset($keys['args']['req'])) || 
-            (!is_array($keys['auth']['req'])) ||
-            (!isset($keys['args']['opt'])) || 
-            (!is_array($keys['auth']['opt']))
-        ) {
-            $msg = 'Invalid API keys provided. (HINT: Each '
-                 . 'API class must define a $keys array with '
-                 . 'specific key requirements. (HINT: View an /Api/[file] '
-                 . 'for an example.)';
-            throw new ApiException($msg);
-        }
-    }
-
-    private function assertKeysHasMinOptParams($keys, $params)
-    {
-        // Assert minimum number of optional args exist if requirement exists
-        if ((isset($keys['args']['opt_min'])) && 
-            (!$params || count($params) < $keys['args']['opt_min'])
-        ) {
-            $msg = 'API requires at least '.$keys['args']['opt_min'].' optional '
-                 . 'parameter(s). (HINT: Reference the $keys '
-                 . 'property at the top of the API class file for '
-                 . 'required and optional parameters.)';
             throw new ApiException($msg);
         }
     }
@@ -191,7 +212,7 @@ class Api
      * @throws MyAllocator\phpsdk\Exception\ApiException
      * @throws MyAllocator\phpsdk\Exception\ApiAuthenticationException
      */
-    public function validateApiParameters($keys = null, $params = null)
+    private function validateApiParameters($keys = null, $params = null)
     {
         $this->assertKeysArrayValid($keys);
         $this->assertKeysHasMinOptParams($keys, $params);
@@ -277,5 +298,51 @@ class Api
         }
 
         return $params;
+    }
+
+    /*
+     * Assert required API keys exist and are valid.
+     */
+    private function assertKeysArrayValid($keys = null)
+    {
+        if ((!$keys) ||
+            (!is_array($keys)) ||
+            (!isset($keys['auth'])) || 
+            (!is_array($keys['auth'])) ||
+            (!isset($keys['auth']['req'])) || 
+            (!is_array($keys['auth']['req'])) ||
+            (!isset($keys['auth']['opt'])) || 
+            (!is_array($keys['auth']['opt'])) ||
+            (!isset($keys['args'])) || 
+            (!is_array($keys['args'])) ||
+            (!isset($keys['args']['req'])) || 
+            (!is_array($keys['auth']['req'])) ||
+            (!isset($keys['args']['opt'])) || 
+            (!is_array($keys['auth']['opt']))
+        ) {
+            $msg = 'Invalid API keys provided. (HINT: Each '
+                 . 'API class must define a $keys array with '
+                 . 'specific key requirements. (HINT: View an /Api/[file] '
+                 . 'for an example.)';
+            throw new ApiException($msg);
+        }
+    }
+
+    /*
+     * Assert parameters include minimum number of optional
+     * parameters as configured/defined by the API.
+     */
+    private function assertKeysHasMinOptParams($keys, $params)
+    {
+        // Assert minimum number of optional args exist if requirement exists
+        if ((isset($keys['args']['opt_min'])) && 
+            (!$params || count($params) < $keys['args']['opt_min'])
+        ) {
+            $msg = 'API requires at least '.$keys['args']['opt_min'].' optional '
+                 . 'parameter(s). (HINT: Reference the $keys '
+                 . 'property at the top of the API class file for '
+                 . 'required and optional parameters.)';
+            throw new ApiException($msg);
+        }
     }
 }

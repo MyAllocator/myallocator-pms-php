@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\ChannelList;
+use MyAllocator\phpsdk\Api\ChannelMappingList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class ChannelListTest extends PHPUnit_Framework_TestCase
+class ChannelMappingListTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,15 +13,19 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new ChannelList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\ChannelList', get_class($obj));
+        $obj = new ChannelMappingList();
+        $this->assertEquals('MyAllocator\phpsdk\Api\ChannelMappingList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword'
+            'vendorPassword',
+            //'userId',
+            //'userPassword',
+            'userToken',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -40,16 +44,16 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new ChannelList($fxt);
+        print_r($fxt);
+
+        $obj = new ChannelMappingList($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $rsp = $obj->callApiWithParams(array(
-            'ChannelList' => true
-        ));
-        $this->assertTrue(isset($rsp['Channels']));
-        $this->assertGreaterThan(20, count($rsp['Channels']));
+        $rsp = $obj->callApi();
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Properties']));
     }
 }

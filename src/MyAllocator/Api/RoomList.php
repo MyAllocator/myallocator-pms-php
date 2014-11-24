@@ -25,9 +25,6 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Util\Common;
 
 class RoomList extends Api
 {
@@ -40,8 +37,9 @@ class RoomList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/UserId',
-                'Auth/UserPassword',
+                //'Auth/UserId',
+                //'Auth/UserPassword',
+                'Auth/UserToken',
                 'Auth/PropertyId',
             ),
             'opt' => array()
@@ -51,27 +49,4 @@ class RoomList extends Api
             'opt' => array()
         )
     );
-
-    /**
-     * Get room list for a property.
-     *
-     * @return string Server's response
-     */
-    public function get($params = null)
-    {
-        // Ensure this api is currently enabled/supported
-        $this->assertEnabled();
-
-        // Validate and sanitize parameters
-        $params = $this->validateApiParameters($this->keys, $params);
-
-        // Perform request
-        $requestor = new Requestor();
-        $url = Common::get_class_name(get_class());
-        $response = $requestor->request('post', $url, $params);
-
-        // Return result
-        $this->lastApiResponse = $response;
-        return $response;
-    }
 }

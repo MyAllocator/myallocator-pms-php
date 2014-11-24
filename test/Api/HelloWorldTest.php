@@ -52,26 +52,10 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testConstructorAuthCfgObject(array $fxt)
-    {
-        $cfg['auth'] = $fxt['auth'];
-        $obj = new HelloWorld($cfg);
-        $obj_auth = $obj->getAuth();
-
-        foreach ($fxt['auth'] as $k => $v) {
-            $this->assertEquals($cfg['auth']->$k, $obj_auth->$k);
-        }
-    }
-
-    /**
-     * @author nathanhelenihi
-     * @group api
-     * @dataProvider fixtureAuthCfgObject
-     */
-    public function testSayHello(array $fxt)
+    public function testCallApi(array $fxt)
     {
         $obj = new HelloWorld($fxt);
-        $rsp = $obj->sayHello($fxt['params']);
+        $rsp = $obj->callApiWithParams($fxt['params']);
         $this->assertEquals(array('hello'), array_keys($rsp));
         $this->assertEquals('world', $rsp['hello']);
     }

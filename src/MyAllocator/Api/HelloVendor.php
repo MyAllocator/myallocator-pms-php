@@ -25,9 +25,6 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Util\Common;
 
 class HelloVendor extends Api
 {
@@ -50,27 +47,4 @@ class HelloVendor extends Api
             'opt' => array()
         )
     );
-
-    /**
-     * Say Hello! (Requires valid vendor credentials)
-     *
-     * @return string Server's response
-     */
-    public function sayHello($params = null)
-    {
-        // Ensure this api is currently enabled/supported
-        $this->assertEnabled();
-
-        // Validate and sanitize parameters
-        $params = $this->validateApiParameters($this->keys, $params);
-
-        // Perform request
-        $requestor = new Requestor();
-        $url = Common::get_class_name(get_class());
-        $response = $requestor->request('post', $url, $params);
-
-        // Return result
-        $this->lastApiResponse = $response;
-        return $response;
-    }
 }

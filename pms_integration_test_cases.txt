@@ -1,0 +1,15 @@
+Property Management System (PMS) Integration Test Cases
+
+The purpose of this file is to outline the basic test cases PMS developers
+should consider while integrating with the MyAllocator API (PHP SDK or not).
+
+Vendor Account Management
+-----------------------
+VendorSet :: Setting callback URL and password.
+AssociateUserToPMS :: Associate an existing user to your PMS vendor account.
+
+User Account Management
+-----------------------
+UserCreate :: Create a new user account under your vendor account.
+UserModify :: Modify a user account under your vendor account.
+Property

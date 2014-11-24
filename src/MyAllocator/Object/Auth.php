@@ -55,6 +55,11 @@ class Auth
     public $userPassword = null;
 
     /**
+     * @var string The user token (can store/use instead of username/password).
+     */
+    public $userToken = null;
+
+    /**
      * @var string The MyAllocator property id.
      */
     public $propertyId = null;
@@ -83,6 +88,9 @@ class Auth
                 break;
             case 'Auth/UserPassword':
                 return $this->userPassword;
+                break;
+            case 'Auth/UserToken':
+                return $this->userToken;
                 break;
             case 'Auth/PropertyId':
                 return $this->propertyId;

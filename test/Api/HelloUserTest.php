@@ -34,54 +34,39 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testSayHello(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new HelloUser($fxt);
-        $params = array(
-            'hello' => 'world'
-        );
-        $rsp = $obj->sayHello($params);
-        $this->assertTrue(isset($rsp['hello']));
-        $this->assertEquals('world', $rsp['hello']);
-    }
-
-    /**
-     * @author nathanhelenihi
-     * @group api
-     */
-    public function testSayHelloAuthNull()
-    {
+        // Auth null
         $obj = new HelloUser();
         try {
-            $params = array(
+            $rsp = $obj->callApiWithParams(array(
                 'hello' => 'world'
-            );
-            $rsp = $obj->sayHello($params);
+            ));
         } catch (Exception $e) {
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
         }
-    }
 
-    /**
-     * @author nathanhelenihi
-     * @group api
-     * @dataProvider fixtureAuthCfgObject
-     */
-    public function testSayHelloAuthInvalid(array $fxt)
-    {
+        // Auth invalid
         $fxt['auth']->userId = '111';
         $fxt['auth']->userPassword = '111';
         $obj = new HelloUser($fxt);
-        $params = array(
+        $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
-        );
-        $rsp = $obj->sayHello($params);
+        ));
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertTrue(isset($rsp['Errors'][0]['ErrorMsg']));
         $this->assertEquals('Invalid user or user password', $rsp['Errors'][0]['ErrorMsg']);
+
+        // Successful call
+        $obj = new HelloUser($fxt);
+        $rsp = $obj->callApiWithParams(array(
+            'hello' => 'world'
+        ));
+        $this->assertTrue(isset($rsp['hello']));
+        $this->assertEquals('world', $rsp['hello']);
     }
 }

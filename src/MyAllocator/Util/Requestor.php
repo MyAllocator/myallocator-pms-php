@@ -117,7 +117,8 @@ class Requestor
                 throw new ApiException($msg, $rcode, $rbody);
             }
             $opts[CURLOPT_POST] = 1;
-            $opts[CURLOPT_POSTFIELDS] = 'json=' . $encoded;
+            //$opts[CURLOPT_POSTFIELDS] = 'json=' . htmlspecialchars($encoded);
+            $opts[CURLOPT_POSTFIELDS] = array('json' => $encoded);
         } else {
             throw new ApiException("Unrecognized method $method");
         }

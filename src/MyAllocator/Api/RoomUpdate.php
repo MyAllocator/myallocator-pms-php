@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class ChannelMappingList extends Api
+class RoomUpdate extends Api
 {
     /**
      * @var array Array of required and optional authentication and argument 
@@ -37,16 +37,25 @@ class ChannelMappingList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                //'Auth/UserId',
-                //'Auth/UserPassword',
-                'Auth/UserToken',
+                'Auth/UserId',
+                'Auth/UserPassword',
                 'Auth/PropertyId',
             ),
             'opt' => array()
         ),
         'args' => array(
             'req' => array(),
-            'opt' => array()
+            'opt_min' => 1, //going to have to change opt keys bc Rooms nest TODO
+            'opt' => array(
+                'Room', // can be Room or Rooms
+                'Rooms'
+                //'PrivateRoom',
+                //'PMSRoomId',
+                //'Units',
+                //'Gender',
+                //'Occupancy',
+                //'Label'
+            )
         )
     );
 }

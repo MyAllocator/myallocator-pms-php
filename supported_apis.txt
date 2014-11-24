@@ -1,24 +1,56 @@
-Done ExpIssues ReqPerms
 
-[ ]     [ ]      [ ]  AssociateUserToPMS
-[ ]     [ ]      [ ]  BookingList
-[ ]     [x]      [ ]  BookingPaymentDownload [should not be able to use this call]
-[x]     [-]      [-]  ChannelList
-[ ]     [ ]      [ ]  ChannelMappingList
-[ ]     [ ]      [ ]  GetUpdateStatus
-[x]     [-]      [-]  HelloWorld
-[x]     [-]      [-]  HelloUser
-[x]     [-]      [-]  HelloVender
-[x]     [-]      [-]  HelloUserVendor
-[x]     [-]      [x]  PropertyCreate
-[x]     [-]      [-]  PropertyList
-[ ]     [ ]      [x]  PropertyModify
-[ ]     [ ]      [ ]  RoomAvailabilityList
-[x]     [-]      [-]  RoomList
-[ ]     [x]      [ ]  SetAllocation
-[ ]     [ ]      [ ]  SetRoomTypes [pending server side changes]
-[x]     [-]      [x]  UserCreate
-[x]     [-]      [x]  UserExists
-[x]     [-]      [x]  UserModify
-[ ]     [ ]      [ ]  UserPasswordRecover
-[x]     [-]      [-]  VendorSet
+Api                     Status  RPerms  Notes
+---                     ------  ------  -----
+
+AssociateUserToPMS      done
+
+BookingList             block   false   - shitty response structure
+                                        - modification param typos
+                                        - modification params not working
+                                        - not clear must use start and end date (add to ui)
+BookingPaymentDownload  done    false
+
+ChannelList             done    false
+ChannelMappingList      done    false 
+
+GetUpdateStatus         done    false   - response has invalid json
+
+HelloWorld              done    false
+HelloUser               done    false
+HelloVender             done    false
+HelloUserVendor         done    false
+
+PropertyCreate          done    true
+PropertyModify          todo    true    - wait perms to test
+PropertyList            done    false
+
+RoomCreate              done    false   - test multiple inserts at one tiem (Room vs Rooms)
+RoomUpdate              done    false
+                                        - test multiple updates at one time (Room vs Rooms)
+RoomRemove              done    false
+RoomList                done    false   - response bad format
+RoomAvailabilityList    done    false   - server not enforcing date range <= 31
+
+SetAllocation           todo    false
+
+UserCreate              done    true
+UserExists              done    true
+UserModify              done    true
+UserLogin               todo    true    - experimental (todo?)
+UserPasswordRecover     todo    true    - experimental (todo?)
+
+VendorSet               done    false
+
+
+-----------------------------------------------------
+
+Other Tasks
+-------------------
+1. property key vs user/pw
+2. need access to vendor apis for testing
+
+Other Tasks (Me)
+----------------
+1. configuration file
+    A. run basic local api param validation
+2. ask brian about objects (should use and extend to user or keep as arrays?)

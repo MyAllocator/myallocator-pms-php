@@ -25,8 +25,6 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Util\Common;
 
 class HelloWorld extends Api
 {
@@ -46,27 +44,4 @@ class HelloWorld extends Api
             'opt' => array()
         )
     );
-
-    /**
-     * Say Hello! (No authentication required)
-     *
-     * @return string Server's response
-     */
-    public function sayHello($params = null)
-    {
-        // Ensure this api is currently enabled/supported
-        $this->assertEnabled();
-
-        // Validate and sanitize parameters (No auth required)
-        $params = $this->validateApiParameters($this->keys, $params);
-
-        // Perform request
-        $requestor = new Requestor();
-        $url = Common::get_class_name(get_class());
-        $response = $requestor->request('post', $url, $params);
-
-        // Return result
-        $this->lastApiResponse = $response;
-        return $response;
-    }
 }

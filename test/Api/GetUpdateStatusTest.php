@@ -1,10 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\VendorSet;
+use MyAllocator\phpsdk\Api\GetUpdateStatus;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class VendorSetTest extends PHPUnit_Framework_TestCase
+class GetUpdateStatusTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,15 +13,18 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new VendorSet();
-        $this->assertEquals('MyAllocator\phpsdk\Api\VendorSet', get_class($obj));
+        $obj = new GetUpdateStatus();
+        $this->assertEquals('MyAllocator\phpsdk\Api\GetUpdateStatus', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword'
+            'vendorPassword',
+            'userId',
+            'userPassword',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -39,19 +43,16 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new VendorSet($fxt);
+        $obj = new GetUpdateStatus($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No password should fail
+        // No required parameters should throw exception
         $caught = false;
         try {
-            $rsp = $obj->callApiWithParams(array(
-                'Callback/URL' => 'http://www.example.com'
-            ));
-            var_dump($rsp);
+            $rsp = $obj->callApi();
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -61,13 +62,12 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Successful call
+        // Invalid update id should fail
         $rsp = $obj->callApiWithParams(array(
-            'Callback/URL' => 'http://www.example.com',
-            'Callback/Password' => 'password'
+            'UpdateId' => '123'
         ));
-
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Errors']));
+        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
     }
 }

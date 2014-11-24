@@ -25,9 +25,6 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiException;
 
 class UserCreate extends Api
 {
@@ -65,31 +62,4 @@ class UserCreate extends Api
      * @var boolean Whether or not the API is currently enabled/supported.
      */
     protected $enabled = false;
-
-    /**
-     * Create a new MA user under a vendor or user account.
-     *
-     * NOTE: This API requires special vendor permissions. Please contact
-     * support@myallocator.com to learn how to get access. Once you have
-     * access, modify $enabled above to 'true'.
-     *
-     * @return string Server's response
-     */
-    public function create($params = null)
-    {
-        // Ensure this api is currently enabled/supported
-        $this->assertEnabled();
-
-        // Validate and sanitize parameters
-        $params = $this->validateApiParameters($this->keys, $params);
-
-        // Perform request
-        $requestor = new Requestor();
-        $url = Common::get_class_name(get_class());
-        $response = $requestor->request('post', $url, $params);
-
-        // Return result
-        $this->lastApiResponse = $response;
-        return $response;
-    }
 }

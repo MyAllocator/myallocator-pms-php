@@ -35,7 +35,7 @@ class UserModifyTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testModify(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
@@ -50,7 +50,7 @@ class UserModifyTest extends PHPUnit_Framework_TestCase
         // No user id should fail
         $caught = false;
         try {
-            $rsp = $obj->create(array(
+            $rsp = $obj->callApiWithParams(array(
                 'UserPassword' => 'phpsdkpassword',
                 'Email' => 'phpsdkuser@phpsdk.com',
                 'CustomerEmail' => 'phpsdkcustomer@phpsdk.com'
@@ -68,7 +68,7 @@ class UserModifyTest extends PHPUnit_Framework_TestCase
          * Successful calls require special vendor permissions.
 
         // Successful call without optional parameters
-        $rsp = $obj->create(array(
+        $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
             'UserPassword' => 'password',
             'Email' => 'phpsdkuser@phpsdk.com',
@@ -81,7 +81,7 @@ class UserModifyTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($rsp['Success'][0], 'true');
 
         // Successful call with optional parameters
-        $rsp = $obj->modify(array(
+        $rsp = $obj->callApiWithParams(array(
             //'UserId' => 'phpsdkuser',
             'CustomerFirstName' => 'Nate'
         ));

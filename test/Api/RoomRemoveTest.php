@@ -1,10 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\VendorSet;
+use MyAllocator\phpsdk\Api\RoomRemove;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
  
-class VendorSetTest extends PHPUnit_Framework_TestCase
+class RoomRemoveTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,15 +12,18 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new VendorSet();
-        $this->assertEquals('MyAllocator\phpsdk\Api\VendorSet', get_class($obj));
+        $obj = new RoomRemove();
+        $this->assertEquals('MyAllocator\phpsdk\Api\RoomRemove', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword'
+            'vendorPassword',
+            'userId',
+            'userPassword',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -39,19 +42,16 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new VendorSet($fxt);
+        $obj = new RoomRemove($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No password should fail
+        // No optional args should fail (at least 1 required)
         $caught = false;
         try {
-            $rsp = $obj->callApiWithParams(array(
-                'Callback/URL' => 'http://www.example.com'
-            ));
-            var_dump($rsp);
+            $rsp = $obj->callApiWithParams(array());
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -61,13 +61,35 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'Callback/URL' => 'http://www.example.com',
-            'Callback/Password' => 'password'
-        ));
+        // Remove single room type 
+        $data = array(
+            'Room' => array(
+                'RoomId' => '22904'
+            )
+        );
+        $rsp = $obj->callApiWithParams($data);
 
+        print_r($rsp);
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'], 'true');
+
+/*
+        // Remove multiple room types
+        $data = array(
+            'Rooms' => array(
+                array(
+                    'RoomId' => '22903'
+                ),
+                array(
+                    'RoomId' => '22902'
+                )
+            )
+        );
+        $rsp = $obj->callApiWithParams($data);
+
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Success']));
+        $this->assertEquals($rsp['Success'], 'true');
+*/
     }
 }

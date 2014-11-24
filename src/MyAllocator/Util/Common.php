@@ -71,6 +71,7 @@ abstract class Common
         $auth->vendorPassword = isset($vendorPassword) ? $vendorPassword : null;
         $auth->userId = isset($userId) ? $userId: null;
         $auth->userPassword = isset($userPassword) ? $userPassword : null;
+        $auth->userToken = isset($userToken) ? $userToken : null;
         $auth->propertyId = isset($propertyId) ? $propertyId : null;
         $auth->PMSPropertyId = isset($PMSPropertyId) ? $PMSPropertyId : null;
         $auth->debug = $debug;

@@ -22,8 +22,9 @@ class RoomListTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            //'userId',
+            //'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -37,14 +38,20 @@ class RoomListTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testGet(array $fxt)
+    public function testCallApi(array $fxt)
     {
+        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
         $obj = new RoomList($fxt);
-        $rsp = $obj->get();
+
+        if (!$obj->isEnabled()) {
+            $this->markTestSkipped('API is disabled!');
+        }
+
+        $rsp = $obj->callApi();
         print_r($rsp);
         $this->assertTrue(isset($rsp['RoomTypes']));
 

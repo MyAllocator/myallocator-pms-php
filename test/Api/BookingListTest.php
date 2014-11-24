@@ -1,10 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\PropertyCreate;
+use MyAllocator\phpsdk\Api\BookingList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class PropertyCreateTest extends PHPUnit_Framework_TestCase
+class BookingListTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,8 +13,8 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyCreate();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyCreate', get_class($obj));
+        $obj = new BookingList();
+        $this->assertEquals('MyAllocator\phpsdk\Api\BookingList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -22,7 +23,8 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
             'vendorId',
             'vendorPassword',
             'userId',
-            'userPassword'
+            'userPassword',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -41,23 +43,16 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyCreate($fxt);
+        $obj = new BookingList($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No user id / password should fail
+        // No optional parameters should throw exception
         $caught = false;
         try {
-            $rsp = $obj->callApiWithParams(array(
-                'PropertyName' => 'PHP SDK Hotel A',
-                'ExpiryDate' => '2020-01-01',
-                'Currency' => 'USD',
-                'Country' => 'US',
-                'Breakfast' => 'EX'
-            ));
-            var_dump($rsp);
+            $rsp = $obj->callApi();
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -67,24 +62,30 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        /*
-         * Successful calls require special vendor permissions.
-
-        // Successful call
+        // Arrival parameters
         $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdk_property_A',
-            'UserPassword' => 'password', // update to real password
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2020-01-01',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
+            'ArrivalStartDate' => '2014-12-01',
+            'ArrivalEndDate' => '2014-12-05'
         ));
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Bookings']));
 
-        var_dump($rsp);
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'][0], 'true');
+/*
+        // Modification parameters
+        $rsp = $obj->get(array(
+            'ModifcationStartDate' => '2014-12-01',
+            'ModifcationEndDate' => '2014-12-05'
+        ));
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Bookings']));
+*/
 
-        */
+        // Creation parameters
+        $rsp = $obj->callApiWithParams(array(
+            'CreationStartDate' => '2014-11-01',
+            'CreationEndDate' => '2014-11-30'
+        ));
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Bookings']));
     }
 }

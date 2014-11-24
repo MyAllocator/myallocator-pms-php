@@ -1,10 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\SetRoomTypes;
+use MyAllocator\phpsdk\Api\RoomUpdate;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
  
-class SetRoomTypesTest extends PHPUnit_Framework_TestCase
+class RoomUpdateTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,8 +12,8 @@ class SetRoomTypesTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new SetRoomTypes();
-        $this->assertEquals('MyAllocator\phpsdk\Api\SetRoomTypes', get_class($obj));
+        $obj = new RoomUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\Api\RoomUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -36,13 +36,13 @@ class SetRoomTypesTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testCreateRooms(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new SetRoomTypes($fxt);
+        $obj = new RoomUpdate($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
@@ -51,7 +51,7 @@ class SetRoomTypesTest extends PHPUnit_Framework_TestCase
         // No optional args should fail (at least 1 required)
         $caught = false;
         try {
-            $rsp = $obj->createRooms(array());
+            $rsp = $obj->callApiWithParams(array());
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -61,49 +61,50 @@ class SetRoomTypesTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Create single room type 
+        // Update single room type 
         $data = array(
-            'Rooms' => array(
-                array(
-                    'Label' => 'King',
-                    'Units' => '10',
-                    'Occupancy' => '2',
-                    'Gender' => 'MI',
-                    'PrivateRoom' => 'false'
-                )
+            'Room' => array(
+                'RoomId' => '22797',
+                'Units' => '10',
+                'PrivateRoom' => 'true',
+                'PMSRoomId' => 200,
+                'Gender' => 'MA',
+                'Occupancy' => '2'
             )
         );
-        $rsp = $obj->createRooms($data);
+        $rsp = $obj->callApiWithParams($data);
 
         print_r($rsp);
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['RoomTypeIds']));
 
-        // Create single room type 
+/*
+        // Update multiple room type 
         $data = array(
             'Rooms' => array(
                 array(
-                    'Label' => 'Queen',
-                    'Units' => '10',
-                    'Occupancy' => '2',
+                    'RoomId' => '22797',
+                    'Units' => '5',
+                    'PrivateRoom' => 'false',
+                    'PMSRoomId' => 200,
                     'Gender' => 'MI',
-                    'PrivateRoom' => 'false'
+                    'Occupancy' => '5'
                 ),
                 array(
-                    'Label' => 'Twin',
-                    'Units' => '10',
-                    'Occupancy' => '2',
+                    'RoomId' => '22905',
+                    'Units' => '5',
+                    'PrivateRoom' => 'false',
+                    'PMSRoomId' => 201,
                     'Gender' => 'MI',
-                    'PrivateRoom' => 'false'
+                    'Occupancy' => '5'
                 )
             )
         );
-        $rsp = $obj->createRooms($data);
+        $rsp = $obj->callApiWithParams($data);
 
         print_r($rsp);
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['RoomTypeIds']));
+*/
     }
 }

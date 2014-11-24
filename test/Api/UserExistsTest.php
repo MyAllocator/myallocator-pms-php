@@ -33,7 +33,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testGet(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
@@ -48,7 +48,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
         // Exists by email (Omitting required UserId parameter)
         $caught = false;
         try {
-            $rsp = $obj->get(array(
+            $rsp = $obj->callApiWithParams(array(
                 'Email' => 'phpsdkuser@phpsdk.com'
             ));
         } catch (Exception $e) {
@@ -64,7 +64,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
          * Successful calls require special vendor permissions.
          
         // Exists by id
-        $rsp = $obj->get(array(
+        $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser'
         ));
         var_dump($rsp);
@@ -72,7 +72,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($rsp['UserIdExists']));
 
         // Exists by id and email
-        $rsp = $obj->get(array(
+        $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
             'Email' => 'phpsdkuser@phpsdk.com'
         ));

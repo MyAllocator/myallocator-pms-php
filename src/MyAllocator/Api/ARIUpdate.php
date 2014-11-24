@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class ChannelMappingList extends Api
+class ARIUpdate extends Api
 {
     /**
      * @var array Array of required and optional authentication and argument 
@@ -45,7 +45,9 @@ class ChannelMappingList extends Api
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(),
+            'req' => array(,
+                'Updates'
+            ),
             'opt' => array()
         )
     );

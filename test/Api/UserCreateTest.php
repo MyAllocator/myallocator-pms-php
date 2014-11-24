@@ -33,7 +33,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testCreate(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
@@ -48,7 +48,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
         // No user id should fail
         $caught = false;
         try {
-            $rsp = $obj->create(array(
+            $rsp = $obj->callApiWithParams(array(
                 'UserPassword' => 'phpsdkpassword',
                 'Email' => 'phpsdkuser@phpsdk.com',
                 'CustomerEmail' => 'phpsdkcustomer@phpsdk.com'
@@ -66,7 +66,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
          * Successful calls require special vendor permissions.
 
         // Successful call without optional parameters
-        $rsp = $obj->create(array(
+        $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
             'UserPassword' => 'password',
             'Email' => 'phpsdkuser@phpsdk.com',
@@ -79,7 +79,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($rsp['Success'][0], 'true');
 
         // Successful call with optional parameters
-        $rsp = $obj->create(array(
+        $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser2',
             'UserPassword' => 'password',
             'Email' => 'phpsdkuser2@phpsdk.com',

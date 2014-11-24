@@ -51,7 +51,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObject
      */
-    public function testGet(array $fxt)
+    public function testCallApi(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
@@ -59,7 +59,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
         // Get information about all properties associated with a user/vendor.
         $obj = new PropertyList($fxt);
-        $rsp = $obj->get();
+        $rsp = $obj->callApi();
         $this->assertTrue(isset($rsp['Properties']));
     }
 
@@ -68,7 +68,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
      * @group api
      * @dataProvider fixtureAuthCfgObjectProperty
      */
-    public function testGetProperty(array $fxt)
+    public function testCallApiProperty(array $fxt)
     {
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
@@ -76,7 +76,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
         // Get information about a specific property.
         $obj = new PropertyList($fxt);
-        $rsp = $obj->get();
+        $rsp = $obj->callApi();
         $this->assertTrue(isset($rsp['Properties']));
     }
 }
