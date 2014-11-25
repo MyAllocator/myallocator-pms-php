@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class AssociateUserToPMS extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'AssociateUserToPMS';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

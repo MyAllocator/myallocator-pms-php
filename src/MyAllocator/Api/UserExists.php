@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class UserExists extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'UserExists';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

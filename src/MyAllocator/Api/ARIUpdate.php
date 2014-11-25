@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class ARIUpdate extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'ARIUpdate';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */
@@ -45,7 +50,7 @@ class ARIUpdate extends Api
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(,
+            'req' => array(
                 'Updates'
             ),
             'opt' => array()

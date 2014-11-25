@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class RoomAvailabilityList extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'RoomAvailabilityList';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

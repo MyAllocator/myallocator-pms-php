@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class GetUpdateStatus extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'GetUpdateStatus';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

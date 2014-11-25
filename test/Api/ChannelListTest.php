@@ -49,6 +49,7 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
         $rsp = $obj->callApiWithParams(array(
             'ChannelList' => true
         ));
+        print_r($rsp);
         $this->assertTrue(isset($rsp['Channels']));
         $this->assertGreaterThan(20, count($rsp['Channels']));
     }

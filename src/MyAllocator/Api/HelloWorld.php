@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class HelloWorld extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'HelloWorld';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

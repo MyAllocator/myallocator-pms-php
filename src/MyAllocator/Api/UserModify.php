@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class UserModify extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'UserModify';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

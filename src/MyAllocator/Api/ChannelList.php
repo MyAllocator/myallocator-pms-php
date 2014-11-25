@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class ChannelList extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'ChannelList';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

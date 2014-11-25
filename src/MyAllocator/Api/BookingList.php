@@ -29,6 +29,11 @@ namespace MyAllocator\phpsdk\Api;
 class BookingList extends Api
 {
     /**
+     * @var string The api to call.
+     */
+    protected $id = 'BookingList';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

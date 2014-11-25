@@ -39,6 +39,11 @@ class Api
     protected $enabled = true;
 
     /**
+     * @var string The api to call.
+     */
+    protected $id = null;
+
+    /**
      * @var \MyAllocator\Object\Auth Authentication object for requester.
      */
     private $auth = null;
@@ -68,8 +73,14 @@ class Api
         )
     );
 
+    /**
+     * @var array MyAllocator API configuration.
+     */
+    private $config = null;
+
     public function __construct($cfg = null)
     {
+        // Load auth information if provided
         if (isset($cfg) && isset($cfg['auth'])) {
             if (is_array($cfg['auth'])) {
                 $auth = new Auth();
@@ -88,6 +99,9 @@ class Api
                 $this->auth = $cfg['auth'];
             }
         }
+
+        // Load API Configuration (Throws exception if cannot find config file)
+        $this->config = require(dirname(__FILE__) . '/../Config/Config.php');
     }
 
     /**
@@ -181,8 +195,8 @@ class Api
         $params = $this->validateApiParameters($this->keys, $params);
 
         // Perform request
-        $requestor = new Requestor();
-        $url = Common::get_class_name(get_class());
+        $requestor = new Requestor($this->config);
+        $url = $this->id;
         $response = $requestor->request('post', $url, $params);
 
         // Return result
@@ -214,6 +228,7 @@ class Api
      */
     private function validateApiParameters($keys = null, $params = null)
     {
+        $this->assertApiId();
         $this->assertKeysArrayValid($keys);
         $this->assertKeysHasMinOptParams($keys, $params);
 
@@ -298,6 +313,18 @@ class Api
         }
 
         return $params;
+    }
+
+    /*
+     * Assert the API id is set by the API class.
+     */
+    private function assertApiId()
+    {
+        // Assert minimum number of optional args exist if requirement exists
+        if (!$this->id) {
+            $msg = 'The API id has not be set in the API class.';
+            throw new ApiException($msg);
+        }
     }
 
     /*
