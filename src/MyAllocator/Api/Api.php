@@ -151,6 +151,21 @@ class Api
     }
 
     /**
+     * Set an API configuration key (overwrites keys in Config.php).
+     *
+     * @param key $key The configuration key. 
+     * @param value $value The configuration key value. 
+     */
+    public function setConfig($key, $value)
+    {
+        if (!$key || !$value) {
+            return false;
+        }
+        $this->config[$key] = $value;
+        return true;
+    }
+
+    /**
      * Set the authentication object for the API.
      *
      * @param MyAllocator\phpsdk\Object\Auth API Authentication object.

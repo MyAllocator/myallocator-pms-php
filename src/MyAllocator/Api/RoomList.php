@@ -42,9 +42,9 @@ class RoomList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                //'Auth/UserId',
-                //'Auth/UserPassword',
-                'Auth/UserToken',
+                'Auth/UserId',
+                'Auth/UserPassword',
+                //'Auth/UserToken',
                 'Auth/PropertyId',
             ),
             'opt' => array()

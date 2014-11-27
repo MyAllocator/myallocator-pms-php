@@ -49,8 +49,13 @@ if (!function_exists('mb_detect_encoding')) {
   throw new Exception('MyAllocator needs the Multibyte String PHP extension.');
 }
 
-// Resources
-foreach (glob(dirname(__FILE__) . '/MyAllocator/Resource/*.php') as $file) {
+// Initial Dependencies
+require_once(dirname(__FILE__) . '/MyAllocator/MyAllocatorBaseClass.php');
+require_once(dirname(__FILE__) . '/MyAllocator/Exception/MaException.php');
+require_once(dirname(__FILE__) . '/MyAllocator/Api/Api.php');
+
+// Configuration
+foreach (glob(dirname(__FILE__) . '/MyAllocator/Config/*.php') as $file) {
     require_once($file);
 }
 

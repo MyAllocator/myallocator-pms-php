@@ -22,9 +22,9 @@ class RoomListTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
+            'userId',
+            'userPassword',
+            //'userToken',
             'propertyId'
         ));
         $data = array();
@@ -40,7 +40,6 @@ class RoomListTest extends PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
-        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
@@ -52,9 +51,6 @@ class RoomListTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        print_r($rsp);
         $this->assertTrue(isset($rsp['RoomTypes']));
-
-        // TODO add structure tests once JSON response fixed
     }
 }

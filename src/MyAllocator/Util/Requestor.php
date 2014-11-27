@@ -25,7 +25,9 @@
  */
 
 namespace MyAllocator\phpsdk\Util;
+use MyAllocator\phpsdk\MyAllocatorBaseClass;
 use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\Util\XmlTransformer;
 use MyAllocator\phpsdk\Exception\ApiException;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 use MyAllocator\phpsdk\Exception\ApiConnectionException;
@@ -35,7 +37,7 @@ use MyAllocator\phpsdk\Exception\InvalidRequestException;
  * The Requestor class is responsible for preparing and sending an API reqest,
  * as well as parsing and handling the response.
  */
-class Requestor
+class Requestor extends MyAllocatorBaseClass
 {
     /**
      * @var string The MyAllocator API base url.
@@ -52,15 +54,12 @@ class Requestor
      */
     private $lastApiResponse = null;
 
-    /**
-     * @var array MyAllocator API configuration.
-     */
-    private $config = null;
-
     public function __construct($cfg = null)
     {
+        parent::__construct();
         $this->config = $cfg;
-        print_r($this->config);
+        $this->debug_echo("\n\nConfiguration:\n");
+        $this->debug_print_r($this->config);
     }
 
     /**
@@ -89,11 +88,19 @@ class Requestor
 
         switch ($this->config['apiDataFormat']) {
             case 'json':
-                list($rbody, $rcode) = $this->prepareRequestJSON($method, $url, $params);
+                list($rbody, $rcode) = $this->prepareRequestJSON(
+                    $method, 
+                    $url, 
+                    $params
+                );
                 $resp = $this->interpretResponseJSON($rbody, $rcode);
                 break;
             case 'xml':
-                list($rbody, $rcode) = $this->prepareRequestXML($method, $url, $params);
+                list($rbody, $rcode, $headers) = $this->prepareRequestXML(
+                    $method, 
+                    $url, 
+                    $params
+                );
                 $resp = $this->interpretResponseXML($rbody, $rcode);
                 break;
             default:
@@ -107,18 +114,12 @@ class Requestor
     private function prepareRequestJSON($method, $url, $params)
     {
         $params = self::encodeObjects($params);
-        $absUrl = $this->apiUrl($url);
+        $absUrl = $this->apiUrl($url, 'json');
 
-        //$xml = Common::array2xml($params, $url);
-        //print $xml;
+        $this->debug_echo("\nRequest (Array):\n");
+        $this->debug_print_r($params); 
 
-        list($rbody, $rcode) = $this->curlRequestJSON(
-            $method,
-            $absUrl,
-            $params
-        );
-
-        return array($rbody, $rcode);
+        return $this->curlRequestJSON($method, $absUrl, $params);
     }
 
     private function curlRequestJSON($method, $absUrl, $params)
@@ -153,9 +154,6 @@ class Requestor
         $opts[CURLOPT_TIMEOUT] = 60;
         $opts[CURLOPT_HEADER] = false;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
-
-        //var_dump($absUrl);
-        //var_dump($opts[CURLOPT_POSTFIELDS]);
 
         curl_setopt_array($curl, $opts);
         $rbody = curl_exec($curl);
@@ -202,46 +200,39 @@ class Requestor
     private function prepareRequestXML($method, $url, $params)
     {
         $params = self::encodeObjects($params);
-        $absUrl = $this->apiUrl($url);
+        $absUrl = $this->apiUrl($url, 'xml');
 
-        list($rbody, $rcode) = $this->curlRequestXML(
-            $method,
-            $absUrl,
-            $params
-        );
+        $this->debug_echo("\nRequest (Array):\n");
+        $this->debug_print_r($params); 
 
-        return array($rbody, $rcode);
+        $dataTransformator = new XmlTransformer();
+        $domDocument = $dataTransformator->arrayToXml($params, $url);
+        $xml = $domDocument->saveXML();
+        $this->debug_echo("\nRequest (XML):\n$xml");
+
+        return $this->curlRequestXML($method, $absUrl, $xml);
     }
 
-    private function curlRequestXML($method, $absUrl, $params)
+    private function curlRequestXML($method, $absUrl, $xml)
     {
         $opts = array();
         $curl = curl_init();
 
         if ($method == 'post') {
-            try {
-                $encoded = json_encode($params);
-            } catch (Exception $e) {
-                $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
-                throw new ApiException($msg, $rcode, $rbody);
-            }
             $opts[CURLOPT_POST] = 1;
-            //$opts[CURLOPT_POSTFIELDS] = 'json=' . htmlspecialchars($encoded);
-            $opts[CURLOPT_POSTFIELDS] = array('json' => $encoded);
+            $opts[CURLOPT_POSTFIELDS] = 'xmlRequestString='.urlencode($xml);
         } else {
             throw new ApiException('Unsupported method '.$method);
         }
 
         $absUrl = self::utf8($absUrl);
         $opts[CURLOPT_URL] = $absUrl;
+        $opts[CURLOPT_HTTPHEADER] = array("Expect:");
         $opts[CURLOPT_RETURNTRANSFER] = true;
         $opts[CURLOPT_CONNECTTIMEOUT] = 30;
         $opts[CURLOPT_TIMEOUT] = 60;
         $opts[CURLOPT_HEADER] = false;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
-
-        //var_dump($absUrl);
-        //var_dump($opts[CURLOPT_POSTFIELDS]);
 
         curl_setopt_array($curl, $opts);
         $rbody = curl_exec($curl);
@@ -251,32 +242,33 @@ class Requestor
             $message = curl_error($curl);
             curl_close($curl);
             $this->handleCurlError($errno, $message);
-        } else if (!preg_match("/^[\s\n\r]*\{.*\}[\s\n\r]*$/s", $rbody))  {
-            $rbody = array(
-                'Errors' => array(array(
-                    'ErrorId' => 1,
-                    'ErrorMsg' => 'Invalid JSON Response (server error)',
-                    'ErrorDetail' => $rbody
-                ))
-            ); 
         }
 
         $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $headers = null;
         curl_close($curl);
-        $response = array($rbody, $rcode);
+
+        $response = array($rbody, $rcode, $headers);
         $this->lastApiResponse = $response;
         return $response;
     }
 
     private function interpretResponseXML($rbody, $rcode)
     {
-        try {
-            $resp = json_decode($rbody, TRUE); 
-        } catch (Exception $e) {
-            $msg = 'Invalid response body from API: ' . $rbody
-                 . '(HTTP response code was ' . $rcode . ')';
-            throw new ApiException($msg, $rcode, $rbody);
+        $this->debug_echo("\n\nResponse (XML):\n$rbody");
+        $dataTransformator = new XmlTransformer();
+        $resp = $dataTransformator->xmlToArray($rbody);
+        if (!$resp) {
+            $resp = array(
+                'Errors' => array(array(
+                    'ErrorId' => 1,
+                    'ErrorMsg' => 'Invalid XML Response (server error)',
+                    'ErrorDetail' => $rbody
+                ))
+            ); 
         }
+        $this->debug_echo("\n\nResponse (Array):\n"); 
+        $this->debug_print_r($resp); 
 
         if ($rcode < 200 || $rcode >= 300) {
             $this->handleHttpError($rbody, $rcode, $resp);
@@ -323,15 +315,16 @@ class Requestor
         }
     }
 
-    private function apiUrl($url='')
+    private function apiUrl($url = '', $format = 'json')
     {
         if (!$url) {
             return false;
         }
 
-        $absUrl = sprintf('https://%s/pms/v%d/json/%s', 
+        $absUrl = sprintf('https://%s/pms/v%d/%s/%s', 
                           $this->apiBase,
                           $this->version,
+                          $format,
                           $url);
 
         return (string) $absUrl;

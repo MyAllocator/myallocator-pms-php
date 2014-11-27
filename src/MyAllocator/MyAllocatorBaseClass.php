@@ -24,43 +24,50 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Api;
+namespace MyAllocator\phpsdk;
 
-class RoomDelete extends Api
+class MyAllocatorBaseClass
 {
     /**
-     * @var string The api to call.
+     * @var array MyAllocator API configuration.
      */
-    protected $id = 'RoomDelete';
+    protected $config = null;
 
-    /**
-     * @var array Array of required and optional authentication and argument 
-     *      keys (string) for API method.
-     */
-    protected $keys = array(
-        'auth' => array(
-            'req' => array(
-                'Auth/VendorId',
-                'Auth/VendorPassword',
-                'Auth/UserId',
-                'Auth/UserPassword',
-                'Auth/PropertyId',
-            ),
-            'opt' => array()
-        ),
-        'args' => array(
-            'req' => array(
-                'Room' // can be Room or Rooms
-            ),
-            'opt_min' => 0, //going to have to change opt keys bc Rooms nest TODO
-            'opt' => array(
-                'PrivateRoom',
-                'PMSRoomId',
-                'Units',
-                'Gender',
-                'Occupancy',
-                'Label'
-            )
-        )
-    );
+    public function __construct($cfg = null)
+    {
+        // Load API Configuration (Throws exception if cannot find config file)
+        $this->config = require(dirname(__FILE__) . '/Config/Config.php');
+    }
+
+    protected function debug_echo($str)
+    {
+        return $this->debug('echo', $str);
+    }
+
+    protected function debug_var_dump($obj)
+    {
+        return $this->debug('var_dump', $obj);
+    }
+
+    protected function debug_print_r($array)
+    {
+        return $this->debug('print_r', $array);
+    }
+
+    protected function debug($type, $mixed)
+    {
+        if ($this->config && $this->config['debugsEnabled']) {
+            switch ($type) {
+                case 'echo':
+                    echo $mixed;
+                    break;
+                case 'print_r':
+                    print_r($mixed);
+                    break;
+                case 'var_dump':
+                    var_dump($mixed);
+                    break;
+            }
+        }
+    }
 }
