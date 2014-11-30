@@ -22,9 +22,9 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
+            'userId',
+            'userPassword',
+            //'userToken',
             'propertyId'
         ));
         $data = array();
@@ -61,12 +61,13 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
             'Updates' => array(
                 array(
                     'Channels' => array(
-                        'boo',
-                        'exp'
+                        'all'
+                        //'boo',
+                        //'exp'
                     ),
                     'Allocations' => array(
                         array(
-                            'RoomId' => '59',
+                            'RoomId' => '22797',
                             'StartDate' => '2014-12-01',
                             'EndDate' => '2014-12-20',
                             'Units' => '5',
@@ -77,7 +78,7 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
                             'Price-Weekend' => '100.00'
                         ),
                         array(
-                            'RoomId' => '59',
+                            'RoomId' => '22797',
                             'StartDate' => '2014-12-21',
                             'EndDate' => '2014-12-30',
                             'Units' => '5',

@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\GetUpdateStatus;
+use MyAllocator\phpsdk\Api\ARIUpdateStatus;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class GetUpdateStatusTest extends PHPUnit_Framework_TestCase
+class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +13,8 @@ class GetUpdateStatusTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new GetUpdateStatus();
-        $this->assertEquals('MyAllocator\phpsdk\Api\GetUpdateStatus', get_class($obj));
+        $obj = new ARIUpdateStatus();
+        $this->assertEquals('MyAllocator\phpsdk\Api\ARIUpdateStatus', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -43,7 +43,7 @@ class GetUpdateStatusTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new GetUpdateStatus($fxt);
+        $obj = new ARIUpdateStatus($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
@@ -63,8 +63,18 @@ class GetUpdateStatusTest extends PHPUnit_Framework_TestCase
         }
 
         // Invalid update id should fail
+/*
         $rsp = $obj->callApiWithParams(array(
             'UpdateId' => '123'
+        ));
+        print_r($rsp);
+        $this->assertTrue(isset($rsp['Errors']));
+        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+*/
+
+        // Successful call
+        $rsp = $obj->callApiWithParams(array(
+            'UpdateId' => '2866102'
         ));
         print_r($rsp);
         $this->assertTrue(isset($rsp['Errors']));

@@ -42,11 +42,15 @@ class UserExists extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
-            'opt' => array(
-                'Auth/UserId',
-                'Auth/UserPassword',
-            )
+            'opt' => array()
         ),
         'args' => array(
             'req' => array(

@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class GetUpdateStatus extends Api
+class ARIUpdateStatus extends Api
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'GetUpdateStatus';
+    protected $id = 'ARIUpdateStatus';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -42,9 +42,14 @@ class GetUpdateStatus extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/UserId',
-                'Auth/UserPassword',
                 'Auth/PropertyId',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array()
         ),

@@ -42,8 +42,13 @@ class PropertyList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/UserId',
-                'Auth/UserPassword'
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array(
                 'Auth/PropertyId' // Property id on MyAllocator

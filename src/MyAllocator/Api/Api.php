@@ -243,89 +243,24 @@ class Api
      */
     private function validateApiParameters($keys = null, $params = null)
     {
+        // Assert API has defined an id/endpoint
         $this->assertApiId();
+
+        // Assert API keys array structure is valid
         $this->assertKeysArrayValid($keys);
+
+        // Assert and set authentication parameters from Auth object
+        $params = $this->setAuthenticationParameters($keys, $params, 'req');
+        $params = $this->setAuthenticationParameters($keys, $params, 'opt');
+
+        // Assert required argument parameters exist (non-authentication)
+        $this->assertReqParameters($keys, $params);
+
+        // Assert keys array has minimum required optional parameters
         $this->assertKeysHasMinOptParams($keys, $params);
 
-        // Assert or set required authentication parameters
-        if (!empty($keys['auth']['req'])) {
-            if ($this->auth == null) {
-                $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
-                     . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                     . 'See https://TODO for details.';
-                throw new ApiAuthenticationException($msg);
-            }
-
-            // Set authentication parameters
-            foreach ($keys['auth']['req'] as $k) {
-                if (!isset($params[$k])) {
-                    $v = $this->auth->getAuthKeyVar($k);
-                    if (!$v) {
-                        $msg = 'Authentication key `'.$k.'` is required. '
-                             . 'HINT: Set your Auth data using "$API->'
-                             . 'setAuth(Auth $auth)" or $API\' constructor. '
-                             . 'See https://TODO for details.';
-                        throw new ApiAuthenticationException($msg);
-                    }
-                    $params[$k] = $v;
-                }
-            }
-        }
-
-        // Assert required argument parameters (non-authentication)
-        if (!empty($keys['args']['req'])) {
-            if (!$params) {
-                $msg = 'No parameters provided. (HINT: Reference the $keys '
-                     . 'property at the top of the API class file for '
-                     . 'required and optional parameters.)';
-                throw new ApiException($msg);
-            }
-
-            foreach ($keys['args']['req'] as $k) {
-                if (!isset($params[$k])) {
-                    $msg = 'Required parameter `'.$k.'` not provided. '
-                         . '(HINT: Reference the $keys '
-                         . 'property at the top of the API class file for '
-                         . 'required and optional parameters.)';
-                    throw new ApiException($msg);
-                }
-            }
-        }
-
-        // Include optional authentication parameters
-        if (!empty($keys['auth']['opt'])) {
-            if ($this->auth == null) {
-                $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
-                     . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
-                     . 'See https://TODO for details.';
-                throw new ApiAuthenticationException($msg);
-            }
-
-            // Set authentication parameters
-            foreach ($keys['auth']['opt'] as $k) {
-                if (!isset($params[$k])) {
-                    $v = $this->auth->getAuthKeyVar($k);
-                    if (!$v) {
-                        continue;
-                    }
-                    $params[$k] = $v;
-                }
-            }
-        }
-
-        // Remove extra parameters not defined in $keys
-        $valid_keys = array_merge(
-            $keys['auth']['req'],
-            $keys['auth']['opt'],
-            $keys['args']['req'],
-            $keys['args']['opt']
-        );
-
-        foreach ($params as $k => $v) {
-            if (!in_array($k, $valid_keys)) {
-                unset($params[$k]);
-            }
-        }
+        // Remove extra parameters not defined in keys array
+        $this->removeUnknownParameters($keys, $params);
 
         return $params;
     }
@@ -386,5 +321,131 @@ class Api
                  . 'required and optional parameters.)';
             throw new ApiException($msg);
         }
+    }
+
+    /*
+     * Validate and set required authentication parameters from Auth object.
+     */
+    private function setAuthenticationParameters(
+        $keys = null,
+        $params = null,
+        $type = 'req'
+    ) {
+        if (!empty($keys['auth'][$type])) {
+            if ($this->auth == null) {
+                $msg = 'No Auth object provided.  (HINT: Set your Auth data using '
+                     . '"$API->setAuth(Auth $auth)" or $API\' constructor.  '
+                     . 'See https://TODO for details.';
+                throw new ApiAuthenticationException($msg);
+            }
+
+            // Set authentication parameters
+            $auth_group = false;
+            foreach ($keys['auth'][$type] as $k) {
+                if (is_array($k) && !empty($k)) {
+                    /*
+                     * Different auth key groups may be required.
+                     * In these situations, must assert that each
+                     * key within an auth key group exists. Exits
+                     * once the first auth key group is validated.
+                     */
+
+                    if ($auth_group && $auth_group_validated) {
+                        /*
+                        * At this point an authentication group has been satisfied
+                        * and we don't need to process additional groups.
+                        */
+                        continue;
+                    }
+
+                    $auth_group = true;
+                    $auth_group_validated = true;
+                    foreach ($k as $g) {
+                        if (!isset($params[$g])) {
+                            $v = $this->auth->getAuthKeyVar($g);
+                            if (!$v) {
+                                $auth_group_validated = false;
+                                break;
+                            }
+                            $params[$g] = $v;
+                        }
+                    }
+                } else {
+                    if (!isset($params[$k])) {
+                        $v = $this->auth->getAuthKeyVar($k);
+                        if (!$v) {
+                            if ($type == 'req') {
+                                $msg = 'Authentication key `'.$k.'` is required. '
+                                     . 'HINT: Set your Auth data using "$API->'
+                                     . 'setAuth(Auth $auth)" or $API\' constructor. '
+                                     . 'See https://TODO for details.';
+                                throw new ApiAuthenticationException($msg);
+                            } else {
+                                // optional
+                                continue;
+                            }
+                        }
+                        $params[$k] = $v;
+                    }
+                }
+            }
+
+            // If keys configured with authentication groups, verify one was validated
+            if ($auth_group && !$auth_group_validated) {
+                $msg = 'A required authentication key group was not satisfied. '
+                     . '(HINT: Reference the $keys '
+                     . 'property at the top of the API class file for '
+                     . 'required and optional parameters.)';
+                throw new ApiAuthenticationException($msg);
+            }
+        }
+
+        return $params;
+    }
+
+    /*
+     * Validate required parameters for Api.
+     */
+    private function assertReqParameters($keys = null, $params = null, $type = 'req')
+    {
+        if (!empty($keys['args']['req'])) {
+            if (!$params) {
+                $msg = 'No parameters provided. (HINT: Reference the $keys '
+                     . 'property at the top of the API class file for '
+                     . 'required and optional parameters.)';
+                throw new ApiException($msg);
+            }
+
+            foreach ($keys['args']['req'] as $k) {
+                if (!isset($params[$k])) {
+                    $msg = 'Required parameter `'.$k.'` not provided. '
+                         . '(HINT: Reference the $keys '
+                         . 'property at the top of the API class file for '
+                         . 'required and optional parameters.)';
+                    throw new ApiException($msg);
+                }
+            }
+        }
+    }
+
+    /*
+     * Strip parameters not defined in API keys array.
+     */
+    private function removeUnknownParameters($keys = null, $params = null)
+    {
+        $valid_keys = array_merge(
+            $keys['auth']['req'],
+            $keys['auth']['opt'],
+            $keys['args']['req'],
+            $keys['args']['opt']
+        );
+
+        foreach ($params as $k => $v) {
+            if (!in_array($k, $valid_keys)) {
+                unset($params[$k]);
+            }
+        }
+
+        return $params;
     }
 }

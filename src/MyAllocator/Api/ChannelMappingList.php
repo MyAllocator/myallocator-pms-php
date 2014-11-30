@@ -42,10 +42,14 @@ class ChannelMappingList extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                //'Auth/UserId',
-                //'Auth/UserPassword',
-                'Auth/UserToken',
                 'Auth/PropertyId',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array()
         ),

@@ -42,10 +42,14 @@ class ARIUpdate extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                //'Auth/UserId',
-                //'Auth/UserPassword',
-                'Auth/UserToken',
                 'Auth/PropertyId',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array()
         ),
@@ -53,7 +57,10 @@ class ARIUpdate extends Api
             'req' => array(
                 'Updates'
             ),
-            'opt' => array()
+            'opt' => array(
+                'UpdatesId',
+                'Options'
+            )
         )
     );
 }

@@ -42,9 +42,14 @@ class BookingPaymentDownload extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/UserId',
-                'Auth/UserPassword',
                 'Auth/PropertyId',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array()
         ),
