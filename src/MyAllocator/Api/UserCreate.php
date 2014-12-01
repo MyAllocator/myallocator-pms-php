@@ -41,14 +41,7 @@ class UserCreate extends Api
         'auth' => array(
             'req' => array(
                 'Auth/VendorId',
-                'Auth/VendorPassword',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
+                'Auth/VendorPassword'
             ),
             'opt' => array()
         ),
@@ -66,9 +59,4 @@ class UserCreate extends Api
             )
         )
     );
-
-    /**
-     * @var boolean Whether or not the API is currently enabled/supported.
-     */
-    protected $enabled = false;
 }

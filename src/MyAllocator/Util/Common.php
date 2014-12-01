@@ -72,6 +72,7 @@ abstract class Common
         $auth->userId = isset($userId) ? $userId: null;
         $auth->userPassword = isset($userPassword) ? $userPassword : null;
         $auth->userToken = isset($userToken) ? $userToken : null;
+        $auth->PMSUserId = isset($PMSUserId) ? $PMSUserId : null;
         $auth->propertyId = isset($propertyId) ? $propertyId : null;
         $auth->PMSPropertyId = isset($PMSPropertyId) ? $PMSPropertyId : null;
         $auth->debug = $debug;

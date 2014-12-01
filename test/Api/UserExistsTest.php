@@ -50,7 +50,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             $rsp = $obj->callApiWithParams(array(
-                'Email' => 'phpsdkuser@phpsdk.com'
+                'CustomerEmail' => 'phpsdkuser@phpsdk.com'
             ));
         } catch (Exception $e) {
             $caught = true;
@@ -71,7 +71,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
         // Exists by id and email
         $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
-            'Email' => 'phpsdkuser@phpsdk.com'
+            'CustomerEmail' => 'phpsdkuser@phpsdk.com'
         ));
         $this->assertTrue(isset($rsp['EmailExists']));
         $this->assertTrue(isset($rsp['UserIdExists']));

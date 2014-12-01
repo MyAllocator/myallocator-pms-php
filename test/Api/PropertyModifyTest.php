@@ -21,9 +21,8 @@ class PropertyModifyTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            //'userToken'
+            'userToken',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -48,42 +47,16 @@ class PropertyModifyTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No user id / password should fail
-        $caught = false;
-        try {
-            $rsp = $obj->callApiWithParams(array(
-                'PropertyName' => 'PHP SDK Hotel B',
-                'ExpiryDate' => '2020-01-01',
-                'Currency' => 'USD',
-                'Country' => 'US',
-                'Breakfast' => 'EX'
-            ));
-        } catch (exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-        /*
-         * Successful calls require special vendor permissions.
-
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdk_property_A',
-            'UserPassword' => 'password', // update to real password
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2020-01-01',
+            'PropertyName' => 'PHP SDK Hotel AA',
+            'ExpiryDate' => '2015-01-20',
             'Currency' => 'USD',
             'Country' => 'US',
             'Breakfast' => 'EX'
         ));
 
         $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'][0], 'true');
-
-        */
+        $this->assertEquals($rsp['Success'], 'true');
     }
 }

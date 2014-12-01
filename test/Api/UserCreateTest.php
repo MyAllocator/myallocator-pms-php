@@ -62,9 +62,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        /*
-         * Successful calls require special vendor permissions.
-
+/*
         // Successful call without optional parameters
         $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
@@ -76,25 +74,23 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(isset($rsp['UserIdExists']));
         $this->assertEquals($rsp['UserIdExists'], 'false');
         $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'][0], 'true');
+        $this->assertEquals($rsp['Success'], 'true');
+*/
 
         // Successful call with optional parameters
         $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdkuser2',
+            'UserId' => 'phpsdkuser5',
             'UserPassword' => 'password',
-            'Email' => 'phpsdkuser2@phpsdk.com',
-            'CustomerEmail' => 'phpsdkuser2@phpsdk.com',
+            'Email' => 'phpsdkuser5@phpsdk.com',
+            'CustomerEmail' => 'phpsdkuser5@phpsdk.com',
             'CustomerFirstName' => 'Bob',
             'CustomerLastName' => 'Smith',
             'SendWelcome' => 0
         ));
 
-        print_r($rsp);
         $this->assertTrue(isset($rsp['UserIdExists']));
         $this->assertEquals($rsp['UserIdExists'], 'false');
         $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'][0], 'true');
-
-        */
+        $this->assertEquals($rsp['Success'], 'true');
     }
 }

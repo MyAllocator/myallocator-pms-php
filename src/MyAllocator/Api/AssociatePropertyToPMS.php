@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class PropertyCreate extends Api
+class AssociatePropertyToPMS extends Api
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'PropertyCreate';
+    protected $id = 'AssociatePropertyToPMS';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -42,6 +42,7 @@ class PropertyCreate extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
+                'Auth/PropertyId',
                 'UserCredentials' => array(
                     'Auth/UserId',
                     'Auth/UserPassword'
@@ -53,14 +54,9 @@ class PropertyCreate extends Api
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'PropertyName',
-                'ExpiryDate',
-                'Currency', // 3-letter ISO 4217 currency code
-                'Country' // 2-letter ISO 3166-1 alpha-2 country code
-            ),
+            'req' => array(),
             'opt' => array(
-                'Breakfast'
+                'PMSUserId'
             )
         )
     );

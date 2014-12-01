@@ -57,7 +57,7 @@ class UserExists extends Api
                 'UserId'
             ),
             'opt' => array(
-                'Email'
+                'CustomerEmail'
             )
         )
     );

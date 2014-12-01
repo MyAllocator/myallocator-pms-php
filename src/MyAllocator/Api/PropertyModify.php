@@ -42,6 +42,7 @@ class PropertyModify extends Api
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
+                'Auth/PropertyId',
                 'UserCredentials' => array(
                     'Auth/UserId',
                     'Auth/UserPassword'
@@ -53,22 +54,15 @@ class PropertyModify extends Api
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'UserId', // property username
-                'UserPassword', // property password
+            'req' => array(),
+            'opt_min' => 1,
+            'opt' => array(
                 'PropertyName',
                 'ExpiryDate',
                 'Currency', // 3-letter ISO 4217 currency code
-                'Country' // 2-letter ISO 3166-1 alpha-2 country code
-            ),
-            'opt' => array(
+                'Country', // 2-letter ISO 3166-1 alpha-2 country code
                 'Breakfast'
             )
         )
     );
-
-    /**
-     * @var boolean Whether or not the API is currently enabled/supported.
-     */
-    protected $enabled = false;
 }

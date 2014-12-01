@@ -22,9 +22,9 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            //'userToken',
+            //'userId',
+            //'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -63,7 +63,7 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
                     'Channels' => array(
                         'all'
                         //'boo',
-                        //'exp'
+                        //'loc'
                     ),
                     'Allocations' => array(
                         array(
@@ -73,8 +73,8 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
                             'Units' => '5',
                             'MinStay' => '1',
                             'MaxStay' => '3',
-                            'Price' => '80.00',
-                            'Price-Weekday' => '80.00',
+                            'Price' => '96.00',
+                            //'Price-Weekday' => '80.00',
                             'Price-Weekend' => '100.00'
                         ),
                         array(
@@ -84,8 +84,8 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
                             'Units' => '5',
                             'MinStay' => '1',
                             'MaxStay' => '3',
-                            'Price' => '150.00',
-                            'Price-Weekday' => '150.00',
+                            'Price' => '160.00',
+                            //'Price-Weekday' => '150.00',
                             'Price-Weekend' => '200.00'
                         )
                     )
@@ -169,7 +169,6 @@ class ARIUpdateTest extends PHPUnit_Framework_TestCase
         */
 
         $rsp = $obj->callApiWithParams($data);
-        print_r($rsp);
         $this->assertTrue(isset($rsp['RoomTypes']));
 
         // TODO add structure tests once JSON response fixed

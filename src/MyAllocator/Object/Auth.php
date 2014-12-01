@@ -50,6 +50,11 @@ class Auth
     public $userId = null;
 
     /**
+     * @var string The system user id.
+     */
+    public $PMSUserId = null;
+
+    /**
      * @var string The user password (Required without vendor credentials).
      */
     public $userPassword = null;
@@ -85,6 +90,9 @@ class Auth
                 break;
             case 'Auth/UserId':
                 return $this->userId;
+                break;
+            case 'PMSUserId':
+                return $this->PMSUserId;
                 break;
             case 'Auth/UserPassword':
                 return $this->userPassword;
