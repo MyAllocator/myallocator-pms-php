@@ -64,37 +64,33 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
 
         // Invalid booking id should fail
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62209320-93424',
+            'OrderId' => '4304-62209320-93420',
             'CreditCardPassword' => '!password1'
         ));
-        print_r($rsp);
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
-        $this->fail('weee');
 
         // Invalid booking id should fail
         $rsp = $obj->callApiWithParams(array(
-            'BookingId' => '99999999999999999',
+            'OrderId' => '99999999999999999',
             'CreditCardPassword' => '123'
         ));
-        print_r($rsp);
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
 
         // Valid booking id and invalid password should fail
         $rsp = $obj->callApiWithParams(array(
-            'BookingId' => '123',
+            'OrderId' => '123',
             'CreditCardPassword' => '123'
         ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
+        $this->assertTrue(isset($rsp['Errors']));
+        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
 
         // Valid booking id and valid password should succeed
         $rsp = $obj->callApiWithParams(array(
-            'BookingId' => '123',
-            'CreditCardPassword' => '123'
+            'OrderId' => '4304-62208897-71242',
+            'CreditCardPassword' => '!password1'
         ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['CreditCards']));
+        $this->assertTrue(isset($rsp['Payments']));
     }
 }

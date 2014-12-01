@@ -64,12 +64,11 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
         // Remove single room type 
         $data = array(
             'Room' => array(
-                'RoomId' => '22904'
+                'RoomId' => '23275'
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        print_r($rsp);
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'], 'true');
 
@@ -78,16 +77,15 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
         $data = array(
             'Rooms' => array(
                 array(
-                    'RoomId' => '22903'
+                    'RoomId' => '23276'
                 ),
                 array(
-                    'RoomId' => '22902'
+                    'RoomId' => '23277'
                 )
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        print_r($rsp);
         $this->assertTrue(isset($rsp['Success']));
         $this->assertEquals($rsp['Success'], 'true');
 */

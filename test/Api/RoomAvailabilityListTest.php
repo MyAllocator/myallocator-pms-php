@@ -63,8 +63,8 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApiWithParams(array(
-            'StartDate' => '2015-10-01',
-            'EndDate' => '2015-11-20',
+            'StartDate' => '2015-12-01',
+            'EndDate' => '2015-12-05',
         ));
         print_r($rsp);
         $this->assertTrue(isset($rsp['Rooms']));

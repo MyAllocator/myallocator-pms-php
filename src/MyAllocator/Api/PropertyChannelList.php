@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class UserPasswordRecover extends Api
+class PropertyChannelList extends Api
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'UserPasswordRecover';
+    protected $id = 'PropertyChannelList';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -40,9 +40,16 @@ class UserPasswordRecover extends Api
     protected $keys = array(
         'auth' => array(
             'req' => array(
-                'Auth/UserId',
-                'Auth/UserPassword',
-                //'Auth/UserToken'
+                'Auth/VendorId',
+                'Auth/VendorPassword',
+                'Auth/PropertyId',
+                'UserCredentials' => array(
+                    'Auth/UserId',
+                    'Auth/UserPassword'
+                ),
+                'UserToken' => array(
+                    'Auth/UserToken'
+                )
             ),
             'opt' => array()
         ),

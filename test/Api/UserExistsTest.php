@@ -20,7 +20,8 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword'
+            'vendorPassword',
+            'userToken'
         ));
         $data = array();
         $data[] = array($auth);
@@ -59,15 +60,11 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
         if (!$caught) {
             $this->fail('Should have thrown an exception');
         }
-
-        /*
-         * Successful calls require special vendor permissions.
          
         // Exists by id
         $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser'
         ));
-        var_dump($rsp);
         $this->assertTrue(isset($rsp['EmailExists']));
         $this->assertTrue(isset($rsp['UserIdExists']));
 
@@ -76,10 +73,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
             'UserId' => 'phpsdkuser',
             'Email' => 'phpsdkuser@phpsdk.com'
         ));
-        var_dump($rsp);
         $this->assertTrue(isset($rsp['EmailExists']));
         $this->assertTrue(isset($rsp['UserIdExists']));
-
-        */
     }
 }

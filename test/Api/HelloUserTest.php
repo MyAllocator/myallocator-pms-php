@@ -51,9 +51,12 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
         }
 
         // Auth invalid
-        $fxt['auth']->userId = '111';
-        $fxt['auth']->userPassword = '111';
-        $obj = new HelloUser($fxt);
+        $invalid_auth = new Auth();
+        $invalid_auth->userId = '111';
+        $invalid_auth->userPassword = '111';
+        $obj = new HelloUser(array(
+            'auth' => $invalid_auth
+        ));
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));

@@ -63,7 +63,7 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'Callback/URL' => 'http://www.example.com',
+            'Callback/URL' => 'http://www.fun.com',
             'Callback/Password' => 'password'
         ));
 

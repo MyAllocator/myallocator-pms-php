@@ -249,15 +249,15 @@ class Api
         // Assert API keys array structure is valid
         $this->assertKeysArrayValid($keys);
 
+        // Assert keys array has minimum required optional parameters
+        $this->assertKeysHasMinOptParams($keys, $params);
+
         // Assert and set authentication parameters from Auth object
         $params = $this->setAuthenticationParameters($keys, $params, 'req');
         $params = $this->setAuthenticationParameters($keys, $params, 'opt');
 
         // Assert required argument parameters exist (non-authentication)
         $this->assertReqParameters($keys, $params);
-
-        // Assert keys array has minimum required optional parameters
-        $this->assertKeysHasMinOptParams($keys, $params);
 
         // Remove extra parameters not defined in keys array
         $this->removeUnknownParameters($keys, $params);

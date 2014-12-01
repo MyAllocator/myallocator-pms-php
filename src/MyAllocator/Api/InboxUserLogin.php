@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class UserLogin extends Api
+class InboxUserLogin extends Api
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'UserLogin';
+    protected $id = 'InboxUserLogin';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -40,6 +40,8 @@ class UserLogin extends Api
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/VendorId',
+                'Auth/VendorPassword',
                 'UserCredentials' => array(
                     'Auth/UserId',
                     'Auth/UserPassword'

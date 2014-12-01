@@ -51,9 +51,12 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
         }
 
         // Invalid auth
-        $fxt['auth']->vendorId = '111';
-        $fxt['auth']->vendorPassword = '111';
-        $obj = new HelloVendor($fxt);
+        $invalid_auth = new Auth();
+        $invalid_auth->vendorId = '111';
+        $invalid_auth->vendorPassword = '111';
+        $obj = new HelloVendor(array(
+            'auth' => $invalid_auth
+        ));
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));

@@ -61,9 +61,4 @@ class UserExists extends Api
             )
         )
     );
-
-    /**
-     * @var boolean Whether or not the API is currently enabled/supported.
-     */
-    protected $enabled = false;
 }

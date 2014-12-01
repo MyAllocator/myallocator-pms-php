@@ -134,6 +134,8 @@ class Requestor extends MyAllocatorBaseClass
                 $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
                 throw new ApiException($msg, $rcode, $rbody);
             }
+            $this->debug_echo("\n\nRequest (JSON):\n");
+            $this->debug_print_r($encoded);
             $opts[CURLOPT_POST] = 1;
             //$opts[CURLOPT_POSTFIELDS] = 'json=' . htmlspecialchars($encoded);
             $opts[CURLOPT_POSTFIELDS] = array('json' => $encoded);
@@ -184,6 +186,8 @@ class Requestor extends MyAllocatorBaseClass
     {
         try {
             $resp = json_decode($rbody, TRUE); 
+            $this->debug_echo("\n\nResponse (JSON):\n");
+            $this->debug_print_r($rbody);
         } catch (Exception $e) {
             $msg = 'Invalid response body from API: ' . $rbody
                  . '(HTTP response code was ' . $rcode . ')';
