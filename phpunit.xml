@@ -10,17 +10,29 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="MyAllocator PHP SDK Object Test Suite">
-            <directory suffix=".php">./tests/Object/</directory>
+        <testsuite name="MyAllocator PHP SDK JSON Object Test Suite">
+            <directory suffix=".php">./tests/json/Object/</directory>
         </testsuite>
-        <testsuite name="MyAllocator PHP SDK API Test Suite">
-            <directory suffix=".php">./tests/Api/</directory>
+        <testsuite name="MyAllocator PHP SDK JSON API Test Suite">
+            <directory suffix=".php">./tests/json/Api/</directory>
         </testsuite>
-        <testsuite name="MyAllocator PHP SDK Exception Test Suite">
-            <directory suffix=".php">./tests/Exception/</directory>
+        <testsuite name="MyAllocator PHP SDK JSON Exception Test Suite">
+            <directory suffix=".php">./tests/json/Exception/</directory>
         </testsuite>
-        <testsuite name="MyAllocator PHP SDK Util Test Suite">
-            <directory suffix=".php">./tests/Util/</directory>
+        <testsuite name="MyAllocator PHP SDK JSON Util Test Suite">
+            <directory suffix=".php">./tests/json/Util/</directory>
+        </testsuite>
+        <testsuite name="MyAllocator PHP SDK XML Object Test Suite">
+            <directory suffix=".php">./tests/xml/Object/</directory>
+        </testsuite>
+        <testsuite name="MyAllocator PHP SDK XML API Test Suite">
+            <directory suffix=".php">./tests/xml/Api/</directory>
+        </testsuite>
+        <testsuite name="MyAllocator PHP SDK XML Exception Test Suite">
+            <directory suffix=".php">./tests/xml/Exception/</directory>
+        </testsuite>
+        <testsuite name="MyAllocator PHP SDK XML Util Test Suite">
+            <directory suffix=".php">./tests/xml/Util/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

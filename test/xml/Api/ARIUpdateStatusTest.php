@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\BookingPaymentDownload;
+use MyAllocator\phpsdk\Api\ARIUpdateStatus;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
+class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +13,8 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new BookingPaymentDownload();
-        $this->assertEquals('MyAllocator\phpsdk\Api\BookingPaymentDownload', get_class($obj));
+        $obj = new ARIUpdateStatus();
+        $this->assertEquals('MyAllocator\phpsdk\Api\ARIUpdateStatus', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -43,7 +43,7 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new BookingPaymentDownload($fxt);
+        $obj = new ARIUpdateStatus($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
@@ -62,35 +62,22 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Invalid booking id should fail
+        // Invalid update id should fail
+/*
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62209320-93420',
-            'CreditCardPassword' => '!password1'
+            'UpdateId' => '123'
         ));
+        print_r($rsp);
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+*/
 
-        // Invalid booking id should fail
+        // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '99999999999999999',
-            'CreditCardPassword' => '123'
+            'UpdateId' => '2866102'
         ));
+        print_r($rsp);
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
-
-        // Valid booking id and invalid password should fail
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '123',
-            'CreditCardPassword' => '123'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
-
-        // Valid booking id and valid password should succeed
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62208897-71242',
-            'CreditCardPassword' => '!password1'
-        ));
-        $this->assertTrue(isset($rsp['Payments']));
     }
 }

@@ -84,22 +84,24 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
 
         // Create single room type 
         $data = array(
-            'Rooms' => array(
-                array(
-                    'PMSRoomId' => '110',
-                    'Label' => 'Double4',
-                    'Units' => '10',
-                    'Occupancy' => '2',
-                    'Gender' => 'FE',
-                    'PrivateRoom' => 'false'
-                ),
-                array(
-                    'PMSRoomId' => '111',
-                    'Label' => 'Double5',
-                    'Units' => '10',
-                    'Occupancy' => '2',
-                    'Gender' => 'MI',
-                    'PrivateRoom' => 'false'
+            'CreateRooms' => array(
+                'RoomTypes' => array(
+                    array(
+                        'PMSRoomId' => '120',
+                        'Label' => 'Double4',
+                        'Units' => '10',
+                        'Occupancy' => '2',
+                        'Gender' => 'FE',
+                        'PrivateRoom' => 'false'
+                    ),
+                    array(
+                        'PMSRoomId' => '121',
+                        'Label' => 'Double5',
+                        'Units' => '10',
+                        'Occupancy' => '2',
+                        'Gender' => 'MI',
+                        'PrivateRoom' => 'false'
+                    )
                 )
             )
         );

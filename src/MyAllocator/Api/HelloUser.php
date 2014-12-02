@@ -40,6 +40,8 @@ class HelloUser extends Api
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/VendorId', 
+                'Auth/VendorPassword',
                 'Auth/UserId', 
                 'Auth/UserPassword'
             ),

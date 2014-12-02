@@ -59,6 +59,11 @@ class Api
     private $lastApiResponse = null;
 
     /**
+     * @var string A default element name to be used by XML requests.
+     */
+    protected $defaultElementNameXML = 'item';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */
@@ -211,6 +216,10 @@ class Api
 
         // Perform request
         $requestor = new Requestor($this->config);
+        // If xml, set default tag element name
+        if ($this->config['apiDataFormat'] == 'xml') {
+            $requestor->defaultElementNameXML = $this->defaultElementNameXML; 
+        }
         $url = $this->id;
         $response = $requestor->request('post', $url, $params);
 

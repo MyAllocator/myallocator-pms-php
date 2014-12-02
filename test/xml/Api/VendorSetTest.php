@@ -1,11 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\RoomAvailabilityList;
+use MyAllocator\phpsdk\Api\VendorSet;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
+class VendorSetTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,18 +12,15 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new RoomAvailabilityList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\RoomAvailabilityList', get_class($obj));
+        $obj = new VendorSet();
+        $this->assertEquals('MyAllocator\phpsdk\Api\VendorSet', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::get_auth_env(array(
             'vendorId',
-            'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
+            'vendorPassword'
         ));
         $data = array();
         $data[] = array($auth);
@@ -43,16 +39,19 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new RoomAvailabilityList($fxt);
+        $obj = new VendorSet($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No req args should fail
+        // No password should fail
         $caught = false;
         try {
-            $rsp = $obj->callApi();
+            $rsp = $obj->callApiWithParams(array(
+                'Callback/URL' => 'http://www.example.com'
+            ));
+            var_dump($rsp);
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -62,11 +61,13 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
+        // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'StartDate' => '2015-12-01',
-            'EndDate' => '2015-12-05',
+            'Callback/URL' => 'http://www.fun.com',
+            'Callback/Password' => 'password'
         ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Rooms']));
+
+        $this->assertTrue(isset($rsp['Success']));
+        $this->assertEquals($rsp['Success'], 'true');
     }
 }

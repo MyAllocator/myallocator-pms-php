@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\PropertyChannelList;
+use MyAllocator\phpsdk\Api\RoomList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class PropertyChannelListTest extends PHPUnit_Framework_TestCase
+class RoomListTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +13,8 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyChannelList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyChannelList', get_class($obj));
+        $obj = new RoomList();
+        $this->assertEquals('MyAllocator\phpsdk\Api\RoomList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -22,9 +22,9 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
         $auth = Common::get_auth_env(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
+            'userId',
+            'userPassword',
+            //'userToken',
             'propertyId'
         ));
         $data = array();
@@ -44,16 +44,13 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        print_r($fxt);
-
-        $obj = new PropertyChannelList($fxt);
+        $obj = new RoomList($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
         $rsp = $obj->callApi();
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Properties']));
+        $this->assertTrue(isset($rsp['RoomTypes']));
     }
 }

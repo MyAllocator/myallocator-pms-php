@@ -48,6 +48,12 @@ class Requestor extends MyAllocatorBaseClass
      * @var string The API version. 
      */
     public $version = '201408';
+    //public $version = '1';
+
+    /**
+     * @var string A default element name to be used by XML requests. Set by calling Api.
+     */
+    public $defaultElementNameXML = 'item';
 
     /**
      * @var mixed The response from the last request.
@@ -207,10 +213,14 @@ class Requestor extends MyAllocatorBaseClass
         $absUrl = $this->apiUrl($url, 'xml');
 
         $this->debug_echo("\nRequest (Array):\n");
-        $this->debug_print_r($params); 
+        $this->debug_print_r($params);
 
         $dataTransformator = new XmlTransformer();
-        $domDocument = $dataTransformator->arrayToXml($params, $url);
+        $domDocument = $dataTransformator->arrayToXml(
+            $params,
+            $url,
+            $this->defaultElementNameXML
+        );
         $xml = $domDocument->saveXML();
         $this->debug_echo("\nRequest (XML):\n$xml");
 

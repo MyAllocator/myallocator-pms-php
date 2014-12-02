@@ -40,6 +40,7 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
         $data[] = array(array(
             'auth' => $auth,
             'params' => array(
+                'Auth' => 'wee',
                 'hello' => 'world'
             )
         ));

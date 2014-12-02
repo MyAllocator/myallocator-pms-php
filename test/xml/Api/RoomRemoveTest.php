@@ -1,11 +1,10 @@
 <?php
  
-use MyAllocator\phpsdk\Api\BookingList;
+use MyAllocator\phpsdk\Api\RoomRemove;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class BookingListTest extends PHPUnit_Framework_TestCase
+class RoomRemoveTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +12,8 @@ class BookingListTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new BookingList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\BookingList', get_class($obj));
+        $obj = new RoomRemove();
+        $this->assertEquals('MyAllocator\phpsdk\Api\RoomRemove', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -43,16 +42,16 @@ class BookingListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new BookingList($fxt);
+        $obj = new RoomRemove($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional parameters should throw exception
+        // No optional args should fail (at least 1 required)
         $caught = false;
         try {
-            $rsp = $obj->callApi();
+            $rsp = $obj->callApiWithParams(array());
         } catch (exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -62,30 +61,31 @@ class BookingListTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Arrival parameters
-        $rsp = $obj->callApiWithParams(array(
-            'ArrivalStartDate' => '2014-12-01',
-            'ArrivalEndDate' => '2014-12-05'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
-
 /*
-        // Modification parameters
-        $rsp = $obj->get(array(
-            'ModifcationStartDate' => '2014-12-01',
-            'ModifcationEndDate' => '2014-12-05'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
+        // Remove single room type 
+        $data = array(
+            'Room' => array(
+                'RoomId' => '23275'
+            )
+        );
+        $rsp = $obj->callApiWithParams($data);
+
+        $this->assertTrue(isset($rsp['Success']));
+        $this->assertEquals($rsp['Success'], 'true');
 */
 
-        // Creation parameters
-        $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-11-01',
-            'CreationEndDate' => '2014-11-30'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
+        // Remove multiple room types
+        $data = array(
+            'RemoveRooms' => array(
+                'RoomTypeIds' => array(
+                    '23419',
+                    '23420'
+                )
+            )
+        );
+        $rsp = $obj->callApiWithParams($data);
+
+        $this->assertTrue(isset($rsp['Success']));
+        $this->assertEquals($rsp['Success'], 'true');
     }
 }

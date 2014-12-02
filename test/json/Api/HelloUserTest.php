@@ -20,6 +20,8 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::get_auth_env(array(
+            'vendorId', 
+            'vendorPassword',
             'userId', 
             'userPassword'
         ));
@@ -54,6 +56,8 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
         $invalid_auth = new Auth();
         $invalid_auth->userId = '111';
         $invalid_auth->userPassword = '111';
+        $invalid_auth->vendorId = '111';
+        $invalid_auth->vendorPassword = '111';
         $obj = new HelloUser(array(
             'auth' => $invalid_auth
         ));
@@ -62,7 +66,7 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertTrue(isset($rsp['Errors']));
         $this->assertTrue(isset($rsp['Errors'][0]['ErrorMsg']));
-        $this->assertEquals('Invalid user or user password', $rsp['Errors'][0]['ErrorMsg']);
+        $this->assertEquals('Invalid vendor or vendor password', $rsp['Errors']['Error']['ErrorMsg']);
 
         // Successful call
         $obj = new HelloUser($fxt);

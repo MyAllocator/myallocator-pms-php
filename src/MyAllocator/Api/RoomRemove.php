@@ -34,6 +34,11 @@ class RoomRemove extends Api
     protected $id = 'RoomRemove';
 
     /**
+     * @var string A default element name to be used by XML requests.
+     */
+    protected $defaultElementNameXML = 'RoomTypeId';
+
+    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */
