@@ -52,9 +52,9 @@ Please see TODO for up-to-date documentation.
 
 You can run phpunit tests from the top directory:
 
-    vender/bin/phpunit --debug tests
-    vender/bin/phpunit --debug tests/json
-    vender/bin/phpunit --debug tests/xml
+    vendor/bin/phpunit --debug tests
+    vendor/bin/phpunit --debug tests/json
+    vendor/bin/phpunit --debug tests/xml
 
 Note, there is a different set of tests for json and XML.
-The json tests use the 'array' dataFormat (refer to +src/MyAllocator/Config/Config.php+)
+The json tests use the 'array' dataFormat (refer to *src/MyAllocator/Config/Config.php*)
