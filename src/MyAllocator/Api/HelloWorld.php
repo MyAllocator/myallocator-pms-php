@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class HelloWorld extends Api
+class HelloWorld extends MaApi
 {
     /**
      * @var string The api to call.

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class BookingList extends Api
+class BookingList extends MaApi
 {
     /**
      * @var string The api to call.
@@ -55,7 +55,7 @@ class BookingList extends Api
         ),
         'args' => array(
             'req' => array(),
-            'opt_min' => 1,
+            'optMin' => 1,
             'opt' => array(
                 'ArrivalStartDate',
                 'ArrivalEndDate',

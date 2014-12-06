@@ -25,7 +25,7 @@
  */
 
 namespace MyAllocator\phpsdk\Util;
-use MyAllocator\phpsdk\MyAllocatorBaseClass;
+use MyAllocator\phpsdk\MaBaseClass;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Util\XmlTransformer;
 use MyAllocator\phpsdk\Exception\ApiException;
@@ -37,7 +37,7 @@ use MyAllocator\phpsdk\Exception\InvalidRequestException;
  * The Requestor class is responsible for preparing and sending an API reqest,
  * as well as parsing and handling the response.
  */
-class Requestor extends MyAllocatorBaseClass
+class Requestor extends MaBaseClass
 {
     /**
      * @var string The MyAllocator API base url.
@@ -48,84 +48,83 @@ class Requestor extends MyAllocatorBaseClass
      * @var string The API version. 
      */
     public $version = '201408';
-    //public $version = '1';
 
     /**
      * @var string A default element name to be used by XML requests. Set by calling Api.
      */
     public $defaultElementNameXML = 'item';
 
-    /**
-     * @var mixed The response from the last request.
-     */
-    private $lastApiResponse = null;
-
     public function __construct($cfg = null)
     {
-        parent::__construct();
-        $this->config = $cfg;
+        parent::__construct($cfg);
         $this->debug_echo("\n\nConfiguration:\n");
         $this->debug_print_r($this->config);
     }
 
     /**
-     * Get the last API response as array($rbody, $rcode).
+     * Send an API request, interpret and return the response.
      *
-     * @return array
-     */
-    public static function getLastApiResponse()
-    {
-        return $this->lastApiResponse;
-    }
-
-    /**
-     * @param string $method
-     * @param string $url
-     * @param array|null $params
+     * @param string $method HTTP method.
+     * @param string $url API endpoint.
+     * @param array|null $params API parameters.
      *
-     * @return array An array whose first element is the response and second
-     *    element is the API key used to make the request.
+     * @return mixed API response, code, headers (XML only).
      */
-    public function request($method, $url, $params=null)
+    public function request($method, $url, $params = null)
     {
         if (!$params) {
             $params = array();
+        } else {
+            $params = self::encodeObjects($params);
         }
 
-        switch ($this->config['apiDataFormat']) {
+        /*
+         * Send request based on dataFormat. Format 'array'
+         * is json_encoded and sent as json.
+         */
+        $this->debug_echo("\nRequest (".$this->config['dataFormat']."):\n");
+        $headers = null;
+        switch ($this->config['dataFormat']) {
+            case 'array':
+                $this->debug_print_r($params); 
+                try {
+                    $params = json_encode($params);
+                } catch (Exception $e) {
+                    $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
+                    throw new ApiException($msg, $rcode, $rbody);
+                }
+                $this->debug_echo("\nRequest (json):\n");
+                // Intentionally dropping into json case
             case 'json':
-                list($rbody, $rcode) = $this->prepareRequestJSON(
-                    $method, 
-                    $url, 
+                $this->debug_echo($params); 
+                $absUrl = $this->apiUrl($url, 'json');
+                list($rbody, $rcode) = $this->curlRequestJSON(
+                    $method,
+                    $url,
                     $params
                 );
                 $resp = $this->interpretResponseJSON($rbody, $rcode);
                 break;
             case 'xml':
-                list($rbody, $rcode, $headers) = $this->prepareRequestXML(
-                    $method, 
-                    $url, 
+                $this->debug_echo($params); 
+                $absUrl = $this->apiUrl($url, 'xml');
+                list($rbody, $rcode, $headers) = $this->curlRequestXML(
+                    $method,
+                    $url,
                     $params
                 );
                 $resp = $this->interpretResponseXML($rbody, $rcode);
                 break;
             default:
-                $msg = 'Invalid data format: '.$this->config['apiDataFormat'];
+                $msg = 'Invalid data format: '.$this->config['dataFormat'];
                 throw new ApiException($msg);
         }
 
-        return $resp;
-    }
-
-    private function prepareRequestJSON($method, $url, $params)
-    {
-        $params = self::encodeObjects($params);
-        $absUrl = $this->apiUrl($url, 'json');
-
-        $this->debug_echo("\nRequest (Array):\n");
-        $this->debug_print_r($params); 
-
-        return $this->curlRequestJSON($method, $absUrl, $params);
+        return array(
+            'code' => $rcode,
+            'headers' => $headers,
+            'response' => $resp
+        );
     }
 
     private function curlRequestJSON($method, $absUrl, $params)
@@ -134,23 +133,8 @@ class Requestor extends MyAllocatorBaseClass
         $curl = curl_init();
 
         if ($method == 'post') {
-            try {
-                $encoded = json_encode($params);
-            } catch (Exception $e) {
-                $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
-                throw new ApiException($msg, $rcode, $rbody);
-            }
-            $this->debug_echo("\n\nRequest (JSON):\n");
-            $this->debug_print_r($encoded);
             $opts[CURLOPT_POST] = 1;
-            //$opts[CURLOPT_POSTFIELDS] = 'json=' . htmlspecialchars($encoded);
             $opts[CURLOPT_POSTFIELDS] = array('json' => $encoded);
-        } else if ($method == 'get') {
-            $opts[CURLOPT_HTTPGET] = 1;
-            if (count($params) > 0) {
-                $encoded = self::encode($params);
-                $absUrl = $absUrl . '?' . $encoded;
-            }
         } else {
             throw new ApiException('Unsupported method '.$method);
         }
@@ -171,33 +155,31 @@ class Requestor extends MyAllocatorBaseClass
             $message = curl_error($curl);
             curl_close($curl);
             $this->handleCurlError($errno, $message);
-        } else if (!preg_match("/^[\s\n\r]*\{.*\}[\s\n\r]*$/s", $rbody))  {
-            $rbody = array(
-                'Errors' => array(array(
-                    'ErrorId' => 1,
-                    'ErrorMsg' => 'Invalid JSON Response (server error)',
-                    'ErrorDetail' => $rbody
-                ))
-            ); 
         }
 
         $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        $response = array($rbody, $rcode);
-        $this->lastApiResponse = $response;
-        return $response;
+        return array($rbody, $rcode);
     }
 
     private function interpretResponseJSON($rbody, $rcode)
     {
-        try {
-            $resp = json_decode($rbody, TRUE); 
-            $this->debug_echo("\n\nResponse (JSON):\n");
-            $this->debug_print_r($rbody);
-        } catch (Exception $e) {
-            $msg = 'Invalid response body from API: ' . $rbody
-                 . '(HTTP response code was ' . $rcode . ')';
-            throw new ApiException($msg, $rcode, $rbody);
+        $this->debug_echo("\n\nResponse (json):\n");
+        $this->debug_print_r($rbody);
+
+        // Convert response from json to array format if required
+        if ($this->config['dataFormat'] == 'array') {
+            try {
+                $resp = json_decode($rbody, TRUE); 
+            } catch (Exception $e) {
+                $msg = 'Invalid response body from API: ' . $rbody
+                     . '(HTTP response code was ' . $rcode . ')';
+                throw new ApiException($msg, $rcode, $rbody);
+            }
+            $this->debug_echo("\n\nResponse (array):\n"); 
+            $this->debug_print_r($resp); 
+        } else {
+            $resp = $rbody;
         }
 
         if ($rcode < 200 || $rcode >= 300) {
@@ -205,26 +187,6 @@ class Requestor extends MyAllocatorBaseClass
         }
 
         return $resp;
-    }
-
-    private function prepareRequestXML($method, $url, $params)
-    {
-        $params = self::encodeObjects($params);
-        $absUrl = $this->apiUrl($url, 'xml');
-
-        $this->debug_echo("\nRequest (Array):\n");
-        $this->debug_print_r($params);
-
-        $dataTransformator = new XmlTransformer();
-        $domDocument = $dataTransformator->arrayToXml(
-            $params,
-            $url,
-            $this->defaultElementNameXML
-        );
-        $xml = $domDocument->saveXML();
-        $this->debug_echo("\nRequest (XML):\n$xml");
-
-        return $this->curlRequestXML($method, $absUrl, $xml);
     }
 
     private function curlRequestXML($method, $absUrl, $xml)
@@ -263,32 +225,18 @@ class Requestor extends MyAllocatorBaseClass
         curl_close($curl);
 
         $response = array($rbody, $rcode, $headers);
-        $this->lastApiResponse = $response;
         return $response;
     }
 
     private function interpretResponseXML($rbody, $rcode)
     {
-        $this->debug_echo("\n\nResponse (XML):\n$rbody");
-        $dataTransformator = new XmlTransformer();
-        $resp = $dataTransformator->xmlToArray($rbody);
-        if (!$resp) {
-            $resp = array(
-                'Errors' => array(array(
-                    'ErrorId' => 1,
-                    'ErrorMsg' => 'Invalid XML Response (server error)',
-                    'ErrorDetail' => $rbody
-                ))
-            ); 
-        }
-        $this->debug_echo("\n\nResponse (Array):\n"); 
-        $this->debug_print_r($resp); 
+        $this->debug_echo("\n\nResponse (xml):\n$rbody");
 
         if ($rcode < 200 || $rcode >= 300) {
-            $this->handleHttpError($rbody, $rcode, $resp);
+            $this->handleHttpError($rbody, $rcode);
         }
 
-        return $resp;
+        return $rbody;
     }
 
     private function handleCurlError($errno, $message)
@@ -311,14 +259,9 @@ class Requestor extends MyAllocatorBaseClass
         throw new ApiConnectionException($msg);
     }
 
-    private function handleHttpError($rbody, $rcode, $resp)
+    private function handleHttpError($rbody, $rcode, $resp = null)
     {
-        if (!is_array($resp) || !isset($resp['Errors'])) {
-            $msg = 'Invalid response object from API: ' . $rbody
-                 . '(HTTP response code was ' . $rcode . ')';
-            throw new ApiException($msg, $rcode, $rbody, $resp);
-        }
-
+        $msg = 'HTTP API Error (HTTP response code was ' . $rcode . ')';
         switch ($rcode) {
             case 404:
                 throw new InvalidRequestException($msg, $rcode, $rbody, $resp);
@@ -346,8 +289,9 @@ class Requestor extends MyAllocatorBaseClass
 
     public static function utf8($value)
     {
-        if (is_string($value)
-                && mb_detect_encoding($value, 'UTF-8', TRUE) != 'UTF-8') {
+        if (is_string($value) &&
+            mb_detect_encoding($value, 'UTF-8', TRUE) != 'UTF-8'
+        ) {
             return utf8_encode($value);
         } else {
             return $value;
@@ -356,18 +300,21 @@ class Requestor extends MyAllocatorBaseClass
 
     public static function encode($arr, $prefix=null)
     {
-        if (!is_array($arr))
+        if (!is_array($arr)) {
             return $arr;
+        }
 
         $r = array();
         foreach ($arr as $k => $v) {
-            if (is_null($v))
+            if (is_null($v)) {
                 continue;
+            }
 
-            if ($prefix && $k && !is_int($k))
+            if ($prefix && $k && !is_int($k)) {
                 $k = $prefix . '[' . $k . ']';
-            else if ($prefix)
+            } else if ($prefix) {
                 $k = $prefix . '[]';
+            }
 
             if (is_array($v)) {
                 $r[] = self::encode($v, $k, true);
@@ -382,7 +329,7 @@ class Requestor extends MyAllocatorBaseClass
     private static function encodeObjects($d)
     {
         if ($d instanceof Api) {
-            return self::utf8(Common::get_class_name(get_class($d)));
+            return self::utf8(Common::getClassName(get_class($d)));
         } else if ($d === true) {
             return 'true';
         } else if ($d === false) {

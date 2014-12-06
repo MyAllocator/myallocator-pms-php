@@ -1,11 +1,11 @@
 <?php
  
-use MyAllocator\phpsdk\Api\ARIUpdateStatus;
+use MyAllocator\phpsdk\Api\LoopBookingList;
 use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
  
-class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
+class LoopBookingListTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,8 +13,8 @@ class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new ARIUpdateStatus();
-        $this->assertEquals('MyAllocator\phpsdk\Api\ARIUpdateStatus', get_class($obj));
+        $obj = new LoopBookingList();
+        $this->assertEquals('MyAllocator\phpsdk\Api\LoopBookingList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -43,13 +43,13 @@ class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new ARIUpdateStatus($fxt);
+        $obj = new LoopBookingList($fxt);
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No required parameters should throw exception
+        // No optional parameters should throw exception
         $caught = false;
         try {
             $rsp = $obj->callApi();
@@ -62,22 +62,30 @@ class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Invalid update id should fail
-/*
+        // Arrival parameters
         $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '123'
+            'CreationStartDate' => '2014-12-10',
+            'CreationEndDate' => '2014-12-15'
+        ));
+        $this->assertTrue(isset($rsp['LoopBookings']));
+
+/*
+        // Modification parameters
+        $rsp = $obj->get(array(
+            'ModifcationStartDate' => '2014-12-01',
+            'ModifcationEndDate' => '2014-12-05'
         ));
         print_r($rsp);
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['LoopBookings']));
 */
 
-        // Successful call
+/*
+        // Creation parameters
         $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '32101372'
+            'CreationStartDate' => '2014-11-01',
+            'CreationEndDate' => '2014-11-30'
         ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['LoopBookings']));
+*/
     }
 }

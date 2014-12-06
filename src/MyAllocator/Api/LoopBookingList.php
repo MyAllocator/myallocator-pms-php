@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class AssociatePropertyToPMS extends MaApi
+class LoopBookingList extends MaApi
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'AssociatePropertyToPMS';
+    protected $id = 'LoopBookingList';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -55,8 +55,14 @@ class AssociatePropertyToPMS extends MaApi
         ),
         'args' => array(
             'req' => array(),
+            'optMin' => 1,
             'opt' => array(
-                'PMSUserId'
+                'ArrivalStartDate',
+                'ArrivalEndDate',
+                'ModifcationStartDate',
+                'ModifcationEndDate',
+                'CreationStartDate',
+                'CreationEndDate'
             )
         )
     );

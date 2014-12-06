@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class ARIUpdateStatus extends Api
+class ARIUpdateStatus extends MaApi
 {
     /**
      * @var string The api to call.

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class RoomRemove extends Api
+class RoomRemove extends MaApi
 {
     /**
      * @var string The api to call.
@@ -60,7 +60,7 @@ class RoomRemove extends Api
         ),
         'args' => array(
             'req' => array(),
-            'opt_min' => 1, 
+            'optMin' => 1, 
             'opt' => array(
                 'Room',
                 'Rooms'

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk;
 
-class MyAllocatorBaseClass
+class MaBaseClass
 {
     /**
      * @var array MyAllocator API configuration.
@@ -35,8 +35,75 @@ class MyAllocatorBaseClass
 
     public function __construct($cfg = null)
     {
-        // Load API Configuration (Throws exception if cannot find config file)
-        $this->config = require(dirname(__FILE__) . '/Config/Config.php');
+        // Load configuration from parameters or file
+        if (isset($cfg) && isset($cfg['cfg'])) {
+            $this->config = $this->sanitizeCfg($cfg['cfg']);
+        } else {
+            // Throws exception if cannot find config file
+            $cfg = require(dirname(__FILE__) . '/Config/Config.php');
+            $this->config = $this->sanitizeCfg($cfg);
+        }
+    }
+
+    /**
+     * Set an API configuration key.
+     *
+     * @param key $key The configuration key. 
+     * @param value $value The configuration key value. 
+     * @return boolean|null Result of the set.
+     */
+    public function setConfig($key = null, $value = null)
+    {
+        if ($key == null || $value = null) {
+            return null;
+        }
+        return ($this->config[$key] = $value);
+    }
+
+    /**
+     * Get an API configuration value by key.
+     *
+     * @param key $key The configuration key. 
+     * @return mixed|null The configuration value.
+     */
+    public function getConfig($key)
+    {
+        return (isset($this->config[$key])) ? $this->config[$key] : null;
+    }
+
+    /*
+     * Sanitize parameter config data. Ensure keys/values are valid data.
+     * Unknown keys are removed.
+     */
+    private function sanitizeCfg($cfg)
+    {
+        $sanitize = array(
+            'paramValidationEnabled' => array(
+                'default' => true,
+                'valid' => array(true, false)
+            ),
+            'dataFormat' => array(
+                'default' => 'array',
+                'valid' => array('array', 'json', 'xml')
+            ),
+            'debugsEnabled' => array(
+                'default' => false,
+                'valid' => array(true, false)
+            )
+        );
+
+        $result = array();
+        foreach ($sanitize as $k => $v) {
+            if (!isset($cfg[$k]) || !in_array($cfg[$k], $v['valid'], true)) {
+                // Set to default if not set or invalid value
+                $result[$k] = $v['default'];
+            } else {
+                // Set to parameter if value is set and valid
+                $result[$k] = $cfg[$k];
+            }
+        }
+
+        return $result;
     }
 
     protected function debug_echo($str)

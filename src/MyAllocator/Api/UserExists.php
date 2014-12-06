@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class UserExists extends Api
+class UserExists extends MaApi
 {
     /**
      * @var string The api to call.

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class RoomList extends Api
+class RoomList extends MaApi
 {
     /**
      * @var string The api to call.

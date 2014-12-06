@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class ARIUpdate extends Api
+class ARIUpdate extends MaApi
 {
     /**
      * @var string The api to call.
@@ -55,7 +55,8 @@ class ARIUpdate extends Api
         ),
         'args' => array(
             'req' => array(
-                'Updates'
+                'Channels',
+                'Allocations'
             ),
             'opt' => array(
                 'UpdatesId',

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class InboxUserLogin extends Api
+class InboxUserLogin extends MaApi
 {
     /**
      * @var string The api to call.

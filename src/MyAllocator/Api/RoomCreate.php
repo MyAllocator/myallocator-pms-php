@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class RoomCreate extends Api
+class RoomCreate extends MaApi
 {
     /**
      * @var string The api to call.

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class RoomUpdate extends Api
+class RoomUpdate extends MaApi
 {
     /**
      * @var string The api to call.
@@ -60,7 +60,7 @@ class RoomUpdate extends Api
         ),
         'args' => array(
             'req' => array(),
-            'opt_min' => 1, //going to have to change opt keys bc Rooms nest TODO
+            'optMin' => 1, //going to have to change opt keys bc Rooms nest TODO
             'opt' => array(
                 'Room', // can be Room or Rooms
                 'Rooms'

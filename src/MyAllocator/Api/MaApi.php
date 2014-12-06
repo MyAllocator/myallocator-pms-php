@@ -25,13 +25,14 @@
  */
 
 namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\Object\Auth as Auth;
+use MyAllocator\phpsdk\MaBaseClass;
+use MyAllocator\phpsdk\Object\Auth;
 use MyAllocator\phpsdk\Util\Requestor;
 use MyAllocator\phpsdk\Util\Common;
 use MyAllocator\phpsdk\Exception\ApiException;
 use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
 
-class Api
+class MaApi extends MaBaseClass
 {
     /**
      * @var boolean Whether or not the API is currently enabled/supported.
@@ -39,7 +40,7 @@ class Api
     protected $enabled = true;
 
     /**
-     * @var string The api to call.
+     * @var string The api method.
      */
     protected $id = null;
 
@@ -78,16 +79,17 @@ class Api
         )
     );
 
-    /**
-     * @var array MyAllocator API configuration.
-     */
-    private $config = null;
-
     public function __construct($cfg = null)
     {
+        parent::__construct($cfg);
+
         // Load auth information if provided
         if (isset($cfg) && isset($cfg['auth'])) {
-            if (is_array($cfg['auth'])) {
+            if (is_object($cfg['auth']) &&
+                is_a($cfg['auth'], 'MyAllocator\phpsdk\Object\Auth')
+            ) {
+                $this->auth = $cfg['auth'];
+            } else if (is_array($cfg['auth'])) {
                 $auth = new Auth();
                 $auth_refl = new \ReflectionClass($auth);
                 $props = $auth_refl->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -98,15 +100,9 @@ class Api
                         $auth->$name = $cfg['auth'][$name];
                     }
                 }
-
                 $this->auth = $auth;
-            } else if (is_object($cfg['auth']) && is_a($cfg['auth'], 'MyAllocator\phpsdk\Object\Auth')) {
-                $this->auth = $cfg['auth'];
             }
         }
-
-        // Load API Configuration (Throws exception if cannot find config file)
-        $this->config = require(dirname(__FILE__) . '/../Config/Config.php');
     }
 
     /**
@@ -122,6 +118,8 @@ class Api
 
     /**
      * Call the API using previously set parameters (if any).
+     *
+     * @return mixed API response.
      */
     public function callApi()
     {
@@ -132,6 +130,7 @@ class Api
      * Call the API using provided parameters (if any).
      *
      * @param array $params API request parameters.
+     * @return mixed API response.
      */
     public function callApiWithParams($params = null)
     {
@@ -139,9 +138,11 @@ class Api
     }
 
     /**
-     * Get the authentication object for the API.
+     * Get the authentication object.
      *
+     * @param string $errorOnNull If true, throw an exception if auth null.
      * @return MyAllocator\phpsdk\Object\Auth API Authentication object.
+     * @throws MyAllocator\phpsdk\Exception\ApiException
      */
     public function getAuth($errorOnNull = false)
     {
@@ -153,21 +154,6 @@ class Api
         }
 
         return $this->auth;
-    }
-
-    /**
-     * Set an API configuration key (overwrites keys in Config.php).
-     *
-     * @param key $key The configuration key. 
-     * @param value $value The configuration key value. 
-     */
-    public function setConfig($key, $value)
-    {
-        if (!$key || !$value) {
-            return false;
-        }
-        $this->config[$key] = $value;
-        return true;
     }
 
     /**
@@ -193,7 +179,7 @@ class Api
     /**
      * Get the last API response as array($rbody, $rcode).
      *
-     * @return array
+     * @return mixed The last API response.
      */
     public function getLastApiResponse()
     {
@@ -204,7 +190,7 @@ class Api
      * Validate and process/send the API request.
      *
      * @param array $params API request parameters.
-     * @return array API response.
+     * @return mixed API response.
      */
     private function processRequest($params = null)
     {
@@ -212,16 +198,25 @@ class Api
         $this->assertEnabled();
 
         // Validate and sanitize parameters
-        $params = $this->validateApiParameters($this->keys, $params);
+        if ($this->config['paramValidationEnabled']) {
+            $params = $this->validateApiParameters($this->keys, $params);
+        }
 
-        // Perform request
+        // Instantiate requester
         $requestor = new Requestor($this->config);
-        // If xml, set default tag element name
-        if ($this->config['apiDataFormat'] == 'xml') {
+
+        // Set params/properties based on data format
+        if ($this->config['dataFormat'] == 'json') {
+            // If json, add URI method and version to payload
+            $params['_method'] = $this->id;
+            $params['_version'] = $requestor->version;
+        } else if ($this->config['dataFormat'] == 'xml') {
+            // If xml, set default tag element name
             $requestor->defaultElementNameXML = $this->defaultElementNameXML; 
         }
-        $url = $this->id;
-        $response = $requestor->request('post', $url, $params);
+
+        // Send request
+        $response = $requestor->request('post', $this->id, $params);
 
         // Return result
         $this->lastApiResponse = $response;
@@ -230,8 +225,6 @@ class Api
 
     /**
      * Assert the API is enabled.
-     *
-     * @throws MyAllocator\phpsdk\Exception\ApiException
      */
     private function assertEnabled()
     {
@@ -243,12 +236,6 @@ class Api
 
     /**
      * Validate authentication and argument parameters for an API.
-     *
-     * @param array $keys Array of required and optional keys.
-     * @param array $params Array of API parameters.
-     * @return array Sanitized and validated parameters.
-     * @throws MyAllocator\phpsdk\Exception\ApiException
-     * @throws MyAllocator\phpsdk\Exception\ApiAuthenticationException
      */
     private function validateApiParameters($keys = null, $params = null)
     {
@@ -321,10 +308,10 @@ class Api
     private function assertKeysHasMinOptParams($keys, $params)
     {
         // Assert minimum number of optional args exist if requirement exists
-        if ((isset($keys['args']['opt_min'])) && 
-            (!$params || count($params) < $keys['args']['opt_min'])
+        if ((isset($keys['args']['optMin'])) && 
+            (!$params || count($params) < $keys['args']['optMin'])
         ) {
-            $msg = 'API requires at least '.$keys['args']['opt_min'].' optional '
+            $msg = 'API requires at least '.$keys['args']['optMin'].' optional '
                  . 'parameter(s). (HINT: Reference the $keys '
                  . 'property at the top of the API class file for '
                  . 'required and optional parameters.)';
@@ -413,9 +400,9 @@ class Api
     }
 
     /*
-     * Validate required parameters for Api.
+     * Validate required parameters for API.
      */
-    private function assertReqParameters($keys = null, $params = null, $type = 'req')
+    private function assertReqParameters($keys, $params = null, $type = 'req')
     {
         if (!empty($keys['args']['req'])) {
             if (!$params) {
@@ -425,7 +412,18 @@ class Api
                 throw new ApiException($msg);
             }
 
-            foreach ($keys['args']['req'] as $k) {
+            /*
+             * The argument keys for some API's differ across
+             * data formats. Use configured data format's
+             * keys if defined.
+             */
+            if (isset($keys['args']['req'][$this->config['dataFormat']])) {
+                $req_args = $keys['args']['req'][$this->config['dataFormat']]
+            } else {
+                $req_args = $keys['args']['req'];
+            }
+
+            foreach ($req_args as $k) {
                 if (!isset($params[$k])) {
                     $msg = 'Required parameter `'.$k.'` not provided. '
                          . '(HINT: Reference the $keys '
@@ -440,7 +438,7 @@ class Api
     /*
      * Strip parameters not defined in API keys array.
      */
-    private function removeUnknownParameters($keys = null, $params = null)
+    private function removeUnknownParameters($keys, $params)
     {
         $valid_keys = array_merge(
             $keys['auth']['req'],

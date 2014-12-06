@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class AssociatePropertyToPMS extends MaApi
+class LoopARIList extends MaApi
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'AssociatePropertyToPMS';
+    protected $id = 'LoopARIList';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -54,10 +54,11 @@ class AssociatePropertyToPMS extends MaApi
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(),
-            'opt' => array(
-                'PMSUserId'
-            )
+            'req' => array(
+                'StartDate',
+                'EndDate'
+            ),
+            'opt' => array()
         )
     );
 }

@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class VendorSet extends Api
+class VendorSet extends MaApi
 {
     /**
      * @var string The api to call.

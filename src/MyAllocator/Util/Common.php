@@ -41,13 +41,17 @@ abstract class Common
      * @return array(Auth, string) Authentication object and bool if pulled from ENV.
      * @throws MyAllocator\phpsdk\Exception\ApiException If no keys supplied.
      */
-    public static function get_auth_env($keys = null, $debug = false)
+    public static function getAuthEnv($keys = null, $debug = false)
     {
         if (!$keys) {
             $msg = 'Keys parameter is required. (Keys to set from env)';
             throw new ApiException($msg);
         }
 
+        /*
+         * Some tests require all parameters to be from environment.
+         * Otherwise, they are skipped.
+         */
         $env = true;
 
         /*
@@ -56,11 +60,14 @@ abstract class Common
          *   export ma_vendorPassword=VALUE
          *   export ma_userId=VALUE
          *   export ma_userPassword=VALUE
+         *   export ma_userToken=VALUE
          *   export ma_propertyId=VALUE
+         *   export ma_PMSUserId=VALUE
          *   export ma_PMSPropertyId=VALUE
          */
         foreach ($keys as $k) {
             if (!($$k = getenv('ma_'.$k))) {
+                // Key does not exist in environment, use test data
                 $$k = '111';
                 $env = false;
             }
@@ -86,10 +93,10 @@ abstract class Common
     /**
      * Returns the name of a class using get_class with the namespaces stripped.
      *
-     * @param  object|string  $object  Object or Class Name to retrieve name
-     * @return  string  Name of class with namespaces stripped
+     * @param object|string $object Object or Class Name to retrieve name
+     * @return string Name of class with namespaces stripped
      */
-    public static function get_class_name($object = null)
+    public static function getClassName($object = null)
     {
         if (!is_object($object) && !is_string($object)) {
             return false;

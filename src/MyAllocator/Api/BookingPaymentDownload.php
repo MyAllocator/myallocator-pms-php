@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class BookingPaymentDownload extends Api
+class BookingPaymentDownload extends MaApi
 {
     /**
      * @var string The api to call.

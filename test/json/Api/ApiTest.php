@@ -1,7 +1,7 @@
 <?php
  
 use MyAllocator\phpsdk\Api\Api;
-use MyAllocator\phpsdk\Object\Auth as Auth;
+use MyAllocator\phpsdk\Object\Auth;
  
 class ApiTest extends PHPUnit_Framework_TestCase
 {

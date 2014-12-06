@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class RoomDelete extends Api
+class RoomDelete extends MaApi
 {
     /**
      * @var string The api to call.
@@ -57,7 +57,7 @@ class RoomDelete extends Api
             'req' => array(
                 'Room' // can be Room or Rooms
             ),
-            'opt_min' => 0, //going to have to change opt keys bc Rooms nest TODO
+            'optMin' => 0, //going to have to change opt keys bc Rooms nest TODO
             'opt' => array(
                 'PrivateRoom',
                 'PMSRoomId',

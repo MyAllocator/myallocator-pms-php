@@ -26,7 +26,7 @@
 
 namespace MyAllocator\phpsdk\Api;
 
-class AssociateUserToPMS extends Api
+class AssociateUserToPMS extends MaApi
 {
     /**
      * @var string The api to call.

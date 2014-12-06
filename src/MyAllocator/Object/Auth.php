@@ -30,11 +30,6 @@ use MyAllocator\phpsdk\Exception\ApiException;
 class Auth
 {
     /**
-     * @var string Enable/Disable debugs.
-     */
-    public $debug = false;
-
-    /**
      * @var string The vendor id (Required without user credentials).
      */
     public $vendorId = null;
