@@ -54,7 +54,7 @@ class MaBaseClass
      */
     public function setConfig($key = null, $value = null)
     {
-        if ($key == null || $value = null) {
+        if ($key == null || $value == null) {
             return null;
         }
         return ($this->config[$key] = $value);

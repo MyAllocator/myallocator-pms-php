@@ -6,7 +6,6 @@ class MaBaseClassTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
-     * @group api
      */
     public function testClass()
     {
@@ -222,6 +221,10 @@ class MaBaseClassTest extends PHPUnit_Framework_TestCase
         // Null value
         $this->assertNull($obj->setConfig('key', null));
         $this->assertNull($obj->setConfig('key', ''));
+
+        // Should Succeed
+        $this->assertSame('someval', $obj->setConfig('somekey', 'someval'));
+        $this->assertSame('someval', $obj->getConfig('somekey'));
     }
 
     /**
