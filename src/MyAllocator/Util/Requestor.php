@@ -56,7 +56,9 @@ class Requestor extends MaBaseClass
 
     public function __construct($cfg = null)
     {
-        parent::__construct($cfg);
+        parent::__construct(array(
+            'cfg' => $cfg
+        ));
         $this->debug_echo("\n\nConfiguration:\n");
         $this->debug_print_r($this->config);
     }
@@ -203,17 +205,16 @@ class Requestor extends MaBaseClass
 
         $absUrl = self::utf8($absUrl);
         $opts[CURLOPT_URL] = $absUrl;
-        $opts[CURLOPT_HTTPHEADER] = array("Expect:");
         $opts[CURLOPT_RETURNTRANSFER] = true;
         $opts[CURLOPT_CONNECTTIMEOUT] = 30;
         $opts[CURLOPT_TIMEOUT] = 60;
-        $opts[CURLOPT_HEADER] = false;
+        $opts[CURLOPT_HEADER] = true;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
 
         curl_setopt_array($curl, $opts);
-        $rbody = curl_exec($curl);
+        $result = curl_exec($curl);
 
-        if ($rbody === false) {
+        if ($result === false) {
             $errno = curl_errno($curl);
             $message = curl_error($curl);
             curl_close($curl);
@@ -221,7 +222,9 @@ class Requestor extends MaBaseClass
         }
 
         $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $headers = null;
+        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $headers = substr($result, 0, $header_size);
+        $rbody = substr($result, $header_size);
         curl_close($curl);
 
         $response = array($rbody, $rcode, $headers);

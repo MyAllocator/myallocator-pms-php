@@ -44,6 +44,7 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
         print_r($fxt);
 
         $obj = new PropertyChannelList($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');

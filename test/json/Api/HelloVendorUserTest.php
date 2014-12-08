@@ -44,6 +44,7 @@ class HelloVendorUserTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $obj = new HelloVendorUser($fxt);
+        $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));

@@ -19,7 +19,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId', 
             'vendorPassword'
         ));
@@ -40,36 +40,26 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        // Null auth
         $obj = new HelloVendor();
-        try {
-            $rsp = $obj->callApiWithParams(array(
-                'hello' => 'world'
-            ));
-        } catch (Exception $e) {
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
-        }
 
-        // Invalid auth
-        $invalid_auth = new Auth();
-        $invalid_auth->vendorId = '111';
-        $invalid_auth->vendorPassword = '111';
-        $obj = new HelloVendor(array(
-            'auth' => $invalid_auth
-        ));
-        $rsp = $obj->callApiWithParams(array(
-            'hello' => 'world'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertTrue(isset($rsp['Errors'][0]['ErrorMsg']));
-        $this->assertEquals('Invalid vendor or vendor password', $rsp['Errors'][0]['ErrorMsg']);
+        $auth = $fxt['auth'];
+        $xml = "
+            <HelloVendor>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                </Auth>
+                <hello>world</hello>
+            </HelloVendor>
+        ";
+        $xml = str_replace(" ", "", $xml); 
+        $xml = str_replace("\n", "", $xml);
 
-        // Successful call
-        $obj = new HelloVendor($fxt);
-        $rsp = $obj->callApiWithParams(array(
-            'hello' => 'world'
-        ));
-        $this->assertTrue(isset($rsp['hello']));
-        $this->assertEquals('world', $rsp['hello']);
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

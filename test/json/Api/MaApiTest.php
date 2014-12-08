@@ -207,6 +207,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new MaApi();
+        $obj->setConfig('dataFormat', 'array');
 
         // Prepare reflection method to test private method
         $reflector = new ReflectionClass('MyAllocator\phpsdk\Api\MaApi');
@@ -231,6 +232,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
         unset($obj);
         $cfg['auth'] = $fxt['auth'];
         $obj = new MaApi($cfg);
+        $obj->setConfig('dataFormat', 'array');
 
         // Null keys and parameters
         $keys = null;

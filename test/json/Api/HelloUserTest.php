@@ -44,6 +44,7 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
 
         // Auth null
         $obj = new HelloUser();
+        $obj->setConfig('dataFormat', 'array');
         try {
             $rsp = $obj->callApiWithParams(array(
                 'hello' => 'world'
@@ -54,6 +55,7 @@ class HelloUserTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $obj = new HelloUser($fxt);
+        $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));

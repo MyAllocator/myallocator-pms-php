@@ -18,7 +18,7 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken'
@@ -41,21 +41,35 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new PropertyCreate($fxt);
-
+        $obj->setConfig('dataFormat', 'xml');
+    
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel D',
-            'ExpiryDate' => '2014-12-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
-        ));
+        $auth = $fxt['auth'];
+        $xml = "
+            <PropertyCreate>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserToken>{$auth->userToken}</UserToken>
+                </Auth>
+                <PropertyName>PHP SDK Hotel H</PropertyName>
+                <ExpiryDate>2014-12-20</ExpiryDate>
+                <Currency>USD</Currency>
+                <Country>US</Country>
+                <Breakfast>EX</Breakfast>
+            </PropertyCreate>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

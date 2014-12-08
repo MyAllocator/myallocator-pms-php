@@ -18,11 +18,10 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -43,72 +42,42 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new RoomCreate($fxt);
-
+        $obj->setConfig('dataFormat', 'xml');
+    
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional args should fail (at least 1 required)
-        $caught = false;
-        try {
-            $rsp = $obj->callApiWithParams(array());
-        } catch (exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
+        $auth = $fxt['auth'];
+        $xml = "
+            <RoomCreate>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserToken>{$auth->userToken}</UserToken>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <CreateRooms>
+                    <RoomTypes>
+                        <RoomType>
+                            <Label>SuiteX</Label>
+                            <Units>5</Units>
+                            <Occupancy>2</Occupancy>
+                            <Gender>MI</Gender>
+                            <PrivateRoom>true</PrivateRoom>
+                        </RoomType>
+                    </RoomTypes>
+                </CreateRooms>
+            </RoomCreate>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-/*
-        // Create single room type 
-        $data = array(
-            'Rooms' => array(
-                array(
-                    'PMSRoomId' => '107',
-                    'Label' => 'Double2',
-                    'Units' => '10',
-                    'Occupancy' => '2',
-                    'Gender' => 'MA',
-                    'PrivateRoom' => 'true'
-                )
-            )
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
         );
-        $rsp = $obj->callApiWithParams($data);
-
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['Rooms']));
-*/
-
-        // Create single room type 
-        $data = array(
-            'CreateRooms' => array(
-                'RoomTypes' => array(
-                    array(
-                        'PMSRoomId' => '120',
-                        'Label' => 'Double4',
-                        'Units' => '10',
-                        'Occupancy' => '2',
-                        'Gender' => 'FE',
-                        'PrivateRoom' => 'false'
-                    ),
-                    array(
-                        'PMSRoomId' => '121',
-                        'Label' => 'Double5',
-                        'Units' => '10',
-                        'Occupancy' => '2',
-                        'Gender' => 'MI',
-                        'PrivateRoom' => 'false'
-                    )
-                )
-            )
-        );
-        $rsp = $obj->callApiWithParams($data);
-
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['Rooms']));
     }
 }

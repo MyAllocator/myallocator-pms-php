@@ -19,7 +19,7 @@ class BookingListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -49,43 +49,78 @@ class BookingListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
+        // Arrival Parameters
+        $auth = $fxt['auth'];
+        $xml = "
+            <BookingList>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <ArrivalStartDate>2014-12-10</ArrivalStartDate>
+                <ArrivalEndDate>2014-12-15</ArrivalEndDate>
+            </BookingList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
 
-        // Arrival parameters
-        $rsp = $obj->callApiWithParams(array(
-            'ArrivalStartDate' => '2014-12-01',
-            'ArrivalEndDate' => '2014-12-05'
-        ));
-        $this->assertTrue(isset($rsp['Bookings']));
+        // Modification Parameters
+        $xml = "
+            <BookingList>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <ModificationStartDate>2014-12-10</ModificationStartDate>
+                <ModificationEndDate>2014-12-15</ModificationEndDate>
+            </BookingList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-/*
-        // Modification parameters
-        $rsp = $obj->get(array(
-            'ModifcationStartDate' => '2014-12-01',
-            'ModifcationEndDate' => '2014-12-05'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
-*/
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
 
-/*
-        // Creation parameters
-        $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-11-01',
-            'CreationEndDate' => '2014-11-30'
-        ));
-        $this->assertTrue(isset($rsp['Bookings']));
-*/
+        // Arrival Parameters
+        $auth = $fxt['auth'];
+        $xml = "
+            <BookingList>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <CreationStartDate>2014-12-08</CreationStartDate>
+                <CreationEndDate>2014-12-15</CreationEndDate>
+            </BookingList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

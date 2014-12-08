@@ -59,6 +59,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
         // Get information about all properties associated with a user/vendor.
         $obj = new PropertyList($fxt);
+        $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApi();
         $this->assertTrue(isset($rsp['response']['Properties']));
     }
@@ -76,6 +77,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
         // Get information about a specific property.
         $obj = new PropertyList($fxt);
+        $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApi();
         $this->assertTrue(isset($rsp['response']['Properties']));
     }

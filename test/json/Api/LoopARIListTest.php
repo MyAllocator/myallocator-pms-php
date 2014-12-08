@@ -44,6 +44,7 @@ class LoopARIListTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new LoopARIList($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');

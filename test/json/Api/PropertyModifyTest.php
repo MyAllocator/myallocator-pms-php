@@ -42,6 +42,7 @@ class PropertyModifyTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new PropertyModify($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');

@@ -44,6 +44,7 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new BookingPaymentDownload($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
@@ -93,7 +94,7 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
         ));
         $this->assertTrue(isset($rsp['response']['Payments']));
 
-        // Valid myallocator`` id and valid password should succeed
+        // Valid myallocator id and valid password should succeed
         $rsp = $obj->callApiWithParams(array(
             'MyAllocatorId' => '5485e70e399dbd9a2451a744',
             'CreditCardPassword' => '!password1'

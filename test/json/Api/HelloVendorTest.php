@@ -42,6 +42,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
 
         // Null auth
         $obj = new HelloVendor();
+        $obj->setConfig('dataFormat', 'array');
         try {
             $rsp = $obj->callApiWithParams(array(
                 'hello' => 'world'
@@ -52,6 +53,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $obj = new HelloVendor($fxt);
+        $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));

@@ -19,7 +19,7 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -49,50 +49,77 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No required parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-/*
         // Invalid booking id should fail
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62209320-93420',
-            'CreditCardPassword' => '!password1'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $auth = $fxt['auth'];
+        $xml = "
+            <BookingPaymentDownload>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <OrderId>99999999999999999</OrderId>
+                <CreditCardPassword>!password1</CreditCardPassword>
+            </BookingPaymentDownload>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        // Invalid booking id should fail
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '99999999999999999',
-            'CreditCardPassword' => '123'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertNotFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
 
-        // Valid booking id and invalid password should fail
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '123',
-            'CreditCardPassword' => '123'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
-*/
+        // Valid order id and valid password should succeed
+        $xml = "
+            <BookingPaymentDownload>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <OrderId>4304-63761582-4625</OrderId>
+                <CreditCardPassword>!password1</CreditCardPassword>
+            </BookingPaymentDownload>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        // Valid booking id and valid password should succeed
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62208897-71242',
-            'CreditCardPassword' => '!password1'
-        ));
-        $this->assertTrue(isset($rsp['Payments']));
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
+
+        // Valid myallocator id and valid password should succeed
+        $xml = "
+            <BookingPaymentDownload>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <MyAllocatorId>5485e70e399dbd9a2451a744</MyAllocatorId>
+                <CreditCardPassword>!password1</CreditCardPassword>
+            </BookingPaymentDownload>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

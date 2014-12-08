@@ -18,11 +18,10 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -43,49 +42,36 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new RoomRemove($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional args should fail (at least 1 required)
-        $caught = false;
-        try {
-            $rsp = $obj->callApiWithParams(array());
-        } catch (exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
+        $auth = $fxt['auth'];
+        $xml = "
+            <RoomRemove>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserToken>{$auth->userToken}</UserToken>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+                <RemoveRooms>
+                    <RoomTypeIds>
+                        <RoomTypeId>23655</RoomTypeId>
+                    </RoomTypeIds>
+                </RemoveRooms>
+            </RoomRemove>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
 
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-/*
-        // Remove single room type 
-        $data = array(
-            'Room' => array(
-                'RoomId' => '23275'
-            )
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
         );
-        $rsp = $obj->callApiWithParams($data);
-
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-*/
-
-        // Remove multiple room types
-        $data = array(
-            'RemoveRooms' => array(
-                'RoomTypeIds' => array(
-                    '23419',
-                    '23420'
-                )
-            )
-        );
-        $rsp = $obj->callApiWithParams($data);
-
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
     }
 }

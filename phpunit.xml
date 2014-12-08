@@ -15,6 +15,14 @@
         </testsuite>
         <testsuite name="MyAllocator PHP SDK JSON API Test Suite">
             <directory suffix=".php">./tests/json/Api/</directory>
+            <exclude>./tests/json/Api/PropertyCreateTest.php</exclude>
+            <exclude>./tests/json/Api/PropertyModifyTest.php</exclude>
+            <exclude>./tests/json/Api/RoomCreateTest.php</exclude>
+            <exclude>./tests/json/Api/RoomUpdateTest.php</exclude>
+            <exclude>./tests/json/Api/RoomRemoveTest.php</exclude>
+            <exclude>./tests/json/Api/UserCreateTest.php</exclude>
+            <exclude>./tests/json/Api/UserExistsTest.php</exclude>
+            <exclude>./tests/json/Api/BookingPaymentDownloadTest.php</exclude>
         </testsuite>
         <testsuite name="MyAllocator PHP SDK JSON Exception Test Suite">
             <directory suffix=".php">./tests/json/Exception/</directory>
@@ -27,6 +35,14 @@
         </testsuite>
         <testsuite name="MyAllocator PHP SDK XML API Test Suite">
             <directory suffix=".php">./tests/xml/Api/</directory>
+            <exclude>./tests/xml/Api/PropertyCreateTest.php</exclude>
+            <exclude>./tests/xml/Api/PropertyModifyTest.php</exclude>
+            <exclude>./tests/xml/Api/RoomCreateTest.php</exclude>
+            <exclude>./tests/xml/Api/RoomUpdateTest.php</exclude>
+            <exclude>./tests/xml/Api/RoomRemoveTest.php</exclude>
+            <exclude>./tests/xml/Api/UserCreateTest.php</exclude>
+            <exclude>./tests/xml/Api/UserExistsTest.php</exclude>
+            <exclude>./tests/xml/Api/BookingPaymentDownloadTest.php</exclude>
         </testsuite>
         <testsuite name="MyAllocator PHP SDK XML Exception Test Suite">
             <directory suffix=".php">./tests/xml/Exception/</directory>

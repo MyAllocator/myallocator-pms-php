@@ -24,7 +24,6 @@ class AuthTest extends PHPUnit_Framework_TestCase
             'userPassword' => '1010',
             'propertyId' => '1111',
             'PMSPropertyId' => '1212',
-            'debug' => true
         ));
 
         return $data;
@@ -44,7 +43,6 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->userPassword = $fxt['userPassword'];
         $auth->propertyId = $fxt['propertyId'];
         $auth->PMSPropertyId = $fxt['PMSPropertyId'];
-        $auth->debug = $fxt['debug'];
 
         $this->assertEquals($auth->vendorId, $fxt['vendorId']);
         $this->assertEquals($auth->vendorPassword, $fxt['vendorPassword']);
@@ -52,7 +50,6 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($auth->userPassword, $fxt['userPassword']);
         $this->assertEquals($auth->propertyId, $fxt['propertyId']);
         $this->assertEquals($auth->PMSPropertyId, $fxt['PMSPropertyId']);
-        $this->assertEquals($auth->debug, $fxt['debug']);
     }
 
     /**
@@ -69,7 +66,6 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->userPassword = $fxt['userPassword'];
         $auth->propertyId = $fxt['propertyId'];
         $auth->PMSPropertyId = $fxt['PMSPropertyId'];
-        $auth->debug = $fxt['debug'];
 
         // Test valid authentication keys
         $this->assertEquals($auth->vendorId, $auth->getAuthKeyVar('Auth/VendorId'));

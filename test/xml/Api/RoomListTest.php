@@ -19,7 +19,7 @@ class RoomListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -44,13 +44,33 @@ class RoomListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new RoomList($fxt);
+        $obj = new RoomList();
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['RoomTypes']));
+        $auth = $fxt['auth'];
+        $xml = "
+            <RoomList>
+             <Auth>
+               <UserId>{$auth->userId}</UserId>
+               <UserPassword>{$auth->userPassword}</UserPassword>
+               <PropertyId>{$auth->propertyId}</PropertyId>
+               <VendorId>{$auth->vendorId}</VendorId>
+               <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+             </Auth>
+            </RoomList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

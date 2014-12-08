@@ -18,7 +18,7 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken'
@@ -46,34 +46,47 @@ class UserExistsTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Exists by email (Omitting required UserId parameter)
-        $caught = false;
-        try {
-            $rsp = $obj->callApiWithParams(array(
-                'CustomerEmail' => 'phpsdkuser@phpsdk.com'
-            ));
-        } catch (Exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('Should have thrown an exception');
-        }
-         
         // Exists by id
-        $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdkuser'
-        ));
-        $this->assertTrue(isset($rsp['EmailExists']));
-        $this->assertTrue(isset($rsp['UserIdExists']));
+        $auth = $fxt['auth'];
+        $xml = "
+            <UserExists>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                </Auth>
+                <UserId>phpsdkuser</UserId>
+            </UserExists>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
 
         // Exists by id and email
-        $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdkuser',
-            'CustomerEmail' => 'phpsdkuser@phpsdk.com'
-        ));
-        $this->assertTrue(isset($rsp['EmailExists']));
-        $this->assertTrue(isset($rsp['UserIdExists']));
+        $auth = $fxt['auth'];
+        $xml = "
+            <UserExists>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                </Auth>
+                <UserId>phpsdkuser</UserId>
+                <CustomerEmail>phpsdkuser@phpsdk.com</CustomerEmail>
+            </UserExists>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

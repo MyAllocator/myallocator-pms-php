@@ -40,6 +40,7 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new VendorSet($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');

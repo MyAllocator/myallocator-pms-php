@@ -19,7 +19,7 @@ class AssociatePropertyToPMSTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken',
@@ -43,13 +43,32 @@ class AssociatePropertyToPMSTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new AssociatePropertyToPMS($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $rsp = $obj->callApi();
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Success']));
+        $auth = $fxt['auth'];
+        $xml = "
+            <AssociatePropertyToPMS>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+            </AssociatePropertyToPMS>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

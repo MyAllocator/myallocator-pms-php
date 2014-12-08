@@ -19,7 +19,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -33,7 +33,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObjectProperty()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -57,10 +57,33 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        // Get information about all properties associated with a user/vendor.
         $obj = new PropertyList($fxt);
-        $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['Properties']));
+        $obj->setConfig('dataFormat', 'xml');
+
+        if (!$obj->isEnabled()) {
+            $this->markTestSkipped('API is disabled!');
+        }
+
+        $auth = $fxt['auth'];
+        $xml = "
+            <PropertyList>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                </Auth>
+            </PropertyList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 
     /**
@@ -76,7 +99,32 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
         // Get information about a specific property.
         $obj = new PropertyList($fxt);
-        $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['Properties']));
+        $obj->setConfig('dataFormat', 'xml');
+
+        if (!$obj->isEnabled()) {
+            $this->markTestSkipped('API is disabled!');
+        }
+
+        $auth = $fxt['auth'];
+        $xml = "
+            <PropertyList>
+                <Auth>
+                    <VendorId>{$auth->vendorId}</VendorId>
+                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                    <UserId>{$auth->userId}</UserId>
+                    <UserPassword>{$auth->userPassword}</UserPassword>
+                    <PropertyId>{$auth->propertyId}</PropertyId>
+                </Auth>
+            </PropertyList>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

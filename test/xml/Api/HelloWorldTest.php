@@ -55,9 +55,23 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
-        $obj = new HelloWorld($fxt);
-        $rsp = $obj->callApiWithParams($fxt['params']);
-        $this->assertEquals(array('hello'), array_keys($rsp));
-        $this->assertEquals('world', $rsp['hello']);
+        $obj = new HelloWorld();
+
+        $auth = $fxt['auth'];
+        $xml = "
+            <HelloWorld>
+                <Auth></Auth>
+                <hello>world</hello>
+            </HelloWorld>
+        ";
+        $xml = str_replace(" ", "", $xml);
+        $xml = str_replace("\n", "", $xml);
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

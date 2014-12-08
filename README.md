@@ -73,9 +73,9 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
 
 Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. If you do not wish to experience the cost, disable 'paramValidationEnabled' above. For xml data, the raw request is sent to MyAllocator and raw response returned to you.
 
-### Result Format
+### API Response Format
 
-A request call will always return an array with the following structure:
+A request call will always return an array with the following response structure:
 
     return array(
         'code' => $rcode,

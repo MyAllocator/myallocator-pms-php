@@ -197,22 +197,38 @@ class MaApi extends MaBaseClass
         // Ensure this api is currently enabled/supported
         $this->assertEnabled();
 
-        // Validate and sanitize parameters
-        if ($this->config['paramValidationEnabled']) {
-            $params = $this->validateApiParameters($this->keys, $params);
-        }
-
         // Instantiate requester
         $requestor = new Requestor($this->config);
 
-        // Set params/properties based on data format
-        if ($this->config['dataFormat'] == 'json') {
-            // If json, add URI method and version to payload
-            $params['_method'] = $this->id;
-            $params['_version'] = $requestor->version;
-        } else if ($this->config['dataFormat'] == 'xml') {
-            // If xml, set default tag element name
-            $requestor->defaultElementNameXML = $this->defaultElementNameXML; 
+        switch ($this->config['dataFormat']) {
+            case 'xml':
+                // If xml, set default tag element name
+                $requestor->defaultElementNameXML = $this->defaultElementNameXML; 
+                break;
+            case 'json':
+                // Validate and sanitize parameters (json decode/encode)
+                if ($this->config['paramValidationEnabled']) {
+                    $params_decoded = json_decode($params, TRUE);
+                    $params_decoded = $this->validateApiParameters($this->keys, $params_decoded);
+                    // Add URI method and version to payload
+                    $params['_method'] = $this->id;
+                    $params['_version'] = $requestor->version;
+                    $params = json_encode($params_decoded);
+                }
+                break;
+            case 'array':
+                // Validate and sanitize parameters
+                if ($this->config['paramValidationEnabled']) {
+                    $params = $this->validateApiParameters($this->keys, $params);
+                }
+                // Add URI method and version to payload
+                $params['_method'] = $this->id;
+                $params['_version'] = $requestor->version;
+                break;
+            default:
+                throw new ApiException(
+                    'Invalid dataFormat: '.$this->config['dataFormat']
+                );
         }
 
         // Send request

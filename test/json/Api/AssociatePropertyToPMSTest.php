@@ -43,6 +43,7 @@ class AssociatePropertyToPMSTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new AssociatePropertyToPMS($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');

@@ -43,6 +43,7 @@ class AssociateUserToPMSTest extends PHPUnit_Framework_TestCase
         }
 
         $obj = new AssociateUserToPMS($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
