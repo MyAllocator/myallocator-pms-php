@@ -59,8 +59,8 @@ class BookingList extends MaApi
             'opt' => array(
                 'ArrivalStartDate',
                 'ArrivalEndDate',
-                'ModifcationStartDate',
-                'ModifcationEndDate',
+                'ModificationStartDate',
+                'ModificationEndDate',
                 'CreationStartDate',
                 'CreationEndDate'
             )

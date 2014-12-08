@@ -19,7 +19,7 @@ class LoopBookingActionTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken',
@@ -49,29 +49,28 @@ class LoopBookingActionTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        $id = preg_replace("/[\/=+]/", "", base64_encode(openssl_random_pseudo_bytes(8)));
-
         // Cancel a booking
-        /*
         $data = array(
-            'OrderId' => '19583A964AAD-15A8-4E11-86B7-A258BA6C',
+            'OrderId' => '6862C94E9DFA-42C9-4E11-D0F7-297C5F79',
             'Actions' => array(
-                'CANCEL?reason=becausethatswhy'
+                'CANCEL?reason=hotelierwasmean'
             ),
         );
-        */
-
-        // Uncancel a booking
-        /*
-        $data = array(
-            'OrderId' => '19583A964AAD-15A8-4E11-86B7-A258BA6C',
-            'Actions' => array(
-                'UNCANCEL?reason=becausethatswrongggg'
-            ),
-        );
-        */
 
         $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['RoomTypes']));
+        $this->assertTrue(isset($rsp['response']['%Booking']));
+
+        // Uncancel a booking
+        $data = array(
+            'OrderId' => '6862C94E9DFA-42C9-4E11-D0F7-297C5F79',
+            'Actions' => array(
+                'UNCANCEL?reason=changedmymind'
+            ),
+        );
+
+        $rsp = $obj->callApiWithParams($data);
+        $this->assertTrue(isset($rsp['response']['%Booking']));
+
+        // Modify to come at a later time
     }
 }

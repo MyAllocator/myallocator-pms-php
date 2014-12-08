@@ -18,7 +18,7 @@ class RoomUpdateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -61,40 +61,38 @@ class RoomUpdateTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-/*
         // Update single room type 
         $data = array(
             'Room' => array(
-                'RoomId' => '22905',
-                'Units' => '10',
+                'RoomId' => '23649',
+                'Units' => '3',
                 'PrivateRoom' => 'true',
                 'Gender' => 'MA',
                 'Occupancy' => '2',
-                'Label' => 'twin'
+                'Label' => 'Suite G'
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-*/
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
 
         // Update multiple room type 
         $data = array(
             'Rooms' => array(
                 array(
-                    'RoomId' => '22905',
-                    'Label' => 'twin2'
+                    'RoomId' => '23650',
+                    'Label' => 'Suite H'
                 ),
                 array(
                     'RoomId' => '22797',
-                    'Label' => 'Mighty King'
+                    'Label' => 'King'
                 )
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
     }
 }

@@ -42,7 +42,6 @@ class PropertyChannelList extends MaApi
             'req' => array(
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/PropertyId',
                 'UserCredentials' => array(
                     'Auth/UserId',
                     'Auth/UserPassword'

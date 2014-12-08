@@ -19,7 +19,7 @@ class LoopARIListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -64,28 +64,9 @@ class LoopARIListTest extends PHPUnit_Framework_TestCase
 
         // Arrival parameters
         $rsp = $obj->callApiWithParams(array(
-            'StartDate' => '2014-12-01',
-            'EndDate' => '2014-12-30'
+            'StartDate' => '2014-12-10',
+            'EndDate' => '2014-12-12'
         ));
-        $this->assertTrue(isset($rsp['LoopARIs']));
-
-/*
-        // Modification parameters
-        $rsp = $obj->get(array(
-            'ModifcationStartDate' => '2014-12-01',
-            'ModifcationEndDate' => '2014-12-05'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['LoopARIs']));
-*/
-
-/*
-        // Creation parameters
-        $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-11-01',
-            'CreationEndDate' => '2014-11-30'
-        ));
-        $this->assertTrue(isset($rsp['LoopARIs']));
-*/
+        $this->assertTrue(isset($rsp['response']['LoopARIs']));
     }
 }

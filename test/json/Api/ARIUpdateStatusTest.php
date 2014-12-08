@@ -19,7 +19,7 @@ class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -62,22 +62,22 @@ class ARIUpdateStatusTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Invalid update id should fail
 /*
+        // Invalid update id should fail
         $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '123'
+            'UpdateId' => '123999999999'
         ));
         print_r($rsp);
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertEquals($rsp['response']['Errors'][0]['ErrorMsg'], 'No such booking id');
 */
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '32101372'
+            'UpdateId' => '3393737'
         ));
         print_r($rsp);
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertEquals($rsp['response']['Errors'][0]['ErrorMsg'], 'No such booking id');
     }
 }

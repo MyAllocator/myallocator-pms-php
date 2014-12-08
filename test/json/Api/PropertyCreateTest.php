@@ -18,7 +18,7 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken'
@@ -48,15 +48,14 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel C',
+            'PropertyName' => 'PHP SDK Hotel G',
             'ExpiryDate' => '2014-12-20',
             'Currency' => 'USD',
             'Country' => 'US',
             'Breakfast' => 'EX'
         ));
 
-        var_dump($rsp);
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
     }
 }

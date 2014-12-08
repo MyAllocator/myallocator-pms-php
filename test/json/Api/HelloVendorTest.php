@@ -19,7 +19,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId', 
             'vendorPassword'
         ));
@@ -50,26 +50,12 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
         }
 
-        // Invalid auth
-        $invalid_auth = new Auth();
-        $invalid_auth->vendorId = '111';
-        $invalid_auth->vendorPassword = '111';
-        $obj = new HelloVendor(array(
-            'auth' => $invalid_auth
-        ));
-        $rsp = $obj->callApiWithParams(array(
-            'hello' => 'world'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertTrue(isset($rsp['Errors'][0]['ErrorMsg']));
-        $this->assertEquals('Invalid vendor or vendor password', $rsp['Errors'][0]['ErrorMsg']);
-
         // Successful call
         $obj = new HelloVendor($fxt);
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));
-        $this->assertTrue(isset($rsp['hello']));
-        $this->assertEquals('world', $rsp['hello']);
+        $this->assertTrue(isset($rsp['response']['hello']));
+        $this->assertEquals('world', $rsp['response']['hello']);
     }
 }

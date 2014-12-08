@@ -19,7 +19,7 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -62,37 +62,42 @@ class BookingPaymentDownloadTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-/*
-        // Invalid booking id should fail
-        $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62209320-93420',
-            'CreditCardPassword' => '!password1'
-        ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
-
         // Invalid booking id should fail
         $rsp = $obj->callApiWithParams(array(
             'OrderId' => '99999999999999999',
             'CreditCardPassword' => '123'
         ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertEquals(
+            $rsp['response']['Errors'][0]['ErrorMsg'],
+            'No such booking id'
+        );
 
+/*
         // Valid booking id and invalid password should fail
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '123',
+            'OrderId' => '4304-63761582-4625',
             'CreditCardPassword' => '123'
         ));
-        $this->assertTrue(isset($rsp['Errors']));
-        $this->assertEquals($rsp['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertEquals(
+            $rsp['response']['Errors'][0]['ErrorMsg'],
+            'No such booking id'
+        );
 */
 
-        // Valid booking id and valid password should succeed
+        // Valid order id and valid password should succeed
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-62208897-71242',
+            'OrderId' => '4304-63761582-4625',
             'CreditCardPassword' => '!password1'
         ));
-        $this->assertTrue(isset($rsp['Payments']));
+        $this->assertTrue(isset($rsp['response']['Payments']));
+
+        // Valid myallocator`` id and valid password should succeed
+        $rsp = $obj->callApiWithParams(array(
+            'MyAllocatorId' => '5485e70e399dbd9a2451a744',
+            'CreditCardPassword' => '!password1'
+        ));
+        $this->assertTrue(isset($rsp['response']['Payments']));
     }
 }

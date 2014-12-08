@@ -19,12 +19,12 @@ class RoomListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            //'userToken',
+            //'userId',
+            //'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -51,6 +51,6 @@ class RoomListTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['RoomTypes']));
+        $this->assertTrue(isset($rsp['response']['RoomTypes']));
     }
 }

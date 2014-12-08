@@ -60,8 +60,7 @@ class RoomCreate extends MaApi
         ),
         'args' => array(
             'req' => array(
-                //'Rooms',
-                'CreateRooms'
+                'Rooms',
             ),
             'opt' => array()
         )

@@ -46,9 +46,7 @@ class ChannelList extends MaApi
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'ChannelList'
-            ),
+            'req' => array(),
             'opt' => array()
         )
     );

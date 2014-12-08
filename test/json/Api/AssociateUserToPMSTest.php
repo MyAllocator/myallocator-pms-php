@@ -19,7 +19,7 @@ class AssociateUserToPMSTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -49,7 +49,6 @@ class AssociateUserToPMSTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Success']));
+        $this->assertTrue(isset($rsp['response']['Success']));
     }
 }

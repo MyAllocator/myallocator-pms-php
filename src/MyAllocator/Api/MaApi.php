@@ -42,7 +42,7 @@ class MaApi extends MaBaseClass
     /**
      * @var string The api method.
      */
-    protected $id = null;
+    protected $id = 'MaApi';
 
     /**
      * @var \MyAllocator\Object\Auth Authentication object for requester.
@@ -412,18 +412,7 @@ class MaApi extends MaBaseClass
                 throw new ApiException($msg);
             }
 
-            /*
-             * The argument keys for some API's differ across
-             * data formats. Use configured data format's
-             * keys if defined.
-             */
-            if (isset($keys['args']['req'][$this->config['dataFormat']])) {
-                $req_args = $keys['args']['req'][$this->config['dataFormat']]
-            } else {
-                $req_args = $keys['args']['req'];
-            }
-
-            foreach ($req_args as $k) {
+            foreach ($keys['args']['req'] as $k) {
                 if (!isset($params[$k])) {
                     $msg = 'Required parameter `'.$k.'` not provided. '
                          . '(HINT: Reference the $keys '

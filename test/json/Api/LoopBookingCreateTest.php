@@ -19,7 +19,7 @@ class LoopBookingCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userToken',
@@ -55,7 +55,7 @@ class LoopBookingCreateTest extends PHPUnit_Framework_TestCase
                 'StartDate' => '2014-12-10',
                 'EndDate' => '2014-12-13',
                 'Units' => '1',
-                'RoomTypeId' => '22797',
+                'RoomTypeId' => '23651',
                 'RateId' => '123',
                 'RoomDayRate' => '100.00',
                 'RoomDayDescription' => 'A fun RoomDay!',
@@ -67,12 +67,12 @@ class LoopBookingCreateTest extends PHPUnit_Framework_TestCase
                 'OccupantFName' => 'Nathan',
                 'OccupantLName' => 'Meeper',
                 'Occupancy' => '1',
-                'Policy' => 'No meepers allowed.',
+                'Policy' => 'No smoking.',
                 'ChannelRoomType' => '123'
             )
         );
 
         $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['RoomTypes']));
+        $this->assertTrue(isset($rsp['response']['Booking']));
     }
 }

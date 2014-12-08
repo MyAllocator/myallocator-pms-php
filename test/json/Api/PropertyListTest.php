@@ -19,7 +19,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -33,7 +33,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObjectProperty()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -60,7 +60,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
         // Get information about all properties associated with a user/vendor.
         $obj = new PropertyList($fxt);
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['Properties']));
+        $this->assertTrue(isset($rsp['response']['Properties']));
     }
 
     /**
@@ -77,6 +77,6 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
         // Get information about a specific property.
         $obj = new PropertyList($fxt);
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['Properties']));
+        $this->assertTrue(isset($rsp['response']['Properties']));
     }
 }

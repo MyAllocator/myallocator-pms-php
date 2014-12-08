@@ -57,7 +57,7 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
     {
         $obj = new HelloWorld($fxt);
         $rsp = $obj->callApiWithParams($fxt['params']);
-        $this->assertEquals(array('hello'), array_keys($rsp));
-        $this->assertEquals('world', $rsp['hello']);
+        $this->assertTrue(isset($rsp['response']['hello']));
+        $this->assertEquals('world', $rsp['response']['hello']);
     }
 }

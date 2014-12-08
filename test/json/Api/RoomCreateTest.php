@@ -18,11 +18,12 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
+            //'userId',
+            //'userPassword',
             'propertyId'
         ));
         $data = array();
@@ -61,41 +62,39 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-/*
         // Create single room type 
         $data = array(
             'Rooms' => array(
                 array(
-                    'PMSRoomId' => '107',
-                    'Label' => 'Double2',
+                    'PMSRoomId' => '310',
+                    'Label' => 'King',
                     'Units' => '10',
                     'Occupancy' => '2',
-                    'Gender' => 'MA',
+                    'Gender' => 'MI',
                     'PrivateRoom' => 'true'
                 )
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['Rooms']));
-*/
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Rooms']));
 
-        // Create single room type 
+        // Create multiple room types
         $data = array(
             'Rooms' => array(
                 array(
-                    'PMSRoomId' => '120',
-                    'Label' => 'Double4',
-                    'Units' => '10',
-                    'Occupancy' => '2',
+                    'PMSRoomId' => '306',
+                    'Label' => 'Suite G',
+                    'Units' => '8',
+                    'Occupancy' => '1',
                     'Gender' => 'FE',
                     'PrivateRoom' => 'false'
                 ),
                 array(
-                    'PMSRoomId' => '121',
-                    'Label' => 'Double5',
+                    'PMSRoomId' => '307',
+                    'Label' => 'Suite H',
                     'Units' => '10',
                     'Occupancy' => '2',
                     'Gender' => 'MI',
@@ -105,8 +104,8 @@ class RoomCreateTest extends PHPUnit_Framework_TestCase
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-        $this->assertTrue(isset($rsp['Rooms']));
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Rooms']));
     }
 }

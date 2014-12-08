@@ -19,7 +19,7 @@ class BookingListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -64,28 +64,23 @@ class BookingListTest extends PHPUnit_Framework_TestCase
 
         // Arrival parameters
         $rsp = $obj->callApiWithParams(array(
-            'ArrivalStartDate' => '2014-12-01',
-            'ArrivalEndDate' => '2014-12-05'
+            'ArrivalStartDate' => '2014-11-01',
+            'ArrivalEndDate' => '2014-12-30'
         ));
-        $this->assertTrue(isset($rsp['Bookings']));
+        $this->assertTrue(isset($rsp['response']['Bookings']));
 
-/*
         // Modification parameters
-        $rsp = $obj->get(array(
-            'ModifcationStartDate' => '2014-12-01',
-            'ModifcationEndDate' => '2014-12-05'
+        $rsp = $obj->callApiWithParams(array(
+            'ModificationStartDate' => '2014-11-01',
+            'ModificationEndDate' => '2014-12-30'
         ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Bookings']));
-*/
+        $this->assertTrue(isset($rsp['response']['Bookings']));
 
-/*
         // Creation parameters
         $rsp = $obj->callApiWithParams(array(
             'CreationStartDate' => '2014-11-01',
-            'CreationEndDate' => '2014-11-30'
+            'CreationEndDate' => '2014-12-30'
         ));
-        $this->assertTrue(isset($rsp['Bookings']));
-*/
+        $this->assertTrue(isset($rsp['response']['Bookings']));
     }
 }

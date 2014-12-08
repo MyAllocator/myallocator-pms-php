@@ -19,7 +19,7 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword'
         ));
@@ -46,11 +46,8 @@ class ChannelListTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        $rsp = $obj->callApiWithParams(array(
-            'ChannelList' => true
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['Channels']));
-        $this->assertGreaterThan(20, count($rsp['Channels']));
+        $rsp = $obj->callApi();
+        $this->assertTrue(isset($rsp['response']['Channels']));
+        $this->assertGreaterThan(20, count($rsp['response']['Channels']));
     }
 }

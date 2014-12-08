@@ -19,7 +19,7 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -63,9 +63,9 @@ class RoomAvailabilityListTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApiWithParams(array(
-            'StartDate' => '2014-12-01',
-            'EndDate' => '2014-12-05',
+            'StartDate' => '2014-12-10',
+            'EndDate' => '2014-12-13',
         ));
-        $this->assertTrue(isset($rsp['Rooms']));
+        $this->assertTrue(isset($rsp['response']['Rooms']));
     }
 }

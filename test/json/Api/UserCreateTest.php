@@ -18,7 +18,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword'
         ));
@@ -62,35 +62,20 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-/*
-        // Successful call without optional parameters
-        $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdkuser',
-            'UserPassword' => 'password',
-            'Email' => 'phpsdkuser@phpsdk.com',
-            'CustomerEmail' => 'phpsdkuser@phpsdk.com'
-        ));
-
-        $this->assertTrue(isset($rsp['UserIdExists']));
-        $this->assertEquals($rsp['UserIdExists'], 'false');
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-*/
-
         // Successful call with optional parameters
         $rsp = $obj->callApiWithParams(array(
-            'UserId' => 'phpsdkuser5',
-            'UserPassword' => 'password',
-            'Email' => 'phpsdkuser5@phpsdk.com',
-            'CustomerEmail' => 'phpsdkuser5@phpsdk.com',
+            'UserId' => 'phpsdkuser',
+            'UserPassword' => 'asfjksjkfsd',
+            'Email' => 'phpsdkuser@phpsdk.com',
+            'CustomerEmail' => 'phpsdkuser@phpsdk.com',
             'CustomerFirstName' => 'Bob',
             'CustomerLastName' => 'Smith',
             'SendWelcome' => 0
         ));
 
-        $this->assertTrue(isset($rsp['UserIdExists']));
-        $this->assertEquals($rsp['UserIdExists'], 'false');
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['UserIdExists']));
+        $this->assertEquals($rsp['response']['UserIdExists'], 'false');
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
     }
 }

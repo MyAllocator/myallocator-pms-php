@@ -18,7 +18,7 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword'
         ));
@@ -49,7 +49,7 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             $rsp = $obj->callApiWithParams(array(
-                'Callback/URL' => 'http://www.example.com'
+                'Callback/URL' => 'http://www.example.com/myApiReceiver'
             ));
             var_dump($rsp);
         } catch (exception $e) {
@@ -63,11 +63,11 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'Callback/URL' => 'http://www.fun.com',
+            'Callback/URL' => 'http://www.fun.com/myApiReceiver',
             'Callback/Password' => 'password'
         ));
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
     }
 }

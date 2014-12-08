@@ -55,10 +55,13 @@ class BookingPaymentDownload extends MaApi
         ),
         'args' => array(
             'req' => array(
-                'OrderId',
                 'CreditCardPassword'
             ),
-            'opt' => array()
+            'opt_min' => 1,
+            'opt' => array(
+                'OrderId',
+                'MyAllocatorId'
+            )
         )
     );
 }

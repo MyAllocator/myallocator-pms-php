@@ -59,7 +59,6 @@ class ARIUpdate extends MaApi
                 'Allocations'
             ),
             'opt' => array(
-                'UpdatesId',
                 'Options'
             )
         )

@@ -1,9 +1,9 @@
 <?php
  
-use MyAllocator\phpsdk\Api\Api;
+use MyAllocator\phpsdk\Api\MaApi;
 use MyAllocator\phpsdk\Object\Auth;
  
-class ApiTest extends PHPUnit_Framework_TestCase
+class MaApiTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -11,8 +11,8 @@ class ApiTest extends PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new Api();
-        $this->assertEquals('MyAllocator\phpsdk\Api\Api', get_class($obj));
+        $obj = new MaApi();
+        $this->assertEquals('MyAllocator\phpsdk\Api\MaApi', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -34,7 +34,6 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $auth->userPassword = $cfg_set['auth']['userPassword'];
         $auth->propertyId = $cfg_set['auth']['propertyId'];
         $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
-        $auth->debug = $cfg_set['auth']['debug'];
 
         $data = array();
         $data[] = array(array(
@@ -52,7 +51,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
     public function testConstructorAuthCfgObject(array $fxt)
     {
         $cfg['auth'] = $fxt['auth'];
-        $obj = new Api($cfg);
+        $obj = new MaApi($cfg);
         $obj_auth = $obj->getAuth();
 
         foreach ($fxt['auth'] as $k => $v) {
@@ -71,7 +70,6 @@ class ApiTest extends PHPUnit_Framework_TestCase
             'userPassword' => '444',
             'propertyId' => '555',
             'PMSPropertyId' => '666',
-            'debug' => true
         ));
 
         return $data;
@@ -85,7 +83,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
     public function testConstructorAuthCfgArray(array $fxt)
     {
         $cfg['auth'] = $fxt;
-        $obj = new Api($cfg);
+        $obj = new MaApi($cfg);
         $obj_auth = $obj->getAuth();
 
         foreach ($cfg['auth'] as $k => $v) {
@@ -99,7 +97,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
      */
     public function testSetAuth()
     {
-        $obj = new Api();
+        $obj = new MaApi();
 
         $cfg_set['auth'] = array(
             'vendorId' => '777',
@@ -202,14 +200,25 @@ class ApiTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateApiParameters(array $fxt)
     {
-        $obj = new Api();
+        echo PHP_VERSION;
+        // Reflection required to test private method
+        if (!version_compare(PHP_VERSION, '5.3.2', '>=')) {
+            $this->markTestSkipped('PHP version >= 5.3.2 required for Reflection in test.');        
+        }
+
+        $obj = new MaApi();
+
+        // Prepare reflection method to test private method
+        $reflector = new ReflectionClass('MyAllocator\phpsdk\Api\MaApi');
+        $ref_method_validate = $reflector->getMethod('validateApiParameters');
+        $ref_method_validate->setAccessible(true);
 
         // Null Auth
         $keys = $fxt['keys'];
         $params = $fxt['params']['required'];
         $caught = false;
         try {
-            $obj->validateApiParameters($keys, $params);
+            $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
@@ -221,14 +230,14 @@ class ApiTest extends PHPUnit_Framework_TestCase
 
         unset($obj);
         $cfg['auth'] = $fxt['auth'];
-        $obj = new Api($cfg);
+        $obj = new MaApi($cfg);
 
         // Null keys and parameters
         $keys = null;
         $params = null;
         $caught = false;
         try {
-            $obj->validateApiParameters($keys, $params);
+            $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -243,7 +252,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $params = $fxt['params']['required'];
         $caught = false;
         try {
-            $obj->validateApiParameters($keys, $params);
+            $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -258,7 +267,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $params = null;
         $caught = false;
         try {
-            $obj->validateApiParameters($keys, $params);
+            $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -273,7 +282,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $params = array();
         $caught = false;
         try {
-            $obj->validateApiParameters($keys, $params);
+            $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
@@ -286,22 +295,22 @@ class ApiTest extends PHPUnit_Framework_TestCase
         // Required params
         $keys = $fxt['keys'];
         $params = $fxt['params']['required'];
-        $result = $obj->validateApiParameters($keys, $params);
+        $result = $ref_method_validate->invoke($obj, $keys, $params);
         $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
         $this->assertEquals(count($result), count($params) + $num_auth_keys);
 
         // Required and optional params
         $keys = $fxt['keys'];
         $params = $fxt['params']['required_optional'];
-        $result = $obj->validateApiParameters($keys, $params);
+        $result = $ref_method_validate->invoke($obj, $keys, $params);
         $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
         $this->assertEquals(count($result), count($params) + $num_auth_keys);
 
         // Required, optional, and extra params
         $keys = $fxt['keys'];
         $params = $fxt['params']['required_optional_extra'];
-        $result = $obj->validateApiParameters($keys, $params);
+        $result = $ref_method_validate->invoke($obj, $keys, $params);
         $num_auth_keys = count($fxt['keys']['auth']['req']) + count($fxt['keys']['auth']['opt']);
-        $this->assertEquals(count($result), count($params) - 2 + $num_auth_keys);
+        $this->assertEquals(count($result), count($params) + $num_auth_keys);
     }
 }

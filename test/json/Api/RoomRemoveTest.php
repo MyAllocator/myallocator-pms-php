@@ -18,7 +18,7 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
             'userId',
@@ -64,30 +64,34 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
         // Remove single room type 
         $data = array(
             'Room' => array(
-                'RoomId' => '23275'
+                'RoomId' => '23644'
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
 
-/*
         // Remove multiple room types
         $data = array(
             'Rooms' => array(
                 array(
-                    'RoomId' => '23276'
+                    'RoomId' => '23645'
                 ),
                 array(
-                    'RoomId' => '23277'
+                    'RoomId' => '23646'
+                ),
+                array(
+                    'RoomId' => '23647'
+                ),
+                array(
+                    'RoomId' => '23648'
                 )
             )
         );
         $rsp = $obj->callApiWithParams($data);
 
-        $this->assertTrue(isset($rsp['Success']));
-        $this->assertEquals($rsp['Success'], 'true');
-*/
+        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertEquals($rsp['response']['Success'], 'true');
     }
 }

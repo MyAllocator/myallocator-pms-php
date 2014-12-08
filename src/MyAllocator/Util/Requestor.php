@@ -100,7 +100,7 @@ class Requestor extends MaBaseClass
                 $absUrl = $this->apiUrl($url, 'json');
                 list($rbody, $rcode) = $this->curlRequestJSON(
                     $method,
-                    $url,
+                    $absUrl,
                     $params
                 );
                 $resp = $this->interpretResponseJSON($rbody, $rcode);
@@ -110,7 +110,7 @@ class Requestor extends MaBaseClass
                 $absUrl = $this->apiUrl($url, 'xml');
                 list($rbody, $rcode, $headers) = $this->curlRequestXML(
                     $method,
-                    $url,
+                    $absUrl,
                     $params
                 );
                 $resp = $this->interpretResponseXML($rbody, $rcode);
@@ -134,7 +134,7 @@ class Requestor extends MaBaseClass
 
         if ($method == 'post') {
             $opts[CURLOPT_POST] = 1;
-            $opts[CURLOPT_POSTFIELDS] = array('json' => $encoded);
+            $opts[CURLOPT_POSTFIELDS] = array('json' => $params);
         } else {
             throw new ApiException('Unsupported method '.$method);
         }

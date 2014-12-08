@@ -19,13 +19,10 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::get_auth_env(array(
+        $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
-            'propertyId'
+            'userToken'
         ));
         $data = array();
         $data[] = array($auth);
@@ -53,6 +50,6 @@ class PropertyChannelListTest extends PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['Properties']));
+        $this->assertTrue(isset($rsp['response']['Properties']));
     }
 }
