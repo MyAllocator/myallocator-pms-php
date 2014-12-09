@@ -70,5 +70,5 @@ return array(
     /*
      * Enable/Disable debug logs.
      */
-    'debugsEnabled' => true // true, false
+    'debugsEnabled' => false // true, false
 );

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="./vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -9,12 +9,16 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false">
+    <groups>
+        <exclude>skip</exclude>
+        <exclude>broken</exclude>
+    </groups>
     <testsuites>
-        <testsuite name="MyAllocator PHP SDK JSON Object Test Suite">
-            <directory suffix=".php">./tests/json/Object/</directory>
+        <testsuite name="MyAllocator PHP SDK Common Test Suite">
+            <directory suffix=".php">./tests/common</directory>
         </testsuite>
         <testsuite name="MyAllocator PHP SDK JSON API Test Suite">
-            <directory suffix=".php">./tests/json/Api/</directory>
+            <directory suffix=".php">./tests/json/Api</directory>
             <exclude>./tests/json/Api/PropertyCreateTest.php</exclude>
             <exclude>./tests/json/Api/PropertyModifyTest.php</exclude>
             <exclude>./tests/json/Api/RoomCreateTest.php</exclude>
@@ -23,15 +27,9 @@
             <exclude>./tests/json/Api/UserCreateTest.php</exclude>
             <exclude>./tests/json/Api/UserExistsTest.php</exclude>
             <exclude>./tests/json/Api/BookingPaymentDownloadTest.php</exclude>
-        </testsuite>
-        <testsuite name="MyAllocator PHP SDK JSON Exception Test Suite">
-            <directory suffix=".php">./tests/json/Exception/</directory>
-        </testsuite>
-        <testsuite name="MyAllocator PHP SDK JSON Util Test Suite">
-            <directory suffix=".php">./tests/json/Util/</directory>
-        </testsuite>
-        <testsuite name="MyAllocator PHP SDK XML Object Test Suite">
-            <directory suffix=".php">./tests/xml/Object/</directory>
+            <exclude>./tests/json/Api/LoopBookingCreateTest.php</exclude>
+            <exclude>./tests/json/Api/LoopBookingActionTest.php</exclude>
+            <exclude>./tests/json/Api/LoopARIListTest.php</exclude>
         </testsuite>
         <testsuite name="MyAllocator PHP SDK XML API Test Suite">
             <directory suffix=".php">./tests/xml/Api/</directory>
@@ -43,12 +41,9 @@
             <exclude>./tests/xml/Api/UserCreateTest.php</exclude>
             <exclude>./tests/xml/Api/UserExistsTest.php</exclude>
             <exclude>./tests/xml/Api/BookingPaymentDownloadTest.php</exclude>
-        </testsuite>
-        <testsuite name="MyAllocator PHP SDK XML Exception Test Suite">
-            <directory suffix=".php">./tests/xml/Exception/</directory>
-        </testsuite>
-        <testsuite name="MyAllocator PHP SDK XML Util Test Suite">
-            <directory suffix=".php">./tests/xml/Util/</directory>
+            <exclude>./tests/json/Api/LoopBookingCreateTest.php</exclude>
+            <exclude>./tests/json/Api/LoopBookingActionTest.php</exclude>
+            <exclude>./tests/json/Api/LoopARIListTest.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
