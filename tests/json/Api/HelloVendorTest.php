@@ -49,7 +49,7 @@ class HelloVendorTest extends \PHPUnit_Framework_TestCase
             $rsp = $obj->callApiWithParams(array(
                 'hello' => 'world'
             ));
-        } catch (Exception $e) {
+        } catch (\exception $e) {
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiAuthenticationException', $e);
         }
 
