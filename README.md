@@ -1,6 +1,6 @@
 #myallocator-php
 
-The PHP SDK for MyAllocator integration (JSON & XML).
+MyAllocator PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
 
 ## Requirements
 
@@ -82,6 +82,8 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
     array                   json        json        array
     json                    json        json        json
     xml                     xml         xml         xml
+
+`array` and `json` data formats are preferred vs. `xml`.
 
 Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
