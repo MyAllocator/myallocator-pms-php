@@ -83,7 +83,7 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
     json                    json        json        json
     xml                     xml         xml         xml
 
-Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable 'paramValidationEnabled' in Config.php to skip parameter validation.
+Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
 ### API Response Format
 
@@ -97,7 +97,7 @@ A request call will always return an array with the following response structure
 
 *code* is the HTTP response code.
 
-*headers* is the reponse hears (only returned if dataFormat = xml)
+*headers* is the response headers (only returned if dataFormat = xml)
 
 *response* is the response payload in the configured dataFormat.
 
@@ -133,8 +133,9 @@ You can run phpunit tests from the top directory:
     vendor/bin/phpunit --debug tests/common
 
 Note, there is a different set of tests for json and XML.
-The json tests use the 'array' dataFormat to interface with the SDK. (refer to *src/MyAllocator/Config/Config.php*)
+
+The json tests use the `array` dataFormat to interface with the SDK. Refer to *src/MyAllocator/Config/Config.php*.
 
 ### Troubleshooting
 
-Set 'debugsEnabled' to true in *src/MyAllocator/Config/Config.php* to display request and response data in the SDK interface and API transfer data formats for an API request.
+Set `debugsEnabled` to true in *src/MyAllocator/Config/Config.php* to display request and response data in the SDK interface and API transfer data formats for an API request.
