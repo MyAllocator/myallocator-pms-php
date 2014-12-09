@@ -65,14 +65,13 @@ The setConfig is not required once *src/MyAllocator/Config/Config.php* has been 
 
 ### Parameter Validation
 
-The SDK supports parameter validation for array and json data formats, which can be configured via the *paramValidationEnabled* configuration in *src/MyAllocator/Config/Config.php*. If you prefer to send a raw request for performance, or other reasons, set this configuration to false.
+The SDK supports parameter validation for array and json data formats, which can be configured via the *paramValidationEnabled* configuration in *src/MyAllocator/Config/Config.php*. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
-When enabled:
 1.  Required and optional Api keys are defined via $keys array in each Api class.
 2.  Top level required and optional keys are validated prior to sending a request to MyAllocator.
-3.  If a required key is not present, an ApiException is thrown.
-4.  If a top level key that is not defined in $keys is present in parameters, it is removed. 
-5.  Minimum optional parameters is enforced.
+3.  An ApiException is thrown if a required key is not present.
+4.  Top level keys not defined in $keys are stripped from parameters.
+5.  Minimum optional parameters are enforced.
 
 ### Data Formats
 
