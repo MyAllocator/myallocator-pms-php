@@ -8,7 +8,7 @@ PHP 5.3.2 and later.
 
 ## Composer
 
-You can install via composer. Add the following to your project's *composer.json*.
+You can install via composer. Add the following to your project's `composer.json`.
 
     {
         "require": {
@@ -44,7 +44,7 @@ Please see TODO for up-to-date documentation.
 
 ## Getting Started
 
-A simple usage example (*src/example_autoload.php*):
+A simple usage example (`src/example_autoload.php`):
 
     require_once(dirname(__FILE__) . '/myallocator-sdk-php/src/MyAllocator.php');
     use MyAllocator\phpsdk\src\Api\HelloWorld;
@@ -61,11 +61,11 @@ A simple usage example (*src/example_autoload.php*):
 
 The require_once is not required if autoloaded via composer.
 
-The setConfig is not required once *src/MyAllocator/Config/Config.php* has been configured.
+The setConfig is not required once `src/MyAllocator/Config/Config.php` has been configured.
 
 ### Parameter Validation
 
-The SDK supports parameter validation for array and json data formats, which can be configured via the *paramValidationEnabled* configuration in *src/MyAllocator/Config/Config.php*. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
+The SDK supports parameter validation for array and json data formats, which can be configured via the `paramValidationEnabled` configuration in `src/MyAllocator/Config/Config.php`. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
 1.  Required and optional Api keys are defined via $keys array in each Api class.
 2.  Top level required and optional keys are validated prior to sending a request to MyAllocator.
@@ -75,7 +75,7 @@ The SDK supports parameter validation for array and json data formats, which can
 
 ### Data Formats
 
-The SDK supports three data in/out formats (array, json, xml), which can be configured via the *dataFormat* configuration in *src/MyAllocator/Config/Config.php*. The following table illustrates the formats used for the request flow based on dataFormat.
+The SDK supports three data in/out formats (array, json, xml), which can be configured via the `dataFormat` configuration in `src/MyAllocator/Config/Config.php`. The following table illustrates the formats used for the request flow based on dataFormat.
 
     you->SDK(dataFormat)    SDK->MA     MA->SDK     SDK->you
     --------------------    -------     -------     --------
@@ -95,11 +95,11 @@ A request call will always return an array with the following response structure
         'response' => $resp
     );
 
-*code* is the HTTP response code.
+`code` is the HTTP response code.
 
-*headers* is the response headers (only returned if dataFormat = xml)
+`headers` is the response headers (only returned if dataFormat = xml)
 
-*response* is the response payload in the configured dataFormat.
+`response` is the response payload in the configured dataFormat.
 
 ### Setup Local Environment Variables
 
@@ -120,7 +120,7 @@ Most of the test cases use local environment variables and will be skipped if no
 
 You can run phpunit tests from the top directory:
 
-    Run common infra, JSON API, and XML API test cases. This excludes some of the advanced API's. Refer to *phpunit.xml*.
+    Run common infra, JSON API, and XML API test cases. This excludes some of the advanced API's. Refer to `phpunit.xml`.
     vendor/bin/phpunit --debug
 
     Run JSON API test cases.
@@ -134,8 +134,8 @@ You can run phpunit tests from the top directory:
 
 Note, there is a different set of tests for json and XML.
 
-The json tests use the `array` dataFormat to interface with the SDK. Refer to *src/MyAllocator/Config/Config.php*.
+The json tests use the `array` dataFormat to interface with the SDK. Refer to `src/MyAllocator/Config/Config.php`.
 
 ### Troubleshooting
 
-Set `debugsEnabled` to true in *src/MyAllocator/Config/Config.php* to display request and response data in the SDK interface and API transfer data formats for an API request.
+Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
