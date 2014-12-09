@@ -1,11 +1,13 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\LoopARIList;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
+use MyAllocator\phpsdk\src\Api\LoopARIList;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class LoopARIListTest extends PHPUnit_Framework_TestCase
+class LoopARIListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -14,7 +16,7 @@ class LoopARIListTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new LoopARIList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\LoopARIList', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopARIList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -54,9 +56,9 @@ class LoopARIListTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             $rsp = $obj->callApi();
-        } catch (exception $e) {
+        } catch (\exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {

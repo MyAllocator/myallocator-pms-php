@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\Api\VendorSet;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\VendorSet;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class VendorSetTest extends PHPUnit_Framework_TestCase
+class VendorSetTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class VendorSetTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new VendorSet();
-        $this->assertEquals('MyAllocator\phpsdk\Api\VendorSet', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\VendorSet', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

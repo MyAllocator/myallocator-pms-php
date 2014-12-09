@@ -24,13 +24,13 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Api;
-use MyAllocator\phpsdk\MaBaseClass;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiException;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
+namespace MyAllocator\phpsdk\src\Api;
+use MyAllocator\phpsdk\src\MaBaseClass;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Requestor;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiException;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 
 class MaApi extends MaBaseClass
 {
@@ -86,7 +86,7 @@ class MaApi extends MaBaseClass
         // Load auth information if provided
         if (isset($cfg) && isset($cfg['auth'])) {
             if (is_object($cfg['auth']) &&
-                is_a($cfg['auth'], 'MyAllocator\phpsdk\Object\Auth')
+                is_a($cfg['auth'], 'MyAllocator\phpsdk\src\Object\Auth')
             ) {
                 $this->auth = $cfg['auth'];
             } else if (is_array($cfg['auth'])) {
@@ -141,8 +141,8 @@ class MaApi extends MaBaseClass
      * Get the authentication object.
      *
      * @param string $errorOnNull If true, throw an exception if auth null.
-     * @return MyAllocator\phpsdk\Object\Auth API Authentication object.
-     * @throws MyAllocator\phpsdk\Exception\ApiException
+     * @return MyAllocator\phpsdk\src\Object\Auth API Authentication object.
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuth($errorOnNull = false)
     {
@@ -159,7 +159,7 @@ class MaApi extends MaBaseClass
     /**
      * Set the authentication object for the API.
      *
-     * @param MyAllocator\phpsdk\Object\Auth API Authentication object.
+     * @param MyAllocator\phpsdk\src\Object\Auth API Authentication object.
      */
     public function setAuth(Auth $auth)
     {

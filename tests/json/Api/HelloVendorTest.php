@@ -1,11 +1,13 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\HelloVendor;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
+use MyAllocator\phpsdk\src\Api\HelloVendor;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class HelloVendorTest extends PHPUnit_Framework_TestCase
+class HelloVendorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -14,7 +16,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new HelloVendor();
-        $this->assertEquals('MyAllocator\phpsdk\Api\HelloVendor', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\HelloVendor', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -48,7 +50,7 @@ class HelloVendorTest extends PHPUnit_Framework_TestCase
                 'hello' => 'world'
             ));
         } catch (Exception $e) {
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiAuthenticationException', $e);
         }
 
         // Successful call

@@ -1,11 +1,13 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\Api\AssociatePropertyToPMS;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
+use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class AssociatePropertyToPMSTest extends PHPUnit_Framework_TestCase
+class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -14,7 +16,7 @@ class AssociatePropertyToPMSTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\Api\AssociatePropertyToPMS', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

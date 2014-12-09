@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\Api\RoomUpdate;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\RoomUpdate;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class RoomUpdateTest extends PHPUnit_Framework_TestCase
+class RoomUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class RoomUpdateTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new RoomUpdate();
-        $this->assertEquals('MyAllocator\phpsdk\Api\RoomUpdate', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\RoomUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

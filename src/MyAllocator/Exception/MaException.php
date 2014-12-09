@@ -24,7 +24,7 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Exception;
+namespace MyAllocator\phpsdk\src\Exception;
 
 class MaException extends \Exception
 {

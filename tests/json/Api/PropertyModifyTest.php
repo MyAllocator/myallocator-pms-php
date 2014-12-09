@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\PropertyModify;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class PropertyModifyTest extends PHPUnit_Framework_TestCase
+class PropertyModifyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class PropertyModifyTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyModify', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

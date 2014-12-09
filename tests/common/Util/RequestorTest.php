@@ -1,7 +1,7 @@
 <?php
  
-use MyAllocator\phpsdk\Util\Requestor;
-use MyAllocator\phpsdk\Object\Auth as Auth;
+use MyAllocator\phpsdk\src\Util\Requestor;
+use MyAllocator\phpsdk\src\Object\Auth as Auth;
  
 class RequestorTest extends PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class RequestorTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new Requestor();
-        $this->assertEquals('MyAllocator\phpsdk\Util\Requestor', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Util\Requestor', get_class($obj));
     }
 
     /**

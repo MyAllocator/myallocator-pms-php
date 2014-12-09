@@ -24,7 +24,7 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk;
+namespace MyAllocator\phpsdk\src;
 
 class MaBaseClass
 {

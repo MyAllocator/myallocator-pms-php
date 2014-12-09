@@ -24,14 +24,14 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Util;
-use MyAllocator\phpsdk\MaBaseClass;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Util\XmlTransformer;
-use MyAllocator\phpsdk\Exception\ApiException;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
-use MyAllocator\phpsdk\Exception\ApiConnectionException;
-use MyAllocator\phpsdk\Exception\InvalidRequestException;
+namespace MyAllocator\phpsdk\src\Util;
+use MyAllocator\phpsdk\src\MaBaseClass;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Util\XmlTransformer;
+use MyAllocator\phpsdk\src\Exception\ApiException;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
+use MyAllocator\phpsdk\src\Exception\ApiConnectionException;
+use MyAllocator\phpsdk\src\Exception\InvalidRequestException;
 
 /**
  * The Requestor class is responsible for preparing and sending an API reqest,

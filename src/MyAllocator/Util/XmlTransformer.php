@@ -24,7 +24,7 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Util;
+namespace MyAllocator\phpsdk\src\Util;
 
 class XmlTransformer {
 

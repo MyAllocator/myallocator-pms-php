@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\RoomRemove;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\RoomRemove;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class RoomRemoveTest extends PHPUnit_Framework_TestCase
+class RoomRemoveTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new RoomRemove();
-        $this->assertEquals('MyAllocator\phpsdk\Api\RoomRemove', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\RoomRemove', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -53,9 +55,9 @@ class RoomRemoveTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             $rsp = $obj->callApiWithParams(array());
-        } catch (exception $e) {
+        } catch (\exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {

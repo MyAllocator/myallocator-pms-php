@@ -15,7 +15,9 @@
     },
     "autoload": {
         "psr-4": {
-            "MyAllocator\\phpsdk\\": "src/MyAllocator"
+            "MyAllocator\\phpsdk\\src\\": "src/MyAllocator",
+            "MyAllocator\\phpsdk\\tests\\json\\": "tests/json",
+            "MyAllocator\\phpsdk\\tests\\xml\\": "tests/xml"
         }
     }
 }

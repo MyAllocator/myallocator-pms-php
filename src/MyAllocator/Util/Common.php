@@ -24,9 +24,9 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Util;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Exception\ApiException;
+namespace MyAllocator\phpsdk\src\Util;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Exception\ApiException;
 
 /**
  * Common methods.
@@ -39,7 +39,7 @@ abstract class Common
      * @param array $keys The authentication keys to set.
      * @param string $debug Enable debug.
      * @return array(Auth, string) Authentication object and bool if pulled from ENV.
-     * @throws MyAllocator\phpsdk\Exception\ApiException If no keys supplied.
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException If no keys supplied.
      */
     public static function getAuthEnv($keys = null, $debug = false)
     {

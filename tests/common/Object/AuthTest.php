@@ -1,6 +1,6 @@
 <?php
  
-use MyAllocator\phpsdk\Object\Auth;
+use MyAllocator\phpsdk\src\Object\Auth;
  
 class AuthTest extends PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new Auth();
-        $this->assertEquals('MyAllocator\phpsdk\Object\Auth', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Object\Auth', get_class($obj));
     }
 
     public function fixtureObjectProperties()
@@ -79,7 +79,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
         try {
             $auth->getAuthKeyVar('invalid_key');
         } catch (Exception $e) {
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         // Test api with no auth set

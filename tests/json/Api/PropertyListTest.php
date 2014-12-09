@@ -1,11 +1,13 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\PropertyList;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
-use MyAllocator\phpsdk\Exception\ApiAuthenticationException;
+use MyAllocator\phpsdk\src\Api\PropertyList;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class PropertyListTest extends PHPUnit_Framework_TestCase
+class PropertyListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -14,7 +16,7 @@ class PropertyListTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new PropertyList();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyList', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

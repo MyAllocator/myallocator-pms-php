@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\UserCreate;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\UserCreate;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class UserCreateTest extends PHPUnit_Framework_TestCase
+class UserCreateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new UserCreate();
-        $this->assertEquals('MyAllocator\phpsdk\Api\UserCreate', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\UserCreate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -54,9 +56,9 @@ class UserCreateTest extends PHPUnit_Framework_TestCase
                 'Email' => 'phpsdkuser@phpsdk.com',
                 'CustomerEmail' => 'phpsdkcustomer@phpsdk.com'
             ));
-        } catch (exception $e) {
+        } catch (\exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {

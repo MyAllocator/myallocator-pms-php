@@ -1,6 +1,6 @@
 <?php
  
-use MyAllocator\phpsdk\Exception\ApiConnectionException;
+use MyAllocator\phpsdk\src\Exception\ApiConnectionException;
  
 class ApiConnectionExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class ApiConnectionExceptionTest extends PHPUnit_Framework_TestCase
             );
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiConnectionException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiConnectionException', $e);
             $this->assertEquals($this->message, $e->getMessage());
             $this->assertEquals($this->httpStatus, $e->getHttpStatus());
             $this->assertEquals($this->httpBody, $e->getHttpBody());

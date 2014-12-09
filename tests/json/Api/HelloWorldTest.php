@@ -1,9 +1,11 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\Api\HelloWorld;
-use MyAllocator\phpsdk\Object\Auth as Auth;
+use MyAllocator\phpsdk\src\Api\HelloWorld;
+use MyAllocator\phpsdk\src\Object\Auth;
  
-class HelloWorldTest extends PHPUnit_Framework_TestCase
+class HelloWorldTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -12,7 +14,7 @@ class HelloWorldTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new HelloWorld();
-        $this->assertEquals('MyAllocator\phpsdk\Api\HelloWorld', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\HelloWorld', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

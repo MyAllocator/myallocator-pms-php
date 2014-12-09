@@ -1,7 +1,7 @@
 <?php
  
-use MyAllocator\phpsdk\Api\MaApi;
-use MyAllocator\phpsdk\Object\Auth;
+use MyAllocator\phpsdk\src\Api\MaApi;
+use MyAllocator\phpsdk\src\Object\Auth;
  
 class MaApiTest extends PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new MaApi();
-        $this->assertEquals('MyAllocator\phpsdk\Api\MaApi', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\MaApi', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -210,7 +210,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
         $obj->setConfig('dataFormat', 'array');
 
         // Prepare reflection method to test private method
-        $reflector = new ReflectionClass('MyAllocator\phpsdk\Api\MaApi');
+        $reflector = new ReflectionClass('MyAllocator\phpsdk\src\Api\MaApi');
         $ref_method_validate = $reflector->getMethod('validateApiParameters');
         $ref_method_validate->setAccessible(true);
 
@@ -222,7 +222,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiAuthenticationException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiAuthenticationException', $e);
         }
 
         if (!$caught) {
@@ -242,7 +242,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {
@@ -257,7 +257,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {
@@ -272,7 +272,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {
@@ -287,7 +287,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             $ref_method_validate->invoke($obj, $keys, $params);
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\ApiException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
         }
 
         if (!$caught) {

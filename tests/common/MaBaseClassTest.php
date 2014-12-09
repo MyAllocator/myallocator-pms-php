@@ -1,6 +1,6 @@
 <?php
  
-use MyAllocator\phpsdk\MaBaseClass;
+use MyAllocator\phpsdk\src\MaBaseClass;
  
 class MaBaseClassTest extends PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class MaBaseClassTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new MaBaseClass();
-        $this->assertEquals('MyAllocator\phpsdk\MaBaseClass', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\MaBaseClass', get_class($obj));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
  
-use MyAllocator\phpsdk\Exception\InvalidRequestException;
+use MyAllocator\phpsdk\src\Exception\InvalidRequestException;
  
 class InvalidRequestExceptionTest extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class InvalidRequestExceptionTest extends PHPUnit_Framework_TestCase
             );
         } catch (Exception $e) {
             $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\Exception\InvalidRequestException', $e);
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\InvalidRequestException', $e);
             $this->assertEquals($this->message, $e->getMessage());
             $this->assertEquals($this->httpStatus, $e->getHttpStatus());
             $this->assertEquals($this->httpBody, $e->getHttpBody());

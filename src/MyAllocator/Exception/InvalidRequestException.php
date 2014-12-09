@@ -24,8 +24,8 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Exception;
-use MyAllocator\phpsdk\Exception\MaException;
+namespace MyAllocator\phpsdk\src\Exception;
+use MyAllocator\phpsdk\src\Exception\MaException;
 
 class InvalidRequestException extends MaException
 {

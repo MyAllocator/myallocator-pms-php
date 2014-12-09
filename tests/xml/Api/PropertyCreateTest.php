@@ -1,10 +1,12 @@
 <?php
+
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\Api\PropertyCreate;
-use MyAllocator\phpsdk\Object\Auth;
-use MyAllocator\phpsdk\Util\Common;
+use MyAllocator\phpsdk\src\Api\PropertyCreate;
+use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Util\Common;
  
-class PropertyCreateTest extends PHPUnit_Framework_TestCase
+class PropertyCreateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -13,7 +15,7 @@ class PropertyCreateTest extends PHPUnit_Framework_TestCase
     public function testClass()
     {
         $obj = new PropertyCreate();
-        $this->assertEquals('MyAllocator\phpsdk\Api\PropertyCreate', get_class($obj));
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyCreate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()

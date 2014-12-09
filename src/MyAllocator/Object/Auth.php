@@ -24,8 +24,8 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Object;
-use MyAllocator\phpsdk\Exception\ApiException;
+namespace MyAllocator\phpsdk\src\Object;
+use MyAllocator\phpsdk\src\Exception\ApiException;
 
 class Auth
 {

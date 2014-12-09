@@ -24,7 +24,7 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\Api;
+namespace MyAllocator\phpsdk\src\Api;
 
 class RoomDelete extends MaApi
 {
