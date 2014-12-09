@@ -8,7 +8,7 @@ PHP 5.3.2 and later.
 
 ## Composer
 
-You can install via composer. Add the following to your project's +composer.json+.
+You can install via composer. Add the following to your project's *composer.json*.
 
     {
         "require": {
@@ -59,7 +59,8 @@ A simple usage example (*src/example_autoload.php*):
     $rsp = $api->callApiWithParams($params);
     var_dump($rsp);
 
-The require_once line is not required if autoloaded via composer.
+The require_once is not required if autoloaded via composer.
+
 The setConfig is not required once *src/MyAllocator/Config/Config.php* has been configured.
 
 ### Parameter Validation
@@ -67,11 +68,11 @@ The setConfig is not required once *src/MyAllocator/Config/Config.php* has been 
 The SDK supports parameter validation for array and json data formats, which can be configured via the *paramValidationEnabled* configuration in *src/MyAllocator/Config/Config.php*. If you prefer to send a raw request for performance, or other reasons, set this configuration to false.
 
 When enabled:
-1. Required and optional Api keys are defined via $keys array in each Api class.
-2. Top level required and optional keys are validated prior to sending a request to MyAllocator.
-3. If a required key is not present, an ApiException is thrown.
-4. If a top level key that is not defined in $keys is present in parameters, it is removed. 
-5. Minimum optional parameters is enforced.
+1.  Required and optional Api keys are defined via $keys array in each Api class.
+2.  Top level required and optional keys are validated prior to sending a request to MyAllocator.
+3.  If a required key is not present, an ApiException is thrown.
+4.  If a top level key that is not defined in $keys is present in parameters, it is removed. 
+5.  Minimum optional parameters is enforced.
 
 ### Data Formats
 
