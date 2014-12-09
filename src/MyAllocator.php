@@ -24,17 +24,24 @@
  * IN THE SOFTWARE.
  */
 
-// Tested on PHP 5.5.9
-//
-// Usage: 
-//
-//     require_once("/path/to/this/file");
-//     use MyAllocator\phpsdk\Api\HelloWorld;
-//
-//     $obj = new HelloWorld();
-//     echo $obj->sayHi('hi!') . "\n";
-
-echo "Loading config\n";
+/*
+ * Tested on PHP 5.5.9
+ *
+ * Usage:
+ * 
+ * require_once(dirname(__FILE__) . '/MyAllocator.php');
+ * use MyAllocator\phpsdk\src\Api\HelloWorld;
+ *
+ * $params = array(
+ *     'Auth' => 'true',
+ *     'hello' => 'world'
+ * );
+ *
+ * $api = new HelloWorld();
+ * $api->setConfig('dataFormat', 'array');
+ * $rsp = $api->callApiWithParams($params);
+ * var_dump($rsp);
+ */
 
 //Required packages
 if (!function_exists('curl_init')) {
@@ -50,9 +57,9 @@ if (!function_exists('mb_detect_encoding')) {
 }
 
 // Initial Dependencies
-require_once(dirname(__FILE__) . '/MyAllocator/MyAllocatorBaseClass.php');
+require_once(dirname(__FILE__) . '/MyAllocator/MaBaseClass.php');
 require_once(dirname(__FILE__) . '/MyAllocator/Exception/MaException.php');
-require_once(dirname(__FILE__) . '/MyAllocator/Api/Api.php');
+require_once(dirname(__FILE__) . '/MyAllocator/Api/MaApi.php');
 
 // Configuration
 foreach (glob(dirname(__FILE__) . '/MyAllocator/Config/*.php') as $file) {

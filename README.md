@@ -4,7 +4,7 @@ The PHP SDK for MyAllocator integration (JSON & XML).
 
 ## Requirements
 
-PHP 5.3 and later.
+PHP 5.3.2 and later.
 
 ## Composer
 
@@ -44,9 +44,23 @@ Please see TODO for up-to-date documentation.
 
 ## Getting Started
 
-A simple usage example:
+A simple usage example (*src/example_autoload.php*):
 
-TODO
+    require_once(dirname(__FILE__) . '/myallocator-sdk-php/src/MyAllocator.php');
+    use MyAllocator\phpsdk\src\Api\HelloWorld;
+
+    $params = array(
+        'Auth' => 'true',
+        'hello' => 'world'
+    );
+
+    $api = new HelloWorld();
+    $api->setConfig('dataFormat', 'array');
+    $rsp = $api->callApiWithParams($params);
+    var_dump($rsp);
+
+The require_once line is not required if autoloaded via composer.
+The setConfig is not required once *src/MyAllocator/Config/Config.php* has been configured.
 
 ### Parameter Validation
 
@@ -59,8 +73,6 @@ When enabled:
 4. If a top level key that is not defined in $keys is present in parameters, it is removed. 
 5. Minimum optional parameters is enforced.
 
-Note, parameter validation is not supported with xml. The raw request is sent and response returned.
-
 ### Data Formats
 
 The SDK supports three data in/out formats (array, json, xml), which can be configured via the *dataFormat* configuration in *src/MyAllocator/Config/Config.php*. The following table illustrates the formats used for the request flow based on dataFormat.
@@ -71,7 +83,7 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
     json                    json        json        json
     xml                     xml         xml         xml
 
-Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. If you do not wish to experience the cost, disable 'paramValidationEnabled' above. For xml data, the raw request is sent to MyAllocator and raw response returned to you.
+Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable 'paramValidationEnabled' in Config.php to skip parameter validation.
 
 ### API Response Format
 
@@ -84,32 +96,45 @@ A request call will always return an array with the following response structure
     );
 
 *code* is the HTTP response code.
+
 *headers* is the reponse hears (only returned if dataFormat = xml)
+
 *response* is the response payload in the configured dataFormat.
+
+### Setup Local Environment Variables
+
+Most of the test cases use local environment variables and will be skipped if not provided. Export the following local environment variables from your data to use with the related test cases:
+
+    myallocator-sdk-php$ cat test/ENVIRONMENT_CREDENTIALS 
+    #!/bin/bash
+    export ma_vendorId=xxxxx
+    export ma_vendorPassword=xxxxx
+    export ma_userId=xxxxx
+    export ma_userPassword=xxxxx
+    export ma_userToken=xxxxx
+    export ma_propertyId=xxxxx
+    export ma_PMSUserId=xxxxx
+    myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
 
 ## Tests
 
 You can run phpunit tests from the top directory:
 
-    vendor/bin/phpunit --debug tests
+    Run common infra, JSON API, and XML API test cases. This excludes some of the advanced API's. Refer to *phpunit.xml*.
+    vendor/bin/phpunit --debug
+
+    Run JSON API test cases.
     vendor/bin/phpunit --debug tests/json
+
+    Run XML API test cases.
     vendor/bin/phpunit --debug tests/xml
 
+    Run common infra test cases.
+    vendor/bin/phpunit --debug tests/common
+
 Note, there is a different set of tests for json and XML.
-The json tests use the 'array' dataFormat (refer to *src/MyAllocator/Config/Config.php*)
+The json tests use the 'array' dataFormat to interface with the SDK. (refer to *src/MyAllocator/Config/Config.php*)
 
-### Setup Local Environment Variables
+### Troubleshooting
 
-Most of the test cases use local environment variables and will be skipped if they are not provided. Export the following local environment variables from your data to use with the related test cases:
-
-    myallocator-sdk-php$ cat test/ENVIRONMENT_CREDENTIALS 
-    #!/bin/bash
-    export ma_vendorId=phpsdk
-    export ma_vendorPassword=xxxxx
-    export ma_userId=phpsdkuser
-    export ma_userPassword=xxxxx
-    export ma_userToken=xxxxx
-    export ma_propertyId=xxxxx
-    export ma_PMSUserId=xxxxx
-
-    myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
+Set 'debugsEnabled' to true in *src/MyAllocator/Config/Config.php* to display request and response data in the SDK interface and API transfer data formats for an API request.

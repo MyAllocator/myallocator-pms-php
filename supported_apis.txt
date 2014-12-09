@@ -1,4 +1,5 @@
-The following API's are supported by this SDK:
+The following API's are supported by this SDK.
+API documentation can be found at http://myallocator.github.io/apidocs/
 
 ARIUpdate
 ARIUpdateStatus
@@ -11,15 +12,19 @@ HelloWorld
 HelloUser
 HelloVendor
 HelloVendorUser
+LoopARIList
+LoopBookingAction
+LoopBookingCreate
+LoopBookingList
 PropertyChannelList
 PropertyCreate
-PropertyModify
 PropertyList
-RoomCreate
-RoomUpdate
-RoomRemove
-RoomList
+PropertyModify
 RoomAvailabilityList
+RoomCreate
+RoomList
+RoomRemove
+RoomUpdate
 UserCreate
 UserExists
 VendorSet
