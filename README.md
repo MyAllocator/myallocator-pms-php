@@ -60,7 +60,11 @@ A simple usage example (`src/example_autoload.php`):
 
     $api = new HelloWorld();
     $api->setConfig('dataFormat', 'array');
-    $rsp = $api->callApiWithParams($params);
+    try {
+        $rsp = $api->callApiWithParams($params);
+    } catch (Exception $e) {
+        $rsp = 'Oops: '.$e->getMessage();
+    }
     var_dump($rsp);
 
 The require_once is not required if autoloaded via composer.
@@ -101,7 +105,7 @@ Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display re
 
 ## API Response Format
 
-A request call will always return an array with the following response structure:
+A successful request call will always return an array with the following response structure:
 
     return array(
         'code' => $rcode,
@@ -114,6 +118,8 @@ A request call will always return an array with the following response structure
 `headers` is the response headers (only returned if dataFormat = xml).
 
 `response` is the response payload in the configured dataFormat.
+
+Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks.
 
 ## Tests
 
