@@ -2,6 +2,9 @@
 
 MyAllocator PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
 
+MyAllocator [https://www.myallocator.com/]
+MyAllocator API Documentation [http://myallocator.github.io/apidocs/]
+
 ## Requirements
 
 PHP 5.3.2 and later.
@@ -20,7 +23,7 @@ Then install via:
 
     composer.phar install
 
-To use the bindings, either user Composer's autoload[https://getcomposer.org/doc/00-intro.md#autoloading]:
+To use the bindings, either use Composer's autoload [https://getcomposer.org/doc/00-intro.md#autoloading]:
 
     require_once('vendor/autoload.php');
 
