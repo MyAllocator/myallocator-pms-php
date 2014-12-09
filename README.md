@@ -67,7 +67,11 @@ The require_once is not required if autoloaded via composer.
 
 The setConfig is not required once `src/MyAllocator/Config/Config.php` has been configured.
 
-### Parameter Validation
+## Configuration
+
+The default configuration file can be found at at `src/MyAllocator/Config/Config.php`. The following is configurable:
+
+### Parameter Validation (`paramValidationEnabled`)
 
 The SDK supports parameter validation for array and json data formats, which can be configured via the `paramValidationEnabled` configuration in `src/MyAllocator/Config/Config.php`. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
@@ -77,7 +81,7 @@ The SDK supports parameter validation for array and json data formats, which can
 4.  Top level keys not defined in $keys are stripped from parameters.
 5.  Minimum optional parameters are enforced.
 
-### Data Formats
+### Data Formats (`dataFormat`)
 
 The SDK supports three data in/out formats (array, json, xml), which can be configured via the `dataFormat` configuration in `src/MyAllocator/Config/Config.php`. The following table illustrates the formats used for the request flow based on dataFormat.
 
@@ -91,7 +95,11 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
 
 Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
-### API Response Format
+### Troubleshooting (`debugsEnabled`)
+
+Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
+
+## API Response Format
 
 A request call will always return an array with the following response structure:
 
@@ -103,24 +111,9 @@ A request call will always return an array with the following response structure
 
 `code` is the HTTP response code.
 
-`headers` is the response headers (only returned if dataFormat = xml)
+`headers` is the response headers (only returned if dataFormat = xml).
 
 `response` is the response payload in the configured dataFormat.
-
-### Setup Local Environment Variables
-
-Most of the test cases use local environment variables and will be skipped if not provided. Export the following local environment variables from your data to use with the related test cases:
-
-    myallocator-sdk-php$ cat test/ENVIRONMENT_CREDENTIALS 
-    #!/bin/bash
-    export ma_vendorId=xxxxx
-    export ma_vendorPassword=xxxxx
-    export ma_userId=xxxxx
-    export ma_userPassword=xxxxx
-    export ma_userToken=xxxxx
-    export ma_propertyId=xxxxx
-    export ma_PMSUserId=xxxxx
-    myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
 
 ## Tests
 
@@ -142,6 +135,17 @@ Note, there is a different set of tests for json and XML.
 
 The json tests use the `array` dataFormat to interface with the SDK. Refer to `src/MyAllocator/Config/Config.php`.
 
-### Troubleshooting
+#### Setup Local Environment Variables
 
-Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
+Most of the test cases use local environment variables and will be skipped if not provided. Export the following local environment variables from your data to use with the related test cases:
+
+    myallocator-sdk-php$ cat test/ENVIRONMENT_CREDENTIALS 
+    #!/bin/bash
+    export ma_vendorId=xxxxx
+    export ma_vendorPassword=xxxxx
+    export ma_userId=xxxxx
+    export ma_userPassword=xxxxx
+    export ma_userToken=xxxxx
+    export ma_propertyId=xxxxx
+    export ma_PMSUserId=xxxxx
+    myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
