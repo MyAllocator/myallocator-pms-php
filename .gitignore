@@ -1,4 +1,4 @@
 /vendor
 composer.lock
 test/ENVIRONMENT_CREDENTIALS
-doc/
+docs/
