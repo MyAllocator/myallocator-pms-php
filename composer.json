@@ -1,7 +1,7 @@
 {
-    "name": "MyAllocator/phpsdk",
+    "name": "MyAllocator/myallocator-php-sdk",
     "type": "library",
-    "description": "MyAllocator Channel Manager PHP SDK",
+    "description": "MyAllocator PHP SDK",
     "license": "MIT",
     "keywords": ["myallocator", "channel", "manager"],
     "homepage": "https://www.myallocator.com/",
