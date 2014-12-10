@@ -1,5 +1,5 @@
 {
-    "name": "MyAllocator/myallocator-php-sdk",
+    "name": "myallocator/myallocator-php-sdk",
     "type": "library",
     "description": "MyAllocator PHP SDK",
     "license": "MIT",
