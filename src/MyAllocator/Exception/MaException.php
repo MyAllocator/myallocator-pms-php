@@ -26,8 +26,18 @@
 
 namespace MyAllocator\phpsdk\src\Exception;
 
+/**
+ * The MyAllocator base exception class.
+ */
 class MaException extends \Exception
 {
+    /**
+     * The constructor can set http status, body, and json body.
+     *
+     * @param integer $httpStatus The http code.
+     * @param array $httpBody The http response body.
+     * @param string $jsonBody The http response body in json format.
+     */
     public function __construct(
         $message,
         $httpStatus = null,
@@ -40,16 +50,25 @@ class MaException extends \Exception
         $this->jsonBody = $jsonBody;
     }
 
+    /**
+     * Get the http status code of an exception.
+     */
     public function getHttpStatus()
     {
         return $this->httpStatus;
     }
 
+    /**
+     * Get the http body of an exception.
+     */
     public function getHttpBody()
     {
         return $this->httpBody;
     }
 
+    /**
+     * Get the http body as json of an exception.
+     */
     public function getJsonBody()
     {
         return $this->jsonBody;

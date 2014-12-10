@@ -27,7 +27,6 @@
 namespace MyAllocator\phpsdk\src\Util;
 use MyAllocator\phpsdk\src\MaBaseClass;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Util\XmlTransformer;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 use MyAllocator\phpsdk\src\Exception\ApiConnectionException;
@@ -54,6 +53,11 @@ class Requestor extends MaBaseClass
      */
     public $defaultElementNameXML = 'item';
 
+    /**
+     * The constructor passes potential configuration parameters to MaBaseClass.
+     *
+     * @param array $cfg API configuration parameters.
+     */
     public function __construct($cfg = null)
     {
         parent::__construct(array(
@@ -71,6 +75,8 @@ class Requestor extends MaBaseClass
      * @param array|null $params API parameters.
      *
      * @return mixed API response, code, headers (XML only).
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function request($method, $url, $params = null)
     {
@@ -129,6 +135,17 @@ class Requestor extends MaBaseClass
         );
     }
 
+    /**
+     * Send a JSON CURL request.
+     *
+     * @param string $method HTTP method.
+     * @param string $absUrl The absolute endpoint URL.
+     * @param array|null $params API parameters.
+     *
+     * @return mixed API response, code, headers (XML only).
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
     private function curlRequestJSON($method, $absUrl, $params)
     {
         $opts = array();
@@ -164,6 +181,16 @@ class Requestor extends MaBaseClass
         return array($rbody, $rcode);
     }
 
+    /**
+     * Process a JSON CURL response.
+     *
+     * @param string $rbody The JSON response body.
+     * @param integer $rcode The HTTP code.
+     *
+     * @return mixed API response. The format depends on dataFormat.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
     private function interpretResponseJSON($rbody, $rcode)
     {
         $this->debug_echo("\n\nResponse (json):\n");
@@ -191,6 +218,17 @@ class Requestor extends MaBaseClass
         return $resp;
     }
 
+    /**
+     * Send a XML CURL request.
+     *
+     * @param string $method HTTP method.
+     * @param string $absUrl The absolute endpoint URL.
+     * @param array|null $params API parameters.
+     *
+     * @return mixed API response, code, headers (XML only).
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
     private function curlRequestXML($method, $absUrl, $xml)
     {
         $opts = array();
@@ -231,6 +269,14 @@ class Requestor extends MaBaseClass
         return $response;
     }
 
+    /**
+     * Process a XML CURL response.
+     *
+     * @param string $rbody The JSON response body.
+     * @param integer $rcode The HTTP code.
+     *
+     * @return mixed API response. The format depends on dataFormat.
+     */
     private function interpretResponseXML($rbody, $rcode)
     {
         $this->debug_echo("\n\nResponse (xml):\n$rbody");
@@ -242,6 +288,14 @@ class Requestor extends MaBaseClass
         return $rbody;
     }
 
+    /**
+     * Handle a CURL error resulting from a request.
+     *
+     * @param integer $errno The CURL error code.
+     * @param string $message The CURL error nessage.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     */
     private function handleCurlError($errno, $message)
     {
         $apiBase = $this->apiBase;
@@ -262,6 +316,17 @@ class Requestor extends MaBaseClass
         throw new ApiConnectionException($msg);
     }
 
+    /**
+     * Handle a HTTP error resulting from a request.
+     *
+     * @param mixed $rbody The HTTP response body.
+     * @param integer $rcode The HTTP error code.
+     * @param string $resp The JSON encoded response body.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\InvalidRequestException
+     * @throws MyAllocator\phpsdk\src\Exception\APIAuthenticationException
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
     private function handleHttpError($rbody, $rcode, $resp = null)
     {
         $msg = 'HTTP API Error (HTTP response code was ' . $rcode . ')';
@@ -275,6 +340,14 @@ class Requestor extends MaBaseClass
         }
     }
 
+    /**
+     * Get the absolute URL for an API request.
+     *
+     * @param string $url The API method endpoint.
+     * @param string $format The request data format.
+     *
+     * @return string The absolute API URL.
+     */
     private function apiUrl($url = '', $format = 'json')
     {
         if (!$url) {
@@ -290,6 +363,13 @@ class Requestor extends MaBaseClass
         return (string) $absUrl;
     }
 
+    /**
+     * Convert a string to UTF-8 encoding.
+     *
+     * @param string $value The string to encode.
+     *
+     * @return string The UTF-8 encoded string.
+     */
     public static function utf8($value)
     {
         if (is_string($value) &&
@@ -301,6 +381,14 @@ class Requestor extends MaBaseClass
         }
     }
 
+    /**
+     * URL encode URL array parameters.
+     *
+     * @param array $arr The array to encode.
+     * @param string $prefix A key prefix.
+     *
+     * @return string The URL encoded string.
+     */
     public static function encode($arr, $prefix=null)
     {
         if (!is_array($arr)) {
@@ -329,6 +417,13 @@ class Requestor extends MaBaseClass
         return implode('&', $r);
     }
 
+    /**
+     * Encode an object.
+     *
+     * @param mixed $d The object to encode.
+     *
+     * @return mixed The encoded object.
+     */
     private static function encodeObjects($d)
     {
         if ($d instanceof Api) {

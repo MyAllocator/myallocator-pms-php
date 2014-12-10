@@ -82,6 +82,16 @@ class MaApi extends MaBaseClass
         )
     );
 
+    /**
+     * Class contructor attempts to assign authentication parameters
+     * from $cfg argument. Authentication parameters may be configured
+     * via Auth object or array. The parent constructor handles
+     * the included configuration parameters.
+     *
+     * @param mixed $cfg API configuration potentially containing an 
+     *        'auth' key with authentication parameters/object or a
+     *        'cfg' key containing configurations to overwrite Config/Config.php.
+     */
     public function __construct($cfg = null)
     {
         parent::__construct($cfg);
@@ -144,7 +154,9 @@ class MaApi extends MaBaseClass
      * Get the authentication object.
      *
      * @param string $errorOnNull If true, throw an exception if auth null.
+     *
      * @return MyAllocator\phpsdk\src\Object\Auth API Authentication object.
+     *
      * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuth($errorOnNull = false)
@@ -223,6 +235,8 @@ class MaApi extends MaBaseClass
                 // Validate and sanitize parameters
                 if ($this->config['paramValidationEnabled']) {
                     $params = $this->validateApiParameters($this->keys, $params);
+                } else {
+                    $params = $this->setAuthenticationParametersNoValidation($params);
                 }
                 // Add URI method and version to payload
                 $params['_method'] = $this->id;
@@ -255,6 +269,12 @@ class MaApi extends MaBaseClass
 
     /**
      * Validate authentication and argument parameters for an API.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
+     * @param array $params API specific parameters.
+     *
+     * @return array Validated API parameters.
      */
     private function validateApiParameters($keys = null, $params = null)
     {
@@ -280,7 +300,7 @@ class MaApi extends MaBaseClass
         return $params;
     }
 
-    /*
+    /**
      * Assert the API id is set by the API class.
      */
     private function assertApiId()
@@ -292,8 +312,11 @@ class MaApi extends MaBaseClass
         }
     }
 
-    /*
+    /**
      * Assert required API keys exist and are valid.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
      */
     private function assertKeysArrayValid($keys = null)
     {
@@ -320,9 +343,15 @@ class MaApi extends MaBaseClass
         }
     }
 
-    /*
+    /**
      * Assert parameters include minimum number of optional
      * parameters as configured/defined by the API.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
+     * @param array $params API specific parameters.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertKeysHasMinOptParams($keys, $params)
     {
@@ -338,8 +367,18 @@ class MaApi extends MaBaseClass
         }
     }
 
-    /*
+    /**
      * Validate and set required authentication parameters from Auth object.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
+     * @param array $params API specific parameters.
+     * @param string $type The type of authentication parameters to
+     *  process (optional or required).
+     *
+     * @return array Paramters with authentication parameters of $type set.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
      */
     private function setAuthenticationParameters(
         $keys = null,
@@ -418,10 +457,55 @@ class MaApi extends MaBaseClass
         return $params;
     }
 
-    /*
-     * Validate required parameters for API.
+    /**
+     * Set authentication parameters if authentication property set.
+     * This only runs if parameter validation is disabled and does
+     * not validate $keys.
+     *
+     * @param array $params API specific parameters.
+     *
+     * @return array Paramters with authentication parameters set.
      */
-    private function assertReqParameters($keys, $params = null, $type = 'req')
+    private function setAuthenticationParametersNoValidation($params = null)
+    {
+        // Return if authentication property not set
+        if ($this->auth == null) {
+            return $params;
+        }
+
+        // Set parameters for previously configured auth properties
+        // Get property list from auth class
+        $auth_refl = new \ReflectionClass($this->auth);
+        $props = $auth_refl->getProperties(\ReflectionProperty::IS_PUBLIC);
+
+        /*
+         * Loop through property names to determine if configured in auth object.
+         * Add to parameters if set and does not already exist.
+         */
+        foreach ($props as $prop) {
+            $name = $prop->getName();
+            if (isset($this->auth->$name)) {
+                // Do not overwrite if parameter already included
+                $key = $this->auth->getAuthKeyByVar($name);
+                if (!isset($params[$key])) {
+                    $params[$key] = $this->auth->$name;
+                }
+            }
+        }
+
+        return $params;
+    }
+
+    /**
+     * Validate required parameters for API.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
+     * @param array $params API specific parameters.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
+    private function assertReqParameters($keys, $params = null)
     {
         if (!empty($keys['args']['req'])) {
             if (!$params) {
@@ -443,8 +527,15 @@ class MaApi extends MaBaseClass
         }
     }
 
-    /*
+    /**
      * Strip parameters not defined in API keys array.
+     *
+     * @param array $keys Array of required and optional 
+     *  authentication and argument keys (string) for API method.
+     * @param array $params API specific parameters.
+     *
+     * @return array API parameters with unknown parameters
+     *  removed.
      */
     private function removeUnknownParameters($keys, $params)
     {

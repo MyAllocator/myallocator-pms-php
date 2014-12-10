@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src;
 
+/**
+ * The MyAllocator base class to be extended by API's and Utilities.
+ */
 class MaBaseClass
 {
     /**
@@ -33,6 +36,12 @@ class MaBaseClass
      */
     protected $config = null;
 
+    /**
+     * Class contructor attempts to assign configuration parameters.
+     *
+     * @param mixed $cfg API configuration potentially containing a
+     *        'cfg' key with configurations to overwrite Config/Config.php.
+     */
     public function __construct($cfg = null)
     {
         // Load configuration from parameters or file
@@ -50,6 +59,7 @@ class MaBaseClass
      *
      * @param key $key The configuration key. 
      * @param value $value The configuration key value. 
+     *
      * @return boolean|null Result of the set.
      */
     public function setConfig($key = null, $value = null)
@@ -64,6 +74,7 @@ class MaBaseClass
      * Get an API configuration value by key.
      *
      * @param key $key The configuration key. 
+     *
      * @return mixed|null The configuration value.
      */
     public function getConfig($key)
@@ -71,9 +82,15 @@ class MaBaseClass
         return (isset($this->config[$key])) ? $this->config[$key] : null;
     }
 
-    /*
+    /**
      * Sanitize parameter config data. Ensure keys/values are valid data.
      * Unknown keys are removed.
+     *
+     * @param array $cfg API configurations. 
+     *
+     * @return array Configuration containing a valid configuration set. It
+     *  may or may not include the supplied configuration parameters,
+     *  depending on their validity.
      */
     private function sanitizeCfg($cfg)
     {
@@ -106,21 +123,43 @@ class MaBaseClass
         return $result;
     }
 
+    /**
+     * Echoes a string if debugsEnabled is set to true.
+     *
+     * @param string $str The string to echo.
+     *
+     */
     protected function debug_echo($str)
     {
-        return $this->debug('echo', $str);
+        $this->debug('echo', $str);
     }
 
+    /**
+     * Dumps an object/variable if debugsEnabled is set to true.
+     *
+     * @param mixed $obj The object or vairable to dump.
+     */
     protected function debug_var_dump($obj)
     {
-        return $this->debug('var_dump', $obj);
+        $this->debug('var_dump', $obj);
     }
 
+    /**
+     * Prints an array if debugsEnabled is set to true.
+     *
+     * @param array $array The array to print.
+     */
     protected function debug_print_r($array)
     {
-        return $this->debug('print_r', $array);
+        $this->debug('print_r', $array);
     }
 
+    /**
+     * Generates some output if debugsEnabled is set to true.
+     *
+     * @param string $type The output type.
+     * @param mixed $mixed The object, array, or variable.
+     */
     protected function debug($type, $mixed)
     {
         if ($this->config && $this->config['debugsEnabled']) {

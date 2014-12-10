@@ -27,6 +27,10 @@
 namespace MyAllocator\phpsdk\src\Exception;
 use MyAllocator\phpsdk\src\Exception\MaException;
 
+/**
+ * The invalid request exception class. This exception is thrown when
+ * a 404 not found is returned by the MyAllocator API.
+ */
 class InvalidRequestException extends MaException
 {
 }

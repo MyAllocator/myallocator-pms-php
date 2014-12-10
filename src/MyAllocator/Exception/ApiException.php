@@ -27,6 +27,10 @@
 namespace MyAllocator\phpsdk\src\Exception;
 use MyAllocator\phpsdk\src\Exception\MaException;
 
+/**
+ * The API exception class. The generic API exception used during validation,
+ * request, and response flows.
+ */
 class ApiException extends MaException
 {
 }

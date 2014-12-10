@@ -27,6 +27,10 @@
 namespace MyAllocator\phpsdk\src\Object;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 
+/**
+ * The authentication class used to store authentication parameters
+ * to be used in one or more API requests.
+ */
 class Auth
 {
     /**
@@ -70,41 +74,56 @@ class Auth
     public $PMSPropertyId = null;
 
     /**
-     * Get the authentication variable from API key/parameter.
+     * @var array API Authentication to property mappings.
+     */
+    private $authKeyMap = array(
+        'Auth/VendorId' => 'vendorId',
+        'Auth/VendorPassword' => 'vendorPassword',
+        'Auth/UserId' => 'userId',
+        'PMSUserId' => 'PMSUserId',
+        'Auth/UserPassword' => 'userPassword',
+        'Auth/UserToken' => 'userToken',
+        'Auth/PropertyId' => 'propertyId',
+        'PMSPropertyId' => 'PMSPropertyId'
+    );
+
+    /**
+     * Map an API authentication key to the Auth object's
+     * variable and return it.
+     *
+     * @param string $key The API authentication key.
      *
      * @return mixed The requested API variable.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuthKeyVar($key)
     {
-        switch ($key) {
-            case 'Auth/VendorId':
-                return $this->vendorId;
-                break;
-            case 'Auth/VendorPassword':
-                return $this->vendorPassword;
-                break;
-            case 'Auth/UserId':
-                return $this->userId;
-                break;
-            case 'PMSUserId':
-                return $this->PMSUserId;
-                break;
-            case 'Auth/UserPassword':
-                return $this->userPassword;
-                break;
-            case 'Auth/UserToken':
-                return $this->userToken;
-                break;
-            case 'Auth/PropertyId':
-                return $this->propertyId;
-                break;
-            case 'PMSPropertyId':
-                return $this->PMSPropertyId;
-                break;
-            default:
-                break;
+        if (!isset($this->authKeyMap[$key])) {
+            $msg = 'Invalid Auth key requested: ' . $key;
+            throw new ApiException($msg);
         }
-        $msg = 'Invalid Auth key requested: ' . $key;
-        throw new ApiException($msg);
+
+        $property = $this->authKeyMap[$key];
+        return $this->$property;
+    }
+
+    /**
+     * Get an authentication key by variable name.
+     *
+     * @param string $property The property/variable name.
+     *
+     * @return string The authentication key.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
+    public function getAuthKeyByVar($property)
+    {
+        if (!($key = array_search($property, $this->authKeyMap))) {
+            $msg = 'Invalid Auth property requested: ' . $property;
+            throw new ApiException($msg);
+        }
+
+        return $key;
     }
 }

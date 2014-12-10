@@ -29,7 +29,7 @@ use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 
 /**
- * Common methods.
+ * Common methods used in the SDK.
  */
 abstract class Common
 {
@@ -38,7 +38,9 @@ abstract class Common
      *
      * @param array $keys The authentication keys to set.
      * @param string $debug Enable debug.
+     *
      * @return array(Auth, string) Authentication object and bool if pulled from ENV.
+     *
      * @throws MyAllocator\phpsdk\src\Exception\ApiException If no keys supplied.
      */
     public static function getAuthEnv($keys = null, $debug = false)
@@ -94,6 +96,7 @@ abstract class Common
      * Returns the name of a class using get_class with the namespaces stripped.
      *
      * @param object|string $object Object or Class Name to retrieve name
+     *
      * @return string Name of class with namespaces stripped
      */
     public static function getClassName($object = null)

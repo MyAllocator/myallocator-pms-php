@@ -65,10 +65,10 @@ return array(
      * 'paramValidationEnabled' above. For xml data, the raw request is sent
      * to MyAllocator and raw response returned to you.
      */
-    'dataFormat' => 'xml', // array, json, xml
+    'dataFormat' => 'array', // array, json, xml
 
     /*
      * Enable/Disable debug logs.
      */
-    'debugsEnabled' => true // true, false
+    'debugsEnabled' => false // true, false
 );

@@ -115,7 +115,7 @@ A successful request call will always return an array with the following respons
 
 `response` is the response payload in the configured dataFormat.
 
-Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks.
+Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information.
 
 ## Tests
 

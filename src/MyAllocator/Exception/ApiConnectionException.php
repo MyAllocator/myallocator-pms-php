@@ -27,6 +27,10 @@
 namespace MyAllocator\phpsdk\src\Exception;
 use MyAllocator\phpsdk\src\Exception\MaException;
 
+/**
+ * The API connection exception class. This exception is thrown when
+ * the API cannot connect to the MyAllocator API.
+ */
 class ApiConnectionException extends MaException
 {
 }

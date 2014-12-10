@@ -27,6 +27,11 @@
 namespace MyAllocator\phpsdk\src\Exception;
 use MyAllocator\phpsdk\src\Exception\MaException;
 
+/**
+ * The API authentication exception class. This exception is thrown when
+ * the authentication parameters included in an API request are not
+ * valid.
+ */
 class ApiAuthenticationException extends MaException
 {
 }
