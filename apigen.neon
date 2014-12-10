@@ -1,0 +1,7 @@
+source:
+	- src/MyAllocator
+	
+destination: docs
+title: MyAllocator PHP SDK
+baseUrl: http://myallocator.github.io/myallocator-php-sdk-docs/
+templateTheme: bootstrap

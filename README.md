@@ -1,14 +1,20 @@
-#myallocator-php
+#myallocator-php-sdk
 
 MyAllocator PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
 
-MyAllocator [https://www.myallocator.com/]
+MyAllocator PHP SDK Documentation [http://myallocator.github.io/myallocator-php-sdk-docs/]
 
 MyAllocator API Documentation [http://myallocator.github.io/apidocs/]
+
+MyAllocator [https://www.myallocator.com/]
 
 ## Requirements
 
 PHP 5.3.2 and later.
+
+## Documentation
+
+Please see http://myallocator.github.io/myallocator-php-sdk-docs/ for the complete and up-to-date SDK documentation.
 
 ## Composer
 
@@ -151,7 +157,3 @@ Most of the test cases use local environment variables and will be skipped if no
     export ma_propertyId=xxxxx
     export ma_PMSUserId=xxxxx
     myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
-
-## Documentation
-
-Please see TODO for the complete up-to-date documentation.
