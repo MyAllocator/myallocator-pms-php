@@ -22,7 +22,7 @@ You can install via composer. Add the following to your project's `composer.json
 
     {
         "require": {
-            "Myallocator/phpsdk": "1.*"
+            "myallocator/myallocator-php-sdk": "1.*"
         }
     }
 
@@ -36,23 +36,23 @@ To use the bindings, either use Composer's autoload [https://getcomposer.org/doc
 
 Or manually:
 
-    require_once('/path/to/vendor/MyAllocator/myallocator-sdk-php/src/MyAllocator.php');
+    require_once('/path/to/vendor/MyAllocator/myallocator-php-sdk/src/MyAllocator.php');
 
 ## Manual Installation
 
 Grab the latest version of the SDK:
 
-    git clone https://github.com/MyAllocator/myallocator-php.git
+    git clone https://github.com/MyAllocator/myallocator-php-sdk.git
 
 To use the bindings, add the following to a PHP script:
 
-    require_once('/path/to/myallocator-sdk-php/src/MyAllocator.php');
+    require_once('/path/to/myallocator-php-sdk/src/MyAllocator.php');
 
 ## Getting Started
 
-A simple usage example (`src/example_autoload.php`):
+A simple usage example with composer:
 
-    require_once(dirname(__FILE__) . '/myallocator-sdk-php/src/MyAllocator.php');
+    require_once('vendor/autoload.php');
     use MyAllocator\phpsdk\src\Api\HelloWorld;
 
     $params = array(
@@ -68,8 +68,6 @@ A simple usage example (`src/example_autoload.php`):
         $rsp = 'Oops: '.$e->getMessage();
     }
     var_dump($rsp);
-
-The require_once is not required if autoloaded via composer.
 
 The setConfig is not required once `src/MyAllocator/Config/Config.php` has been configured.
 
