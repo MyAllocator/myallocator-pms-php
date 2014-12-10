@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Send API hello test with vendor and user credentials.
+ */
 class HelloVendorUser extends MaApi
 {
     /**

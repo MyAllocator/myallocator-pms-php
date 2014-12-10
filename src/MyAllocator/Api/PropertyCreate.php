@@ -26,6 +26,11 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Create a new property account under a vendor account.
+ *
+ * This API requires special vendor permissions.
+ */
 class PropertyCreate extends MaApi
 {
     /**

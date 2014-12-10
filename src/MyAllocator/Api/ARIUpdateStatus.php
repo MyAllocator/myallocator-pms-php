@@ -26,6 +26,11 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query the update status of an asynchronous ARIUpdate.
+ * ARIUpdates are asynchronous by default and return an
+ * UpdateId for successful requests.
+ */
 class ARIUpdateStatus extends MaApi
 {
     /**

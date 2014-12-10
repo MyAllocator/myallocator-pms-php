@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Update the callback URL and password for a property.
+ */
 class VendorSet extends MaApi
 {
     /**

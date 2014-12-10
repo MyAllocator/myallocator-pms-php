@@ -42,10 +42,6 @@ To use the bindings, add the following to a PHP script:
 
     require_once('/path/to/myallocator-sdk-php/src/MyAllocator.php');
 
-## Documentation
-
-Please see TODO for up-to-date documentation.
-
 ## Getting Started
 
 A simple usage example (`src/example_autoload.php`):
@@ -155,3 +151,7 @@ Most of the test cases use local environment variables and will be skipped if no
     export ma_propertyId=xxxxx
     export ma_PMSUserId=xxxxx
     myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
+
+## Documentation
+
+Please see TODO for the complete up-to-date documentation.

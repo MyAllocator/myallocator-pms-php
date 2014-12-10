@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query the channel integration states for a property.
+ */
 class PropertyChannelList extends MaApi
 {
     /**

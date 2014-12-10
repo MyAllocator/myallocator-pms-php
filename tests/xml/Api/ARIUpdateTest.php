@@ -55,12 +55,14 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
 
         $auth = $fxt['auth'];
 
+        //<loop_delay>10</loop_delay>
         $options = "
                 <Options>
                     <QueryForStatus>true</QueryForStatus>
+                    <loop_delay>30</loop_delay>
+                    <FailIfUpdateActive>false</FailIfUpdateActive>
                 </Options>
         ";
-        $options = "";
 
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                 <ARIUpdate>
@@ -72,8 +74,8 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
                     </Auth>
                     ".$options."
                     <Channels>
-                        <Channel>boo</Channel>
                         <Channel>loop</Channel>
+                        <Channel>boo</Channel>
                     </Channels>
                     <Allocations>
                         <Allocation>
@@ -84,7 +86,7 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
                             <MinStay>1</MinStay>
                             <MaxStay>3</MaxStay>
                             <Prices>
-                                <Price>400.00</Price>
+                                <Price>451.00</Price>
                                 <Price weekend=\"true\">500.00</Price>
                             </Prices>
                         </Allocation>

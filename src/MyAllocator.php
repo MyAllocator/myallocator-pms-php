@@ -40,6 +40,11 @@
  * $api = new HelloWorld();
  * $api->setConfig('dataFormat', 'array');
  * $rsp = $api->callApiWithParams($params);
+ * try {
+ *     $rsp = $api->callApiWithParams($params);
+ * } catch (Exception $e) {
+ *     $rsp = 'Oops: '.$e->getMessage();
+ * }
  * var_dump($rsp);
  */
 

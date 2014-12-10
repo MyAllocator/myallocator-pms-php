@@ -1,12 +1,15 @@
 {
     "name": "MyAllocator/phpsdk",
-    "description": "The MyAllocator PHP SDK.",
+    "type": "library",
+    "description": "MyAllocator Channel Manager PHP SDK",
     "license": "MIT",
-    "keywords": ["myallocator"],
+    "keywords": ["myallocator", "channel", "manager"],
+    "homepage": "https://www.myallocator.com/",
     "authors": [
         {
             "name": "Nathan Helenihi",
-            "email": "nathan.helenihi@cloudbeds.com"
+            "email": "nathan.helenihi@cloudbeds.com",
+            "role": "Developer"
         }
     ],
     "require": {

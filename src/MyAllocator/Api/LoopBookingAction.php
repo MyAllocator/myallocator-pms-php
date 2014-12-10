@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Update/Cancel/Uncancel a booking created using the loopback test channel.
+ */
 class LoopBookingAction extends MaApi
 {
     /**

@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Update a room for a property.
+ */
 class RoomUpdate extends MaApi
 {
     /**

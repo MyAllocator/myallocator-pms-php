@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Associate an existing MyAllocator property account to a vendor account.
+ */
 class AssociatePropertyToPMS extends MaApi
 {
     /**

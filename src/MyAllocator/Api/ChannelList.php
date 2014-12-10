@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query the channels MyAllocator supports (and their information).
+ */
 class ChannelList extends MaApi
 {
     /**

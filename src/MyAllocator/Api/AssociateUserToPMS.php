@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Associate an existing MyAllacator user account to a vendor account.
+ */
 class AssociateUserToPMS extends MaApi
 {
     /**

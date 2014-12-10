@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query Availability/Rates/Inventory from the loopback test channel.
+ */
 class LoopARIList extends MaApi
 {
     /**

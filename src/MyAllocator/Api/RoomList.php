@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query the properties under a vendor account.
+ */
 class RoomList extends MaApi
 {
     /**

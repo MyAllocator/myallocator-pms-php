@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Create a new room for a property account.
+ */
 class RoomCreate extends MaApi
 {
     /**

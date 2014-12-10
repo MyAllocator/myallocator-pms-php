@@ -26,6 +26,11 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Modify a property account.
+ *
+ * This API requires special vendor permissions.
+ */
 class PropertyModify extends MaApi
 {
     /**

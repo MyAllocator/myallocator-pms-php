@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Delete a room for a property account.
+ */
 class RoomDelete extends MaApi
 {
     /**

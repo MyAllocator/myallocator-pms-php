@@ -32,6 +32,9 @@ use MyAllocator\phpsdk\src\Util\Common;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 
+/**
+ * The Base API class.
+ */
 class MaApi extends MaBaseClass
 {
     /**

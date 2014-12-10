@@ -26,6 +26,10 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query bookings for a property for a given arrival, modification, 
+ * or creation date range.
+ */
 class BookingList extends MaApi
 {
     /**

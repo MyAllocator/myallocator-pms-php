@@ -63,7 +63,7 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
                         <UserPassword>{$auth->userPassword}</UserPassword>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                    <UpdateId>3393737</UpdateId>
+                    <UpdateId>3464336</UpdateId>
                 </ARIUpdateStatus>
         ";
 

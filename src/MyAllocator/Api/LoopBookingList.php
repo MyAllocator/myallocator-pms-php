@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Querry bookings created using the loopback test channel.
+ */
 class LoopBookingList extends MaApi
 {
     /**

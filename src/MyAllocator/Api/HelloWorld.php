@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Send API hello test.
+ */
 class HelloWorld extends MaApi
 {
     /**

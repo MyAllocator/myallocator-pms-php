@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Update the Avilability/Rates/Inventory for a property.
+ */
 class ARIUpdate extends MaApi
 {
     /**

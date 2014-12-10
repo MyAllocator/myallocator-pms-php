@@ -26,6 +26,12 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query booking payment details for a booking.
+ * Payment details are not returned with BookingList.
+ *
+ * This API requires special vendor permissions and PCI certification.
+ */
 class BookingPaymentDownload extends MaApi
 {
     /**

@@ -26,6 +26,11 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Create a new user account.
+ *
+ * This API requires special vendor permissions.
+ */
 class UserCreate extends MaApi
 {
     /**

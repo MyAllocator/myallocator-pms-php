@@ -26,6 +26,9 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Query the Availability/Rates/Inventory for all rooms under a property account.
+ */
 class RoomAvailabilityList extends MaApi
 {
     /**

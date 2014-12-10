@@ -26,6 +26,11 @@
 
 namespace MyAllocator\phpsdk\src\Api;
 
+/**
+ * Determine if a user id or email exists.
+ *
+ * This API requires special vendor permissions.
+ */
 class UserExists extends MaApi
 {
     /**
