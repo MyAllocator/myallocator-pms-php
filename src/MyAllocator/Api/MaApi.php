@@ -63,11 +63,6 @@ class MaApi extends MaBaseClass
     private $lastApiResponse = null;
 
     /**
-     * @var string A default element name to be used by XML requests.
-     */
-    protected $defaultElementNameXML = 'item';
-
-    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */
@@ -217,8 +212,7 @@ class MaApi extends MaBaseClass
 
         switch ($this->config['dataFormat']) {
             case 'xml':
-                // If xml, set default tag element name
-                $requestor->defaultElementNameXML = $this->defaultElementNameXML; 
+                // Do nothing special for XML
                 break;
             case 'json':
                 // Validate and sanitize parameters (json decode/encode)

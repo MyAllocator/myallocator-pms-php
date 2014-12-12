@@ -76,24 +76,8 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (\exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
         // Arrival parameters
-        $rsp = $obj->callApiWithParams(array(
-            'StartDate' => '2014-12-10',
-            'EndDate' => '2014-12-12'
-        ));
-        $this->assertTrue(isset($rsp['response']['LoopARIs']));
+        $rsp = $obj->callApi();
+        $this->assertTrue(isset($rsp['response']['Inventory']));
     }
 }

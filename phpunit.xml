@@ -28,8 +28,6 @@
             <exclude>./tests/json/Api/UserExistsTest.php</exclude>
             <exclude>./tests/json/Api/BookingPaymentDownloadTest.php</exclude>
             <exclude>./tests/json/Api/LoopBookingCreateTest.php</exclude>
-            <exclude>./tests/json/Api/LoopBookingActionTest.php</exclude>
-            <exclude>./tests/json/Api/LoopARIListTest.php</exclude>
         </testsuite>
         <testsuite name="MyAllocator PHP SDK XML API Test Suite">
             <directory suffix=".php">./tests/xml/Api/</directory>
@@ -42,8 +40,6 @@
             <exclude>./tests/xml/Api/UserExistsTest.php</exclude>
             <exclude>./tests/xml/Api/BookingPaymentDownloadTest.php</exclude>
             <exclude>./tests/json/Api/LoopBookingCreateTest.php</exclude>
-            <exclude>./tests/json/Api/LoopBookingActionTest.php</exclude>
-            <exclude>./tests/json/Api/LoopARIListTest.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>

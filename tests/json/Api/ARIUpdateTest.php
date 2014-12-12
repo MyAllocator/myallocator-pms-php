@@ -80,11 +80,13 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
         $data = array(
             'Options' => array(
                 'QueryForStatus' => 'true',
-                //'loop_delay' => 60
+                'loop_delay' => 30,
+                'FailIfUpdateActive' => 'false'
             ),
             'Channels' => array(
-                'loop',
-                'boo'
+                //'loop',
+                //'boo',
+                'all'
             ),
             'Allocations' => array(
                 array(
@@ -122,6 +124,5 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
 
         $rsp = $obj->callApiWithParams($data);
         $this->assertTrue(isset($rsp['response']['Success']));
-        $this->assertEquals('true', $rsp['response']['Success']);
     }
 }

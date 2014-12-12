@@ -26,12 +26,12 @@
 
 namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
+use MyAllocator\phpsdk\src\Api\LoopBookingAction;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
+class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,8 +39,8 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
+        $obj = new LoopBookingAction();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingAction', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -48,8 +48,7 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -65,28 +64,58 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
+        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new AssociatePropertyToPMS($fxt);
+        $obj = new LoopBookingAction($fxt);
         $obj->setConfig('dataFormat', 'xml');
-
+    
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
         $auth = $fxt['auth'];
+
+        //Cancel booking
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <AssociatePropertyToPMS>
+                <LoopBookingAction>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <UserPassword>{$auth->userPassword}</UserPassword>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                </AssociatePropertyToPMS>
+                    <OrderId>6862C94E9DFA-42C9-4E11-D0F7-297C5F79</OrderId>
+                    <Actions>
+                        <Action>CANCEL?reason=hotelierwasmean</Action>
+                    </Actions>
+                </LoopBookingAction>
+        ";
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
+
+        //Uncancel booking
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <LoopBookingAction>
+                    <Auth>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                    <OrderId>6862C94E9DFA-42C9-4E11-D0F7-297C5F79</OrderId>
+                    <Actions>
+                        <Action>UNCANCEL?reason=changedmymind</Action>
+                    </Actions>
+                </LoopBookingAction>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

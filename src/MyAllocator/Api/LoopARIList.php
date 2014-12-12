@@ -57,10 +57,7 @@ class LoopARIList extends MaApi
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'StartDate',
-                'EndDate'
-            ),
+            'req' => array(),
             'opt' => array()
         )
     );

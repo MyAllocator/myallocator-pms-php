@@ -24,15 +24,14 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\ARIUpdateStatus;
+use MyAllocator\phpsdk\src\Api\LoopARIList;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
-use MyAllocator\phpsdk\src\Exception\ApiException;
  
-class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
+class LoopARIListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -40,8 +39,8 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new ARIUpdateStatus();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIUpdateStatus', get_class($obj));
+        $obj = new LoopARIList();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopARIList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -70,40 +69,31 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new ARIUpdateStatus($fxt);
-        $obj->setConfig('dataFormat', 'array');
+        $obj = new LoopARIList($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No required parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (\exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
-        }
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <LoopARIList>
+                    <Auth>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <UserId>{$auth->userId}</UserId>
+                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                </LoopARIList>
+        ";
 
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-/*
-        // Invalid update id should fail
-        $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '123999999999'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['response']['Errors']));
-        $this->assertEquals($rsp['response']['Errors'][0]['ErrorMsg'], 'No such booking id');
-*/
-
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '3602958'
-        ));
-        $this->assertTrue(isset($rsp['response']['Channels']));
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['code']);
+        $this->assertFalse(
+            strpos($rsp['response'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

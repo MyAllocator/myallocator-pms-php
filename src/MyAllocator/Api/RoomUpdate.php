@@ -37,11 +37,6 @@ class RoomUpdate extends MaApi
     protected $id = 'RoomUpdate';
 
     /**
-     * @var string A default element name to be used by XML requests.
-     */
-    protected $defaultElementNameXML = 'RoomType';
-
-    /**
      * @var array Array of required and optional authentication and argument 
      *      keys (string) for API method.
      */

@@ -2,9 +2,13 @@
 
 MyAllocator PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
 
+MyAllocator API Version: 201408
+
 MyAllocator PHP SDK Documentation [http://myallocator.github.io/myallocator-php-sdk-docs/]
 
 MyAllocator API Documentation [http://myallocator.github.io/apidocs/]
+
+MyAllocator API Integration Guide [https://docs.google.com/document/d/1_OuI0Z6rTkkuA9xxlJUvhXlazJ9w_iqsp1QzIj4gb2U/edit?usp=sharing]
 
 MyAllocator [https://www.myallocator.com/]
 

@@ -49,11 +49,6 @@ class Requestor extends MaBaseClass
     public $version = '201408';
 
     /**
-     * @var string A default element name to be used by XML requests. Set by calling Api.
-     */
-    public $defaultElementNameXML = 'item';
-
-    /**
      * The constructor passes potential configuration parameters to MaBaseClass.
      *
      * @param array $cfg API configuration parameters.
