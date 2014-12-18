@@ -46,14 +46,7 @@ class UserExists extends MaApi
         'auth' => array(
             'req' => array(
                 'Auth/VendorId',
-                'Auth/VendorPassword',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
+                'Auth/VendorPassword'
             ),
             'opt' => array()
         ),
