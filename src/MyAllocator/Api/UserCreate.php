@@ -54,7 +54,6 @@ class UserCreate extends MaApi
             'req' => array(
                 'UserId', // username
                 'UserPassword',
-                'Email',
                 'CustomerEmail'
             ),
             'opt' => array(
