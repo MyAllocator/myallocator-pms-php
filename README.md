@@ -107,7 +107,7 @@ Note, parameter validation only supports array and json data formats. For json d
 
 #### `dataResponse`
 
-Define what data you prefer to be included in Api responses. The 'response', 'code', and 'headers' keys are not configurable and will always be included in a response. Each piece of data may be useful if you intend to store request and response data locally. The following keys in the dataResponse array below will cause the related data to be returned in all responses:
+Define what data you prefer to be included in Api responses. The response 'body', 'code', and 'headers' keys are not configurable and will always be included in a response. Each piece of data may be useful if you intend to store request and response data locally. The following keys in the dataResponse array below will cause the related data to be returned in all responses:
 
     1. timeRequest - The time immediately before the request is sent
         to MyAllocator (from Requestor). timeRequest is returned
@@ -120,36 +120,34 @@ Define what data you prefer to be included in Api responses. The 'response', 'co
         in the configured dataFormat format. Note, for xml, the request
         is stored in the result prior to url encoding.
 
-Note, leave as array() if you prefer to receive none of the data.
-
 #### `debugsEnabled`
 
 Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
 
 ## API Response Format
 
-A successful request call will return an array with the following response structure. Note, bolded key/values will always be returned. Non-bolded key/values may optionally be returned by configuring `dataResponse` in `src/MyAllocator/Config/Config.php`. By default, all key/values are returned.
+A successful request call will return an array with the following response structure. By default, all key/values are returned. If you prefer to not receive request data or response['time'] in an Api response, you may configure the dataResponse array in `src/MyAllocator/Config/Config.php` to remove the data.
 
     return array(
-        **'request' => array(
+        'request' => array(
             'time' => {DateTime Object},
             'body' => {Request body in dataFormat}
-        ),**
+        ),
         'response' => array(
-            **'time' => {DateTime Object},**
+            'time' => {DateTime Object},
             'code' => {int},
             'headers' => {string},
             'body' => {Response body in dataFormat}      
         )
     );
 
-`request['time'] is a DateTime object representing the time immediately before sending the request to MyAllocator.
-`request['body'] is the request body sent to MyAllocator in your configured dataFormat.
+`request['time']` *(optional)* is a DateTime object representing the time immediately before sending the request to MyAllocator.
+`request['body']` *(optional)* is the request body sent to MyAllocator in your configured dataFormat.
 
-`response['time'] is a DateTime object representing the time immediately after receiving the response from MyAllocator.
-`response['code'] is the HTTP response code.
-`response['headers'] are the HTTP response headers.
-`response['body'] is the response body.
+`response['time']` *(optional)* is a DateTime object representing the time immediately after receiving the response from MyAllocator.
+`response['code']` is the HTTP response code.
+`response['headers']` are the HTTP response headers.
+`response['body']` is the response body.
 
 Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information.
 
