@@ -96,9 +96,9 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
         ";
 
         $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['code']);
+        $this->assertEquals(200, $rsp['response']['code']);
         $this->assertFalse(
-            strpos($rsp['response'], '<Errors>'),
+            strpos($rsp['response']['body'], '<Errors>'),
             'Response contains errors!'
         );
 
@@ -119,9 +119,9 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
         ";
 
         $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['code']);
+        $this->assertEquals(200, $rsp['response']['code']);
         $this->assertFalse(
-            strpos($rsp['response'], '<Errors>'),
+            strpos($rsp['response']['body'], '<Errors>'),
             'Response contains errors!'
         );
     }

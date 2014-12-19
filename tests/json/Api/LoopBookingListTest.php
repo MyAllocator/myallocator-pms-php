@@ -94,20 +94,20 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
             'ArrivalStartDate' => '2014-12-08',
             'ArrivalEndDate' => '2014-12-15'
         ));
-        $this->assertTrue(isset($rsp['response']['Bookings']));
+        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
 
         // Modification parameters
         $rsp = $obj->callApiWithParams(array(
             'ModificationStartDate' => '2014-12-08',
             'ModificationEndDate' => '2014-12-15'
         ));
-        $this->assertTrue(isset($rsp['response']['Bookings']));
+        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
 
         // Creation parameters
         $rsp = $obj->callApiWithParams(array(
             'CreationStartDate' => '2014-12-08',
             'CreationEndDate' => '2014-12-15'
         ));
-        $this->assertTrue(isset($rsp['response']['Bookings']));
+        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
     }
 }

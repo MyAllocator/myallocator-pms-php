@@ -100,9 +100,9 @@ class UserCreateTest extends \PHPUnit_Framework_TestCase
             'SendWelcome' => 0
         ));
 
-        $this->assertTrue(isset($rsp['response']['UserIdExists']));
-        $this->assertEquals($rsp['response']['UserIdExists'], 'false');
-        $this->assertTrue(isset($rsp['response']['Success']));
-        $this->assertEquals($rsp['response']['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['body']['UserIdExists']));
+        $this->assertEquals($rsp['response']['body']['UserIdExists'], 'false');
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

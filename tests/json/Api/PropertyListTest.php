@@ -87,7 +87,7 @@ class PropertyListTest extends \PHPUnit_Framework_TestCase
         $obj = new PropertyList($fxt);
         $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Properties']));
+        $this->assertTrue(isset($rsp['response']['body']['Properties']));
     }
 
     /**
@@ -105,6 +105,6 @@ class PropertyListTest extends \PHPUnit_Framework_TestCase
         $obj = new PropertyList($fxt);
         $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Properties']));
+        $this->assertTrue(isset($rsp['response']['body']['Properties']));
     }
 }

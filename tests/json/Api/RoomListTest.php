@@ -78,6 +78,6 @@ class RoomListTest extends \PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['RoomTypes']));
+        $this->assertTrue(isset($rsp['response']['body']['RoomTypes']));
     }
 }

@@ -94,7 +94,7 @@ class VendorSetTest extends \PHPUnit_Framework_TestCase
             'Callback/Password' => 'password'
         ));
 
-        $this->assertTrue(isset($rsp['response']['Success']));
-        $this->assertEquals($rsp['response']['Success'], 'true');
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

@@ -85,7 +85,7 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
         );
 
         $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['%Booking']));
+        $this->assertTrue(isset($rsp['response']['body']['%Booking']));
 
         // Uncancel a booking
         $data = array(
@@ -96,7 +96,7 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
         );
 
         $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['%Booking']));
+        $this->assertTrue(isset($rsp['response']['body']['%Booking']));
 
         // Modify to come at a later time
     }

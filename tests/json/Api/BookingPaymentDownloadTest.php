@@ -94,9 +94,9 @@ class BookingPaymentDownloadTest extends \PHPUnit_Framework_TestCase
             'OrderId' => '99999999999999999',
             'CreditCardPassword' => '123'
         ));
-        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertTrue(isset($rsp['response']['body']['Errors']));
         $this->assertEquals(
-            $rsp['response']['Errors'][0]['ErrorMsg'],
+            $rsp['response']['body']['Errors'][0]['ErrorMsg'],
             'No such booking id'
         );
 
@@ -106,9 +106,9 @@ class BookingPaymentDownloadTest extends \PHPUnit_Framework_TestCase
             'OrderId' => '4304-63761582-4625',
             'CreditCardPassword' => '123'
         ));
-        $this->assertTrue(isset($rsp['response']['Errors']));
+        $this->assertTrue(isset($rsp['response']['body']['Errors']));
         $this->assertEquals(
-            $rsp['response']['Errors'][0]['ErrorMsg'],
+            $rsp['response']['body']['Errors'][0]['ErrorMsg'],
             'No such booking id'
         );
 */
@@ -118,13 +118,13 @@ class BookingPaymentDownloadTest extends \PHPUnit_Framework_TestCase
             'OrderId' => '4304-63761582-4625',
             'CreditCardPassword' => '!password1'
         ));
-        $this->assertTrue(isset($rsp['response']['Payments']));
+        $this->assertTrue(isset($rsp['response']['body']['Payments']));
 
         // Valid myallocator id and valid password should succeed
         $rsp = $obj->callApiWithParams(array(
             'MyAllocatorId' => '5485e70e399dbd9a2451a744',
             'CreditCardPassword' => '!password1'
         ));
-        $this->assertTrue(isset($rsp['response']['Payments']));
+        $this->assertTrue(isset($rsp['response']['body']['Payments']));
     }
 }

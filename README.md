@@ -12,6 +12,8 @@ MyAllocator API Integration Guide [https://docs.google.com/document/d/1_OuI0Z6rT
 
 MyAllocator [https://www.myallocator.com/]
 
+MyAllocator Development Support [devhelp@myallocator.com]
+
 ## Requirements
 
 PHP 5.3.2 and later.
@@ -79,7 +81,7 @@ The setConfig is not required once `src/MyAllocator/Config/Config.php` has been 
 
 The default configuration file can be found at at `src/MyAllocator/Config/Config.php`. The following is configurable:
 
-### `paramValidationEnabled`
+#### `paramValidationEnabled`
 
 The SDK supports parameter validation for array and json data formats, which can be configured via the `paramValidationEnabled` configuration in `src/MyAllocator/Config/Config.php`. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
@@ -89,7 +91,7 @@ The SDK supports parameter validation for array and json data formats, which can
 4.  Top level keys not defined in $keys are stripped from parameters.
 5.  Minimum optional parameters are enforced.
 
-### `dataFormat`
+#### `dataFormat`
 
 The SDK supports three data in/out formats (array, json, xml), which can be configured via the `dataFormat` configuration in `src/MyAllocator/Config/Config.php`. The following table illustrates the formats used for the request flow based on dataFormat.
 
@@ -103,25 +105,51 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
 
 Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
-### `debugsEnabled`
+#### `dataResponse`
+
+Define what data you prefer to be included in Api responses. The 'response', 'code', and 'headers' keys are not configurable and will always be included in a response. Each piece of data may be useful if you intend to store request and response data locally. The following keys in the dataResponse array below will cause the related data to be returned in all responses:
+
+    1. timeRequest - The time immediately before the request is sent
+        to MyAllocator (from Requestor). timeRequest is returned
+        as a DateTime object.
+    2. timeResponse - The time immediately after the response is
+        received from MyAllocator (from Requestor). timeResponse is
+        returned as a DateTime object.
+    3. request - The exact request data sent from MyAllocator including
+        authentication and provided parameters. The request is returned
+        in the configured dataFormat format. Note, for xml, the request
+        is stored in the result prior to url encoding.
+
+Note, leave as array() if you prefer to receive none of the data.
+
+#### `debugsEnabled`
 
 Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
 
 ## API Response Format
 
-A successful request call will always return an array with the following response structure:
+A successful request call will return an array with the following response structure. Note, bolded key/values will always be returned. Non-bolded key/values may optionally be returned by configuring `dataResponse` in `src/MyAllocator/Config/Config.php`. By default, all key/values are returned.
 
     return array(
-        'code' => $rcode,
-        'headers' => $headers,
-        'response' => $resp
+        **'request' => array(
+            'time' => {DateTime Object},
+            'body' => {Request body in dataFormat}
+        ),**
+        'response' => array(
+            **'time' => {DateTime Object},**
+            'code' => {int},
+            'headers' => {string},
+            'body' => {Response body in dataFormat}      
+        )
     );
 
-`code` is the HTTP response code.
+`request['time'] is a DateTime object representing the time immediately before sending the request to MyAllocator.
+`request['body'] is the request body sent to MyAllocator in your configured dataFormat.
 
-`headers` is the response headers (only returned if dataFormat = xml).
-
-`response` is the response payload in the configured dataFormat.
+`response['time'] is a DateTime object representing the time immediately after receiving the response from MyAllocator.
+`response['code'] is the HTTP response code.
+`response['headers'] are the HTTP response headers.
+`response['body'] is the response body.
 
 Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information.
 

@@ -75,10 +75,22 @@ class Requestor extends MaBaseClass
      */
     public function request($method, $url, $params = null)
     {
+        // The array to return to calling function
+        $return = array();
+        // The 'request' key data
+        $request = array();
+        // The 'response' key data
+        $response = array();
+
         if (!$params) {
             $params = array();
         } else {
             $params = self::encodeObjects($params);
+        }
+
+        // Set request data if configured
+        if (in_array('request', $this->config['dataResponse'])) {
+            $request_body = $params;
         }
 
         /*
@@ -86,7 +98,6 @@ class Requestor extends MaBaseClass
          * is json_encoded and sent as json.
          */
         $this->debug_echo("\nRequest (".$this->config['dataFormat']."):\n");
-        $headers = null;
         switch ($this->config['dataFormat']) {
             case 'array':
                 $this->debug_print_r($params); 
@@ -94,144 +105,93 @@ class Requestor extends MaBaseClass
                     $params = json_encode($params);
                 } catch (Exception $e) {
                     $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
-                    throw new ApiException($msg, $rcode, $rbody);
+                    throw new ApiException($msg);
                 }
                 $this->debug_echo("\nRequest (json):\n");
                 // Intentionally dropping into json case
             case 'json':
                 $this->debug_echo($params); 
+                // Generate absolute url
                 $absUrl = $this->apiUrl($url, 'json');
-                list($rbody, $rcode) = $this->curlRequestJSON(
+                // Format params for curl request POSTFIELDS
+                $params = array('json' => $params);
+                // Send request
+                $curl_response = $this->curlRequest(
                     $method,
                     $absUrl,
                     $params
                 );
-                $resp = $this->interpretResponseJSON($rbody, $rcode);
+                // Process response
+                $curl_response['body'] = $this->interpretResponseJSON(
+                    $curl_response['body'],
+                    $curl_response['code']
+                );
                 break;
             case 'xml':
                 $this->debug_echo($params); 
+                // Generate absolute url
                 $absUrl = $this->apiUrl($url, 'xml');
-                list($rbody, $rcode, $headers) = $this->curlRequestXML(
+                // Format params for curl request POSTFIELDS
+                $params = 'xmlRequestString='.urlencode($params);
+                // Send request
+                $curl_response = $this->curlRequest(
                     $method,
                     $absUrl,
                     $params
                 );
-                $resp = $this->interpretResponseXML($rbody, $rcode);
+                // Process response
+                $curl_response['body'] = $this->interpretResponseXML(
+                    $curl_response['body'],
+                    $curl_response['code']
+                );
                 break;
             default:
                 $msg = 'Invalid data format: '.$this->config['dataFormat'];
                 throw new ApiException($msg);
         }
 
-        return array(
-            'code' => $rcode,
-            'headers' => $headers,
-            'response' => $resp
-        );
+        // Format clean response data
+        if (isset($curl_response['request_time'])) {
+            $request['time'] = $curl_response['request_time'];
+        }
+        if (isset($request_body)) {
+            $request['body'] = $request_body;
+        }
+        if (isset($curl_response['response_time'])) {
+            $response['time'] = $curl_response['response_time'];
+        }
+        $response['code'] = $curl_response['code'];
+        $response['headers'] = $curl_response['headers'];
+        $response['body'] = $curl_response['body'];
+        if (!empty($request)) {
+            $return['request'] = $request;
+        }
+        $return['response'] = $response;
+        //var_dump($return);
+
+        return $return;
     }
 
     /**
-     * Send a JSON CURL request.
+     * Send a JSON or XML CURL request.
      *
      * @param string $method HTTP method.
      * @param string $absUrl The absolute endpoint URL.
      * @param array|null $params API parameters.
      *
-     * @return mixed API response, code, headers (XML only).
+     * @return mixed API response, code, headers.
      *
      * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
-    private function curlRequestJSON($method, $absUrl, $params)
+    private function curlRequest($method, $absUrl, $params)
     {
+        $result = array();
         $opts = array();
         $curl = curl_init();
 
         if ($method == 'post') {
             $opts[CURLOPT_POST] = 1;
-            $opts[CURLOPT_POSTFIELDS] = array('json' => $params);
-        } else {
-            throw new ApiException('Unsupported method '.$method);
-        }
-
-        $absUrl = self::utf8($absUrl);
-        $opts[CURLOPT_URL] = $absUrl;
-        $opts[CURLOPT_RETURNTRANSFER] = true;
-        $opts[CURLOPT_CONNECTTIMEOUT] = 30;
-        $opts[CURLOPT_TIMEOUT] = 60;
-        $opts[CURLOPT_HEADER] = false;
-        $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
-
-        curl_setopt_array($curl, $opts);
-        $rbody = curl_exec($curl);
-
-        if ($rbody === false) {
-            $errno = curl_errno($curl);
-            $message = curl_error($curl);
-            curl_close($curl);
-            $this->handleCurlError($errno, $message);
-        }
-
-        $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        return array($rbody, $rcode);
-    }
-
-    /**
-     * Process a JSON CURL response.
-     *
-     * @param string $rbody The JSON response body.
-     * @param integer $rcode The HTTP code.
-     *
-     * @return mixed API response. The format depends on dataFormat.
-     *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
-     */
-    private function interpretResponseJSON($rbody, $rcode)
-    {
-        $this->debug_echo("\n\nResponse (json):\n");
-        $this->debug_print_r($rbody);
-
-        // Convert response from json to array format if required
-        if ($this->config['dataFormat'] == 'array') {
-            try {
-                $resp = json_decode($rbody, TRUE); 
-            } catch (Exception $e) {
-                $msg = 'Invalid response body from API: ' . $rbody
-                     . '(HTTP response code was ' . $rcode . ')';
-                throw new ApiException($msg, $rcode, $rbody);
-            }
-            $this->debug_echo("\n\nResponse (array):\n"); 
-            $this->debug_print_r($resp); 
-        } else {
-            $resp = $rbody;
-        }
-
-        if ($rcode < 200 || $rcode >= 300) {
-            $this->handleHttpError($rbody, $rcode, $resp);
-        }
-
-        return $resp;
-    }
-
-    /**
-     * Send a XML CURL request.
-     *
-     * @param string $method HTTP method.
-     * @param string $absUrl The absolute endpoint URL.
-     * @param array|null $params API parameters.
-     *
-     * @return mixed API response, code, headers (XML only).
-     *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
-     */
-    private function curlRequestXML($method, $absUrl, $xml)
-    {
-        $opts = array();
-        $curl = curl_init();
-
-        if ($method == 'post') {
-            $opts[CURLOPT_POST] = 1;
-            $opts[CURLOPT_POSTFIELDS] = 'xmlRequestString='.urlencode($xml);
+            $opts[CURLOPT_POSTFIELDS] = $params;
         } else {
             throw new ApiException('Unsupported method '.$method);
         }
@@ -244,43 +204,94 @@ class Requestor extends MaBaseClass
         $opts[CURLOPT_HEADER] = true;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
 
+        // Apply options
         curl_setopt_array($curl, $opts);
-        $result = curl_exec($curl);
 
-        if ($result === false) {
+        // Set request time if configured
+        if (in_array('timeRequest', $this->config['dataResponse'])) {
+            $response['request_time'] = new \DateTime();
+        }
+
+        // Sent request
+        $curl_result = curl_exec($curl);
+
+        // Set response time if configured
+        if (in_array('timeResponse', $this->config['dataResponse'])) {
+            $response['response_time'] = new \DateTime();
+        }
+
+        // Error handling
+        if ($curl_result === false) {
             $errno = curl_errno($curl);
             $message = curl_error($curl);
             curl_close($curl);
             $this->handleCurlError($errno, $message);
         }
 
-        $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        // Parse code, headers, body from response
+        $response['code'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $headers = substr($result, 0, $header_size);
-        $rbody = substr($result, $header_size);
+        $response['headers'] = substr($curl_result, 0, $header_size);
+        $response['body'] = substr($curl_result, $header_size);
         curl_close($curl);
 
-        $response = array($rbody, $rcode, $headers);
         return $response;
+    }
+
+    /**
+     * Process a JSON CURL response.
+     *
+     * @param string $body The JSON response body.
+     * @param integer $code The HTTP code.
+     *
+     * @return mixed API response. The format depends on dataFormat.
+     *
+     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     */
+    private function interpretResponseJSON($body, $code)
+    {
+        $this->debug_echo("\n\nResponse (json):\n");
+        $this->debug_print_r($body);
+
+        // Convert response from json to array format if required
+        if ($this->config['dataFormat'] == 'array') {
+            try {
+                $resp = json_decode($body, TRUE); 
+            } catch (Exception $e) {
+                $msg = 'Invalid response body from API: ' . $body
+                     . '(HTTP response code was ' . $code . ')';
+                throw new ApiException($msg, $code, $body);
+            }
+            $this->debug_echo("\n\nResponse (array):\n"); 
+            $this->debug_print_r($resp); 
+        } else {
+            $resp = $body;
+        }
+
+        if ($code < 200 || $code >= 300) {
+            $this->handleHttpError($body, $code, $resp);
+        }
+
+        return $resp;
     }
 
     /**
      * Process a XML CURL response.
      *
-     * @param string $rbody The JSON response body.
-     * @param integer $rcode The HTTP code.
+     * @param string $body The JSON response body.
+     * @param integer $code The HTTP code.
      *
      * @return mixed API response. The format depends on dataFormat.
      */
-    private function interpretResponseXML($rbody, $rcode)
+    private function interpretResponseXML($body, $code)
     {
-        $this->debug_echo("\n\nResponse (xml):\n$rbody");
+        $this->debug_echo("\n\nResponse (xml):\n$body");
 
-        if ($rcode < 200 || $rcode >= 300) {
-            $this->handleHttpError($rbody, $rcode);
+        if ($code < 200 || $code >= 300) {
+            $this->handleHttpError($body, $code);
         }
 
-        return $rbody;
+        return $body;
     }
 
     /**
@@ -314,24 +325,24 @@ class Requestor extends MaBaseClass
     /**
      * Handle a HTTP error resulting from a request.
      *
-     * @param mixed $rbody The HTTP response body.
-     * @param integer $rcode The HTTP error code.
+     * @param mixed $body The HTTP response body.
+     * @param integer $code The HTTP error code.
      * @param string $resp The JSON encoded response body.
      *
      * @throws MyAllocator\phpsdk\src\Exception\InvalidRequestException
      * @throws MyAllocator\phpsdk\src\Exception\APIAuthenticationException
      * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
-    private function handleHttpError($rbody, $rcode, $resp = null)
+    private function handleHttpError($body, $code, $resp = null)
     {
-        $msg = 'HTTP API Error (HTTP response code was ' . $rcode . ')';
-        switch ($rcode) {
+        $msg = 'HTTP API Error (HTTP response code was ' . $code . ')';
+        switch ($code) {
             case 404:
-                throw new InvalidRequestException($msg, $rcode, $rbody, $resp);
+                throw new InvalidRequestException($msg, $code, $body, $resp);
             case 401:
-                throw new ApiAuthenticationException($msg, $rcode, $rbody, $resp);
+                throw new ApiAuthenticationException($msg, $code, $body, $resp);
             default:
-                throw new ApiException($msg, $rcode, $rbody, $resp);
+                throw new ApiException($msg, $code, $body, $resp);
         }
     }
 

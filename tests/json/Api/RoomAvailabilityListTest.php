@@ -93,6 +93,6 @@ class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
             'StartDate' => '2014-12-10',
             'EndDate' => '2014-12-13',
         ));
-        $this->assertTrue(isset($rsp['response']['Rooms']));
+        $this->assertTrue(isset($rsp['response']['body']['Rooms']));
     }
 }

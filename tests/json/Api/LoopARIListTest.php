@@ -78,6 +78,6 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
 
         // Arrival parameters
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Inventory']));
+        $this->assertTrue(isset($rsp['response']['body']['Inventory']));
     }
 }

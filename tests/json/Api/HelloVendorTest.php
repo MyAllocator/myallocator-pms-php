@@ -83,7 +83,7 @@ class HelloVendorTest extends \PHPUnit_Framework_TestCase
         $rsp = $obj->callApiWithParams(array(
             'hello' => 'world'
         ));
-        $this->assertTrue(isset($rsp['response']['hello']));
-        $this->assertEquals('world', $rsp['response']['hello']);
+        $this->assertTrue(isset($rsp['response']['body']['hello']));
+        $this->assertEquals('world', $rsp['response']['body']['hello']);
     }
 }

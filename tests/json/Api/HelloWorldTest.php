@@ -84,7 +84,7 @@ class HelloWorldTest extends \PHPUnit_Framework_TestCase
         $obj = new HelloWorld($fxt);
         $obj->setConfig('dataFormat', 'array');
         $rsp = $obj->callApiWithParams($fxt['params']);
-        $this->assertTrue(isset($rsp['response']['hello']));
-        $this->assertEquals('world', $rsp['response']['hello']);
+        $this->assertTrue(isset($rsp['response']['body']['hello']));
+        $this->assertEquals('world', $rsp['response']['body']['hello']);
     }
 }

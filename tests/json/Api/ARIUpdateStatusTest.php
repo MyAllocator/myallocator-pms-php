@@ -96,14 +96,14 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
             'UpdateId' => '123999999999'
         ));
         print_r($rsp);
-        $this->assertTrue(isset($rsp['response']['Errors']));
-        $this->assertEquals($rsp['response']['Errors'][0]['ErrorMsg'], 'No such booking id');
+        $this->assertTrue(isset($rsp['response']['body']['Errors']));
+        $this->assertEquals($rsp['response']['body']['Errors'][0]['ErrorMsg'], 'No such booking id');
 */
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
             'UpdateId' => '3602958'
         ));
-        $this->assertTrue(isset($rsp['response']['Channels']));
+        $this->assertTrue(isset($rsp['response']['body']['Channels']));
     }
 }

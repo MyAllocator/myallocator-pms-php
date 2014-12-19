@@ -76,6 +76,6 @@ class AssociateUserToPMSTest extends \PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Success']));
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
     }
 }

@@ -92,15 +92,15 @@ class UserExistsTest extends \PHPUnit_Framework_TestCase
         $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser'
         ));
-        $this->assertTrue(isset($rsp['response']['EmailExists']));
-        $this->assertTrue(isset($rsp['response']['UserIdExists']));
+        $this->assertTrue(isset($rsp['response']['body']['EmailExists']));
+        $this->assertTrue(isset($rsp['response']['body']['UserIdExists']));
 
         // Exists by id and email
         $rsp = $obj->callApiWithParams(array(
             'UserId' => 'phpsdkuser',
             'CustomerEmail' => 'phpsdkuser@phpsdk.com'
         ));
-        $this->assertTrue(isset($rsp['response']['EmailExists']));
-        $this->assertTrue(isset($rsp['response']['UserIdExists']));
+        $this->assertTrue(isset($rsp['response']['body']['EmailExists']));
+        $this->assertTrue(isset($rsp['response']['body']['UserIdExists']));
     }
 }

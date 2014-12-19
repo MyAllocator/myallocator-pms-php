@@ -74,7 +74,7 @@ class ChannelListTest extends \PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Channels']));
-        $this->assertGreaterThan(20, count($rsp['response']['Channels']));
+        $this->assertTrue(isset($rsp['response']['body']['Channels']));
+        $this->assertGreaterThan(20, count($rsp['response']['body']['Channels']));
     }
 }

@@ -75,6 +75,6 @@ class PropertyChannelListTest extends \PHPUnit_Framework_TestCase
         }
 
         $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['Properties']));
+        $this->assertTrue(isset($rsp['response']['body']['Properties']));
     }
 }

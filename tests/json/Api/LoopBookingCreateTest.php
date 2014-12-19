@@ -100,6 +100,6 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
         );
 
         $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['Booking']));
+        $this->assertTrue(isset($rsp['response']['body']['Booking']));
     }
 }

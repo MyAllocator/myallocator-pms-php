@@ -96,14 +96,22 @@ class MaBaseClass
     {
         $sanitize = array(
             'paramValidationEnabled' => array(
+                'type' => 'boolean',
                 'default' => true,
                 'valid' => array(true, false)
             ),
             'dataFormat' => array(
+                'type' => 'string',
                 'default' => 'array',
                 'valid' => array('array', 'json', 'xml')
             ),
+            'dataResponse' => array(
+                'type' => 'array',
+                'default' => array('timeRequest', 'timeResponse', 'request'),
+                'valid' => array('timeRequest', 'timeResponse', 'request')
+            ),
             'debugsEnabled' => array(
+                'type' => 'boolean',
                 'default' => false,
                 'valid' => array(true, false)
             )
@@ -111,12 +119,28 @@ class MaBaseClass
 
         $result = array();
         foreach ($sanitize as $k => $v) {
-            if (!isset($cfg[$k]) || !in_array($cfg[$k], $v['valid'], true)) {
-                // Set to default if not set or invalid value
-                $result[$k] = $v['default'];
+            if ($v['type'] == 'array') {
+                if (!isset($cfg[$k]) || !is_array($cfg[$k])) {
+                    // Set to default if not set or invalid value
+                    $result[$k] = $v['default'];
+                } else {
+                    // Validate array keys
+                    foreach ($cfg[$k] as $index => $item) {
+                        if (!in_array($item, $v['valid'])) {
+                            unset($cfg[$k][$index]);
+                        }
+                    }
+                    // Set to parameter if value is set and valid
+                    $result[$k] = $cfg[$k];
+                }
             } else {
-                // Set to parameter if value is set and valid
-                $result[$k] = $cfg[$k];
+                if (!isset($cfg[$k]) || !in_array($cfg[$k], $v['valid'], true)) {
+                    // Set to default if not set or invalid value
+                    $result[$k] = $v['default'];
+                } else {
+                    // Set to parameter if value is set and valid
+                    $result[$k] = $cfg[$k];
+                }
             }
         }
 

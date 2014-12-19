@@ -43,6 +43,8 @@ return array(
      *   5. Minimum optional parameters is enforced.
      *
      * Read dataFormat comment below for format specific validation notes.
+     *
+     * Available values: true, false
      */ 
     'paramValidationEnabled' => true, // true, false
 
@@ -64,11 +66,41 @@ return array(
      * validation. If you do not wish to experience the cost, disable
      * 'paramValidationEnabled' above. For xml data, the raw request is sent
      * to MyAllocator and raw response returned to you.
+     *
+     * Available values: 'array', 'json', 'xml'
      */
-    'dataFormat' => 'array', // array, json, xml
+    'dataFormat' => 'array',
+
+    /**
+     * Define what data you prefer to be included in Api responses.
+     * The 'response', 'code', and 'headers' keys are not configurable
+     * and will always be included in a response. Each piece of data
+     * may be useful if you intend to store request and response data
+     * locally. The following keys in the dataResponse
+     * array below will cause the related data to be returned
+     * in all responses:
+     *
+     *      1. timeRequest - The time immediately before the request is sent
+     *          to MyAllocator (from Requestor). timeRequest is returned
+     *          as a DateTime object.
+     *      2. timeResponse - The time immediately after the response is
+     *          received from MyAllocator (from Requestor). timeResponse is
+     *          returned as a DateTime object.
+     *      3. request - The exact request data sent from MyAllocator including
+     *          authentication and provided parameters. The request is returned
+     *          in the configured dataFormat format. Note, for xml, the request
+     *          is stored in the result prior to url encoding.
+     *
+     * Note, leave as array() if you prefer to receive none of the data.
+     *
+     * Available keys: 'timeRequest', 'timeResponse', 'request'
+     */
+    'dataResponse' => array('timeRequest', 'timeResponse', 'request'), 
 
     /*
      * Enable/Disable debug logs.
+     *
+     * Available values: true, false
      */
-    'debugsEnabled' => false // true, false
+    'debugsEnabled' => false
 );
