@@ -81,7 +81,7 @@ The setConfig is not required once `src/MyAllocator/Config/Config.php` has been 
 
 The default configuration file can be found at at `src/MyAllocator/Config/Config.php`. The following is configurable:
 
-#### `paramValidationEnabled`
+#### paramValidationEnabled
 
 The SDK supports parameter validation for array and json data formats, which can be configured via the `paramValidationEnabled` configuration in `src/MyAllocator/Config/Config.php`. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
@@ -91,7 +91,7 @@ The SDK supports parameter validation for array and json data formats, which can
 4.  Top level keys not defined in $keys are stripped from parameters.
 5.  Minimum optional parameters are enforced.
 
-#### `dataFormat`
+#### dataFormat
 
 The SDK supports three data in/out formats (array, json, xml), which can be configured via the `dataFormat` configuration in `src/MyAllocator/Config/Config.php`. The following table illustrates the formats used for the request flow based on dataFormat.
 
@@ -105,7 +105,7 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
 
 Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
-#### `dataResponse`
+#### dataResponse
 
 Define what data you prefer to be included in Api responses. The response 'body', 'code', and 'headers' keys are not configurable and will always be included in a response. Each piece of data may be useful if you intend to store request and response data locally. The following keys in the dataResponse array below will cause the related data to be returned in all responses:
 
@@ -120,7 +120,7 @@ Define what data you prefer to be included in Api responses. The response 'body'
         in the configured dataFormat format. Note, for xml, the request
         is stored in the result prior to url encoding.
 
-#### `debugsEnabled`
+#### debugsEnabled
 
 Set `debugsEnabled` to true in `src/MyAllocator/Config/Config.php` to display request and response data in the SDK interface and API transfer data formats for an API request.
 
@@ -142,11 +142,15 @@ A successful request call will return an array with the following response struc
     );
 
 `request['time']` *(optional)* is a DateTime object representing the time immediately before sending the request to MyAllocator.
+
 `request['body']` *(optional)* is the request body sent to MyAllocator in your configured dataFormat.
 
 `response['time']` *(optional)* is a DateTime object representing the time immediately after receiving the response from MyAllocator.
+
 `response['code']` is the HTTP response code.
+
 `response['headers']` are the HTTP response headers.
+
 `response['body']` is the response body.
 
 Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information.
