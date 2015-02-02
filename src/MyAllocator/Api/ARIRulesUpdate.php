@@ -27,7 +27,10 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Update the Avilability/Rates/Inventory for a property.
+ * Update rules for a property for a property. Rules allow a PMS to send
+ * `rules` for specific date ranges. Currently, a only the BLOCK rule is
+ * supported. The BLOCK rule allows a PMS to send blocked availability
+ * for a specific date range, room type, and channel.
  */
 class ARIRulesUpdate extends MaApi
 {

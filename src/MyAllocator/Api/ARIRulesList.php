@@ -27,7 +27,7 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Update the Avilability/Rates/Inventory for a property.
+ * List the rules currently configured for a property.
  */
 class ARIRulesList extends MaApi
 {
