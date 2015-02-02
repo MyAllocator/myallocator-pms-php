@@ -153,7 +153,7 @@ A successful request call will return an array with the following response struc
 
 `response['body']` is the response body.
 
-Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information.
+Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information. Additionally, the `getState` method may be called for an exception to retreive the state information for the request up to the point of failure in the same format as the response structure above (request/response). For example, if an HTTP connection timeout exception occurs, you may acess the request time/body and response code/headers via `getState`.
 
 ## Tests
 

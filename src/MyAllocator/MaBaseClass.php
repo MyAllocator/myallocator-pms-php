@@ -110,6 +110,11 @@ class MaBaseClass
                 'default' => array('timeRequest', 'timeResponse', 'request'),
                 'valid' => array('timeRequest', 'timeResponse', 'request')
             ),
+            'httpErrorThrowsException' => array(
+                'type' => 'boolean',
+                'default' => false,
+                'valid' => array(true, false)
+            ),
             'debugsEnabled' => array(
                 'type' => 'boolean',
                 'default' => false,

@@ -48,7 +48,8 @@ class PropertyChannelListTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userToken'
+            'userToken',
+            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);

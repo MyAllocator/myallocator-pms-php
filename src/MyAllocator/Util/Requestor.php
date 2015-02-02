@@ -49,6 +49,15 @@ class Requestor extends MaBaseClass
     public $version = '201408';
 
     /**
+     * @var array Request and response state data.
+     */
+    public $state = array(
+        'method' => null,
+        'request' => array(), // time, body
+        'response' => array() // time, code, headers, body, body_raw
+    );
+
+    /**
      * The constructor passes potential configuration parameters to MaBaseClass.
      *
      * @param array $cfg API configuration parameters.
@@ -75,13 +84,6 @@ class Requestor extends MaBaseClass
      */
     public function request($method, $url, $params = null)
     {
-        // The array to return to calling function
-        $return = array();
-        // The 'request' key data
-        $request = array();
-        // The 'response' key data
-        $response = array();
-
         if (!$params) {
             $params = array();
         } else {
@@ -90,7 +92,7 @@ class Requestor extends MaBaseClass
 
         // Set request data if configured
         if (in_array('request', $this->config['dataResponse'])) {
-            $request_body = $params;
+            $this->state['request']['body'] = $params;
         }
 
         /*
@@ -100,12 +102,15 @@ class Requestor extends MaBaseClass
         $this->debug_echo("\nRequest (".$this->config['dataFormat']."):\n");
         switch ($this->config['dataFormat']) {
             case 'array':
+                // Set data method
+                $this->state['method'] = $params['_method'];
+                // Encode parameters
                 $this->debug_print_r($params); 
                 try {
                     $params = json_encode($params);
                 } catch (Exception $e) {
                     $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
-                    throw new ApiException($msg);
+                    throw new ApiException($msg, $this->state);
                 }
                 $this->debug_echo("\nRequest (json):\n");
                 // Intentionally dropping into json case
@@ -116,16 +121,13 @@ class Requestor extends MaBaseClass
                 // Format params for curl request POSTFIELDS
                 $params = array('json' => $params);
                 // Send request
-                $curl_response = $this->curlRequest(
+                $this->curlRequest(
                     $method,
                     $absUrl,
                     $params
                 );
                 // Process response
-                $curl_response['body'] = $this->interpretResponseJSON(
-                    $curl_response['body'],
-                    $curl_response['code']
-                );
+                $this->interpretResponseJSON();
                 break;
             case 'xml':
                 $this->debug_echo($params); 
@@ -134,42 +136,20 @@ class Requestor extends MaBaseClass
                 // Format params for curl request POSTFIELDS
                 $params = 'xmlRequestString='.urlencode($params);
                 // Send request
-                $curl_response = $this->curlRequest(
+                $this->curlRequest(
                     $method,
                     $absUrl,
                     $params
                 );
                 // Process response
-                $curl_response['body'] = $this->interpretResponseXML(
-                    $curl_response['body'],
-                    $curl_response['code']
-                );
+                $this->interpretResponseXML();
                 break;
             default:
                 $msg = 'Invalid data format: '.$this->config['dataFormat'];
-                throw new ApiException($msg);
+                throw new ApiException($msg, $this->state);
         }
 
-        // Format clean response data
-        if (isset($curl_response['request_time'])) {
-            $request['time'] = $curl_response['request_time'];
-        }
-        if (isset($request_body)) {
-            $request['body'] = $request_body;
-        }
-        if (isset($curl_response['response_time'])) {
-            $response['time'] = $curl_response['response_time'];
-        }
-        $response['code'] = $curl_response['code'];
-        $response['headers'] = $curl_response['headers'];
-        $response['body'] = $curl_response['body'];
-        if (!empty($request)) {
-            $return['request'] = $request;
-        }
-        $return['response'] = $response;
-        //var_dump($return);
-
-        return $return;
+        return $this->formatResponse();
     }
 
     /**
@@ -193,13 +173,13 @@ class Requestor extends MaBaseClass
             $opts[CURLOPT_POST] = 1;
             $opts[CURLOPT_POSTFIELDS] = $params;
         } else {
-            throw new ApiException('Unsupported method '.$method);
+            throw new ApiException('Unsupported method '.$method, $this->state);
         }
 
         $absUrl = self::utf8($absUrl);
         $opts[CURLOPT_URL] = $absUrl;
         $opts[CURLOPT_RETURNTRANSFER] = true;
-        $opts[CURLOPT_CONNECTTIMEOUT] = 30;
+        $opts[CURLOPT_CONNECTTIMEOUT] = 20;
         $opts[CURLOPT_TIMEOUT] = 60;
         $opts[CURLOPT_HEADER] = true;
         $opts[CURLOPT_USERAGENT] = 'PHP SDK/1.0';
@@ -209,7 +189,7 @@ class Requestor extends MaBaseClass
 
         // Set request time if configured
         if (in_array('timeRequest', $this->config['dataResponse'])) {
-            $response['request_time'] = new \DateTime();
+            $this->state['request']['time'] = new \DateTime();
         }
 
         // Sent request
@@ -217,7 +197,7 @@ class Requestor extends MaBaseClass
 
         // Set response time if configured
         if (in_array('timeResponse', $this->config['dataResponse'])) {
-            $response['response_time'] = new \DateTime();
+            $this->state['response']['time'] = new \DateTime();
         }
 
         // Error handling
@@ -229,69 +209,72 @@ class Requestor extends MaBaseClass
         }
 
         // Parse code, headers, body from response
-        $response['code'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $this->state['response']['code'] = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $response['headers'] = substr($curl_result, 0, $header_size);
-        $response['body'] = substr($curl_result, $header_size);
+        $this->state['response']['headers'] = substr($curl_result, 0, $header_size);
+        $this->state['response']['body_raw'] = substr($curl_result, $header_size);
         curl_close($curl);
 
-        return $response;
+        return $this->state;
     }
 
     /**
      * Process a JSON CURL response.
      *
-     * @param string $body The JSON response body.
-     * @param integer $code The HTTP code.
-     *
      * @return mixed API response. The format depends on dataFormat.
      *
      * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
-    private function interpretResponseJSON($body, $code)
+    private function interpretResponseJSON()
     {
         $this->debug_echo("\n\nResponse (json):\n");
-        $this->debug_print_r($body);
+        $this->debug_print_r($this->state['response']['body_raw']);
 
         // Convert response from json to array format if required
         if ($this->config['dataFormat'] == 'array') {
             try {
-                $resp = json_decode($body, TRUE); 
+                $this->state['response']['body'] = json_decode(
+                    $this->state['response']['body_raw'],
+                    true
+                ); 
             } catch (Exception $e) {
-                $msg = 'Invalid response body from API: ' . $body
-                     . '(HTTP response code was ' . $code . ')';
-                throw new ApiException($msg, $code, $body);
+                $msg = 'Invalid response body from API: '.$this->state['response']['body_raw']
+                     . '(HTTP response code was '.$this->state['response']['code'].')';
+                throw new ApiException($msg, $this->state);
             }
             $this->debug_echo("\n\nResponse (array):\n"); 
-            $this->debug_print_r($resp); 
+            $this->debug_print_r($this->state['response']['body']); 
         } else {
-            $resp = $body;
+            $this->state['response']['body'] = $this->state['response']['body_raw'];
         }
 
-        if ($code < 200 || $code >= 300) {
-            $this->handleHttpError($body, $code, $resp);
+        if ($this->state['response']['code'] < 200 ||
+            $this->state['response']['code'] >= 300
+        ) {
+            $this->handleHttpError();
         }
 
-        return $resp;
+        return $this->state;
     }
 
     /**
      * Process a XML CURL response.
      *
-     * @param string $body The JSON response body.
-     * @param integer $code The HTTP code.
-     *
      * @return mixed API response. The format depends on dataFormat.
      */
-    private function interpretResponseXML($body, $code)
+    private function interpretResponseXML()
     {
-        $this->debug_echo("\n\nResponse (xml):\n$body");
+        $this->debug_echo("\n\nResponse (xml):\n".$this->state['response']['body_raw']);
 
-        if ($code < 200 || $code >= 300) {
-            $this->handleHttpError($body, $code);
+        $this->state['response']['body'] = $this->state['response']['body_raw'];
+
+        if ($this->state['response']['code'] < 200 ||
+            $this->state['response']['code'] >= 300
+        ) {
+            $this->handleHttpError();
         }
 
-        return $body;
+        return $this->state;
     }
 
     /**
@@ -319,7 +302,7 @@ class Requestor extends MaBaseClass
         }
 
         $msg .= "\n\n(Network error [errno $errno]: $message)";
-        throw new ApiConnectionException($msg);
+        throw new ApiConnectionException($msg, $this->state);
     }
 
     /**
@@ -333,16 +316,16 @@ class Requestor extends MaBaseClass
      * @throws MyAllocator\phpsdk\src\Exception\APIAuthenticationException
      * @throws MyAllocator\phpsdk\src\Exception\ApiException
      */
-    private function handleHttpError($body, $code, $resp = null)
+    private function handleHttpError()
     {
-        $msg = 'HTTP API Error (HTTP response code was ' . $code . ')';
-        switch ($code) {
+        $msg = 'HTTP API Error (HTTP response code was '.$this->state['response']['code'].')';
+        switch ($this->state['response']['code']) {
             case 404:
-                throw new InvalidRequestException($msg, $code, $body, $resp);
+                throw new InvalidRequestException($msg, $this->state);
             case 401:
-                throw new ApiAuthenticationException($msg, $code, $body, $resp);
+                throw new ApiAuthenticationException($msg, $this->state);
             default:
-                throw new ApiException($msg, $code, $body, $resp);
+                throw new ApiException($msg, $this->state);
         }
     }
 
@@ -447,5 +430,32 @@ class Requestor extends MaBaseClass
         } else {
             return self::utf8($d);
         }
+    }
+
+    /**
+     * Format a response from available state data.
+     *
+     * @return array Formatted response.
+     */
+    private function formatResponse()
+    {
+        $return = array();
+
+        // Method
+        if (isset($this->state['method'])) {
+            $return['method'] = $this->state['method'];
+        }
+
+        // Request
+        if (!empty($this->state['request'])) {
+            $return['request'] = $this->state['request'];
+        }
+
+        // Response
+        if (!empty($this->state['response'])) {
+            $return['response'] = $this->state['response'];
+        }
+
+        return $return;
     }
 }

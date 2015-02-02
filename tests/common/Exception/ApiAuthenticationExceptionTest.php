@@ -29,9 +29,6 @@ use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 class ApiAuthenticationExceptionTest extends PHPUnit_Framework_TestCase
 {
     private $message = 'message'; 
-    private $httpStatus = 'status'; 
-    private $httpBody = 'body'; 
-    private $jsonBody = 'body'; 
 
     /**
      * @author nathanhelenihi
@@ -39,21 +36,31 @@ class ApiAuthenticationExceptionTest extends PHPUnit_Framework_TestCase
      */
     public function testApiAuthenticationException()
     {
+        $state = array(
+            'method' => 'test',
+            'request' => array(
+                'time' => 'timeA',
+                'body' => 'bodyA'
+            ),
+            'response' => array(
+                'time' => 'timeB',
+                'code' => 'codeB',
+                'headers' => 'headersB',
+                'body' => 'bodyB',
+                'body_raw' => 'bodyRawB'
+            )
+        );
         $caught = false;
         try {
-            throw new ApiAuthenticationException(
-                $this->message, 
-                $this->httpStatus,
-                $this->httpBody,
-                $this->jsonBody
-            );
+            throw new ApiAuthenticationException($this->message, $state);
         } catch (Exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiAuthenticationException', $e);
             $this->assertEquals($this->message, $e->getMessage());
-            $this->assertEquals($this->httpStatus, $e->getHttpStatus());
-            $this->assertEquals($this->httpBody, $e->getHttpBody());
-            $this->assertEquals($this->jsonBody, $e->getJsonBody());
+            $this->assertEquals($state['response']['code'], $e->getHttpStatus());
+            $this->assertEquals($state['response']['body'], $e->getHttpBody());
+            $this->assertEquals($state['response']['body_raw'], $e->getJsonBody());
+            $this->assertSame($state, $e->getState());
         }
 
         if (!$caught) {

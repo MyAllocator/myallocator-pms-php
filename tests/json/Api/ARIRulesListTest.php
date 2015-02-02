@@ -25,14 +25,11 @@
  */
 
 namespace MyAllocator\phpsdk\tests\json;
- 
-use MyAllocator\phpsdk\src\Api\ARIUpdateStatus;
+use MyAllocator\phpsdk\src\Api\ARIRulesList;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
-use MyAllocator\phpsdk\src\Exception\ApiException;
  
-class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
+class ARIRulesListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -40,8 +37,8 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new ARIUpdateStatus();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIUpdateStatus', get_class($obj));
+        $obj = new ARIRulesList();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIRulesList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -49,8 +46,7 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -70,40 +66,14 @@ class ARIUpdateStatusTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new ARIUpdateStatus($fxt);
+        $obj = new ARIRulesList($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No required parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (\exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-/*
-        // Invalid update id should fail
-        $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '123999999999'
-        ));
-        print_r($rsp);
-        $this->assertTrue(isset($rsp['response']['body']['Errors']));
-        $this->assertEquals($rsp['response']['body']['Errors'][0]['ErrorMsg'], 'No such booking id');
-*/
-
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'UpdateId' => '4464436'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['Channels']));
+        $rsp = $obj->callApi();
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
     }
 }

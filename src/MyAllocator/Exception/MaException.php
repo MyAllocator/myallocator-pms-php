@@ -32,22 +32,31 @@ namespace MyAllocator\phpsdk\src\Exception;
 class MaException extends \Exception
 {
     /**
-     * The constructor can set http status, body, and json body.
-     *
-     * @param integer $httpStatus The http code.
-     * @param array $httpBody The http response body.
-     * @param string $jsonBody The http response body in json format.
+     * @var array State data before the exception.
      */
-    public function __construct(
-        $message,
-        $httpStatus = null,
-        $httpBody = null,
-        $jsonBody = null
-    ) {
-        parent::__construct($message);
-        $this->httpStatus = $httpStatus;
-        $this->httpBody = $httpBody;
-        $this->jsonBody = $jsonBody;
+    protected $state = null;
+
+    /**
+     * The constructor may set request/response parameters.
+     *
+     * @param string $msg The exception description.
+     * @param array $args The request/response parameters.
+     */
+    public function __construct($msg, $state = null)
+    {
+        parent::__construct($msg);
+
+        if (isset($state)) {
+            $this->state = $state;
+        }
+    }
+
+    /**
+     * Get the state of an exception
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 
     /**
@@ -55,7 +64,11 @@ class MaException extends \Exception
      */
     public function getHttpStatus()
     {
-        return $this->httpStatus;
+        if ($this->state && isset($this->state['response']['code'])) {
+            return $this->state['response']['code'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -63,7 +76,11 @@ class MaException extends \Exception
      */
     public function getHttpBody()
     {
-        return $this->httpBody;
+        if ($this->state && isset($this->state['response']['body'])) {
+            return $this->state['response']['body'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -71,6 +88,10 @@ class MaException extends \Exception
      */
     public function getJsonBody()
     {
-        return $this->jsonBody;
+        if ($this->state && isset($this->state['response']['body_raw'])) {
+            return $this->state['response']['body_raw'];
+        } else {
+            return null;
+        }
     }
 }

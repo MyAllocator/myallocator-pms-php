@@ -3,6 +3,8 @@ API documentation can be found at http://myallocator.github.io/apidocs/
 
 ARIUpdate
 ARIUpdateStatus
+ARIRulesUpdate
+ARIRulesList
 AssociatePropertyToPMS
 AssociateUserToPMS
 BookingList

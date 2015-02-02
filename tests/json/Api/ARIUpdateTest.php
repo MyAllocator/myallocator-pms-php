@@ -48,9 +48,9 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
+            'userId',
+            'userPassword',
+            //'userToken',
             'propertyId'
         ));
         $data = array();
@@ -77,22 +77,24 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
+/*
         $data = array(
             'Options' => array(
                 'QueryForStatus' => 'true',
-                'loop_delay' => 30,
+                //'loop_delay' => 30,
                 'FailIfUpdateActive' => 'false'
             ),
             'Channels' => array(
-                //'loop',
-                //'boo',
-                'all'
+                'air',
+                'boo',
+                'loc'
+                //'all'
             ),
             'Allocations' => array(
                 array(
                     'RoomId' => '23651',
-                    'StartDate' => '2014-12-01',
-                    'EndDate' => '2014-12-30',
+                    'StartDate' => '2015-01-05',
+                    'EndDate' => '2017-01-07',
                     'Units' => '2',
                     'MinStay' => '1',
                     'MaxStay' => '3',
@@ -118,6 +120,30 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
                     'MaxStay' => '3',
                     'Price' => '3.00',
                     'Price-Weekend' => '4.00'
+                )
+            )
+        );
+*/
+        $data = array(
+            'Options' => array(
+                'QueryForStatus' => 'true',
+                //'loop_delay' => 30,
+                'FailIfUpdateActive' => 'false'
+            ),
+            'Channels' => array(
+                'loop',
+                'boo'
+                //'loc'
+                //'all'
+            ),
+            'Allocations' => array(
+                array(
+                    'RoomId' => '23651',
+                    'StartDate' => '2015-03-01',
+                    'EndDate' => '2016-03-31',
+                    'Units' => '5',
+                    'MinStay' => '1',
+                    'Price' => '50.00'
                 )
             )
         );
