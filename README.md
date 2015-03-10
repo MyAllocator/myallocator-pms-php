@@ -1,10 +1,12 @@
-#myallocator-php-sdk
+#myallocator-pms-php
 
-MyAllocator PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
+MyAllocator PMS PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
+
+Note, this is not the BuildToUs PHP SDK for OTA's. The BuildToUs PHP SDK can be found at https://github.com/MyAllocator/myallocator-ota-php
 
 MyAllocator API Version: 201408
 
-MyAllocator PHP SDK Documentation [http://myallocator.github.io/myallocator-php-sdk-docs/]
+MyAllocator PHP SDK Documentation [http://myallocator.github.io/myallocator-pms-php-docs/]
 
 MyAllocator API Documentation [http://myallocator.github.io/apidocs/]
 
@@ -20,7 +22,7 @@ PHP 5.3.2 and later.
 
 ## Documentation
 
-Please see http://myallocator.github.io/myallocator-php-sdk-docs/ for the complete and up-to-date SDK documentation.
+Please see http://myallocator.github.io/myallocator-pms-php-docs/ for the complete and up-to-date SDK documentation.
 
 ## Composer
 
@@ -48,7 +50,7 @@ Or manually:
 
 Grab the latest version of the SDK:
 
-    git clone https://github.com/MyAllocator/myallocator-php-sdk.git
+    git clone https://github.com/MyAllocator/myallocator-pms-php.git
 
 To use the bindings, add the following to a PHP script:
 
@@ -179,7 +181,7 @@ The json tests use the `array` dataFormat to interface with the SDK. Refer to `s
 
 Most of the test cases use local environment variables and will be skipped if not provided. Export the following local environment variables from your data to use with the related test cases:
 
-    myallocator-sdk-php$ cat test/ENVIRONMENT_CREDENTIALS 
+    myallocator-pms-php$ cat test/ENVIRONMENT_CREDENTIALS 
     #!/bin/bash
     export ma_vendorId=xxxxx
     export ma_vendorPassword=xxxxx
@@ -188,4 +190,4 @@ Most of the test cases use local environment variables and will be skipped if no
     export ma_userToken=xxxxx
     export ma_propertyId=xxxxx
     export ma_PMSUserId=xxxxx
-    myallocator-sdk-php$ source test/ENVIRONMENT_CREDENTIALS
+    myallocator-pms-php$ source test/ENVIRONMENT_CREDENTIALS

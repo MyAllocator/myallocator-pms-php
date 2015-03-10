@@ -2,6 +2,6 @@ source:
 	- src/MyAllocator
 	
 destination: docs
-title: MyAllocator PHP SDK
-baseUrl: http://myallocator.github.io/myallocator-php-sdk-docs/
+title: MyAllocator PMS PHP SDK
+baseUrl: http://myallocator.github.io/myallocator-pms-php-docs/
 templateTheme: bootstrap
