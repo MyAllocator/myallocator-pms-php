@@ -58,24 +58,58 @@ To use the bindings, add the following to a PHP script:
 
 ## Getting Started
 
-A simple usage example with composer:
+#### Installation and usage example with composer installation:
 
-    require_once('vendor/autoload.php');
-    use MyAllocator\phpsdk\src\Api\HelloWorld;
+    root@nate:/var/www# mkdir project
+    root@nate:/var/www# cd project/
+    root@nate:/var/www/project# echo '{"require": {"myallocator/myallocator-php-sdk": "1.*"}}' > composer.json
+    root@nate:/var/www/project# composer install
+    Loading composer repositories with package information
+    Installing dependencies (including require-dev)
+      - Installing myallocator/myallocator-php-sdk (1.2.1)
+        Downloading: 100%         
+    Writing lock file
+    Generating autoload files
+    root@nate:/var/www/project# cp vendor/myallocator/myallocator-php-sdk/src/example_autoload.php .
+    root@nate:/var/www/project# v example_autoload.php 
 
-    $params = array(
-        'Auth' => 'true',
-        'hello' => 'world'
-    );
+Edit require_once autoload in example_autoload.php in line 33 to:
 
-    $api = new HelloWorld();
-    $api->setConfig('dataFormat', 'array');
-    try {
-        $rsp = $api->callApiWithParams($params);
-    } catch (Exception $e) {
-        $rsp = 'Oops: '.$e->getMessage();
-    }
-    var_dump($rsp);
+    require_once(dirname(__FILE__) . '/vendor/autoload.php');
+
+Run HelloWorld ping to MyAllocator:
+
+    root@nate:/var/www/project# php example_autoload.php
+    {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
+
+#### Installation and usage example with manual installation:
+
+    root@nate:/var/www# mkdir -p project/lib
+    root@nate:/var/www# cd project/lib/
+    root@nate:/var/www/project/lib# git clone https://github.com/MyAllocator/myallocator-pms-php.git
+    Cloning into 'myallocator-pms-php'...
+    remote: Counting objects: 1133, done.
+    remote: Compressing objects: 100% (6/6), done.
+    remote: Total 1133 (delta 0), reused 0 (delta 0), pack-reused 1127
+    Receiving objects: 100% (1133/1133), 186.80 KiB | 0 bytes/s, done.
+    Resolving deltas: 100% (874/874), done.
+    Checking connectivity... done.
+    root@nate:/var/www/project/lib# cd ..
+    root@nate:/var/www/project# cp lib/myallocator-pms-php/src/example_autoload.php .
+    root@nate:/var/www/project# v example_autoload.php 
+
+Edit require_once autoload in example_autoload.php in line 33 to:
+
+    require_once(dirname(__FILE__) . '/lib/myallocator-pms-php/src/MyAllocator.php');
+
+Run HelloWorld ping to MyAllocator:
+
+    root@nate:/var/www/project# php example_autoload.php
+    {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
+
+#### Simple usage example:
+
+Can be found at myallocator-pms-php/src/example_autoload.php. You may need to modify the autoload require path as shown above.
 
 The setConfig is not required once `src/MyAllocator/Config/Config.php` has been configured.
 
