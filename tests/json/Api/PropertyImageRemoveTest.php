@@ -26,11 +26,12 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Api\PropertyImageRemove;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class PropertyImageRemoveTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +39,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new PropertyImageRemove();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyImageRemove', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -47,7 +48,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userToken',
+            'userId',
+            'userPassword',
             'propertyId'
         ));
         $data = array();
@@ -67,23 +69,19 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
+        $obj = new PropertyImageRemove($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
+        // Valid order id and valid password should succeed
         $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
+            'PropertyImage' => array(
+                'PropertyImageId' => 468
+            )
         ));
-
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
         $this->assertEquals($rsp['response']['body']['Success'], 1);
     }
 }

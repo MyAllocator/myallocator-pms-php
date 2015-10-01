@@ -26,11 +26,11 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Api\BookingPaymentPasswordValidate;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class BookingPaymentPasswordValidateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +38,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new BookingPaymentPasswordValidate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingPaymentPasswordValidate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -67,7 +67,7 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
+        $obj = new BookingPaymentPasswordValidate($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
@@ -76,11 +76,7 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
 
         // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
+            'CreditCardPassword' => 'some_password'
         ));
 
         $this->assertTrue(isset($rsp['response']['body']['Success']));

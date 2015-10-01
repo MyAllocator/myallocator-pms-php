@@ -90,6 +90,7 @@ class BookingListTest extends \PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
+/*
         // Arrival parameters
         $rsp = $obj->callApiWithParams(array(
             'ArrivalStartDate' => '2014-11-01',
@@ -103,12 +104,27 @@ class BookingListTest extends \PHPUnit_Framework_TestCase
             'ModificationEndDate' => '2014-12-30'
         ));
         $this->assertTrue(isset($rsp['response']['body']['Bookings']));
+*/
 
         // Creation parameters
         $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-11-01',
-            'CreationEndDate' => '2014-12-30'
+            'ModificationStartDateTime' => '2015-01-01 00:00:00',
+            'ModificationEndDateTime' => '2015-07-30 00:00:00'
+//            'Options' => array(
+//                'IncludeArchived' => 'true'
+//            )
         ));
+
+/*
+        // Creation parameters
+        $rsp = $obj->callApiWithParams(array(
+            'CreationStartDate' => '2015-01-01',
+            'CreationEndDate' => '2015-08-01',
+            'Options' => array(
+                'IncludeArchived' => 'true'
+            )
+        ));
+*/
         $this->assertTrue(isset($rsp['response']['body']['Bookings']));
     }
 }

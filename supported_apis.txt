@@ -1,14 +1,17 @@
 The following API's are supported by this SDK.
 API documentation can be found at http://myallocator.github.io/apidocs/
 
+AmenityList
 ARIUpdate
 ARIUpdateStatus
 ARIRulesUpdate
 ARIRulesList
 AssociatePropertyToPMS
 AssociateUserToPMS
+BookingAction
 BookingList
 BookingPaymentDownload
+BookingPaymentPasswordValidate
 ChannelList
 HelloWorld
 HelloUser
@@ -20,10 +23,16 @@ LoopBookingCreate
 LoopBookingList
 PropertyChannelList
 PropertyCreate
+PropertyImageCreate
+PropertyImageList
+PropertyImageRemove
 PropertyList
 PropertyModify
 RoomAvailabilityList
 RoomCreate
+RoomImageCreate
+RoomImageList
+RoomImageRemove
 RoomList
 RoomRemove
 RoomUpdate

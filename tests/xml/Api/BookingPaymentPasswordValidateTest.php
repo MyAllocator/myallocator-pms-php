@@ -24,13 +24,14 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Api\BookingPaymentPasswordValidate;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class BookingPaymentPasswordValidateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +39,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new BookingPaymentPasswordValidate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingPaymentPasswordValidate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -47,6 +48,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
+            //'userId',
+            //'userPassword',
             'userToken',
             'propertyId'
         ));
@@ -67,23 +70,31 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
-        $obj->setConfig('dataFormat', 'array');
+        $obj = new BookingPaymentPasswordValidate($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
-        ));
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <BookingPaymentPasswordValidate>
+                    <Auth>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                    <CreditCardPassword>some_password</CreditCardPassword>
+                </BookingPaymentPasswordValidate>
+        ";
 
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
-        $this->assertEquals($rsp['response']['body']['Success'], 1);
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['response']['code']);
+        $this->assertFalse(
+            strpos($rsp['response']['body'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

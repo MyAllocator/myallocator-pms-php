@@ -27,16 +27,14 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Modify a property account.
- *
- * This API requires special vendor permissions.
+ * List of all supported amenities and their channel support.
  */
-class PropertyModify extends MaApi
+class AmenityList extends MaApi
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'PropertyModify';
+    protected $id = 'AmenityList';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -46,34 +44,13 @@ class PropertyModify extends MaApi
         'auth' => array(
             'req' => array(
                 'Auth/VendorId',
-                'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
+                'Auth/VendorPassword'
             ),
             'opt' => array()
         ),
         'args' => array(
             'req' => array(),
-            'optMin' => 1,
-            'opt' => array(
-                'PropertyName',
-                'ExpiryDate',
-                'Currency', // 3-letter ISO 4217 currency code
-                'Country', // 2-letter ISO 3166-1 alpha-2 country code
-                'Breakfast',
-                'BookingAdjust',
-                'BookingAdjustCancellation',
-                'BookingDownload',
-                'EmailDefault',
-                'EmailChannelBooking',
-                'EmailBookNow'
-            )
+            'opt' => array()
         )
     );
 }

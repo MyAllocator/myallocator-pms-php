@@ -24,13 +24,14 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Api\RoomImageList;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class RoomImageListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +39,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new RoomImageList();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\RoomImageList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -47,7 +48,9 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userToken',
+            'userId',
+            'userPassword',
+            //'userToken',
             'propertyId'
         ));
         $data = array();
@@ -67,23 +70,31 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
-        $obj->setConfig('dataFormat', 'array');
+        $obj = new RoomImageList();
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
-        ));
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <RoomImageList>
+                 <Auth>
+                   <UserId>{$auth->userId}</UserId>
+                   <UserPassword>{$auth->userPassword}</UserPassword>
+                   <PropertyId>{$auth->propertyId}</PropertyId>
+                   <VendorId>{$auth->vendorId}</VendorId>
+                   <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                 </Auth>
+                </RoomImageList>
+        ";
 
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
-        $this->assertEquals($rsp['response']['body']['Success'], 1);
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['response']['code']);
+        $this->assertFalse(
+            strpos($rsp['response']['body'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

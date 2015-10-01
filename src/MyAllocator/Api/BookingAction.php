@@ -27,16 +27,14 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Modify a property account.
- *
- * This API requires special vendor permissions.
+ * Send incremental 'intents' which modify a booking.
  */
-class PropertyModify extends MaApi
+class BookingAction extends MaApi
 {
     /**
      * @var string The api to call.
      */
-    protected $id = 'PropertyModify';
+    protected $id = 'BookingAction';
 
     /**
      * @var array Array of required and optional authentication and argument 
@@ -59,21 +57,11 @@ class PropertyModify extends MaApi
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(),
-            'optMin' => 1,
-            'opt' => array(
-                'PropertyName',
-                'ExpiryDate',
-                'Currency', // 3-letter ISO 4217 currency code
-                'Country', // 2-letter ISO 3166-1 alpha-2 country code
-                'Breakfast',
-                'BookingAdjust',
-                'BookingAdjustCancellation',
-                'BookingDownload',
-                'EmailDefault',
-                'EmailChannelBooking',
-                'EmailBookNow'
-            )
+            'req' => array(
+                'OrderId',
+                'Actions'
+            ),
+            'opt' => array()
         )
     );
 }

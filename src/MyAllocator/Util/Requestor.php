@@ -133,6 +133,8 @@ class Requestor extends MaBaseClass
                 $this->debug_echo($params); 
                 // Generate absolute url
                 $absUrl = $this->apiUrl($url, 'xml');
+                $this->debug_echo("\n\nURL:\n");
+                $this->debug_print_r($absUrl);
                 // Format params for curl request POSTFIELDS
                 $params = 'xmlRequestString='.urlencode($params);
                 // Send request

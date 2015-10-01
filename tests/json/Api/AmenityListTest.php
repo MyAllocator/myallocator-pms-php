@@ -26,11 +26,12 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
+use MyAllocator\phpsdk\src\Api\AmenityList;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
+use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class AmenityListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,17 +39,15 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new AmenityList();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\AmenityList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
             'vendorId',
-            'vendorPassword',
-            'userToken',
-            'propertyId'
+            'vendorPassword'
         ));
         $data = array();
         $data[] = array($auth);
@@ -67,23 +66,15 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
+        $obj = new AmenityList($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
-        ));
-
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
-        $this->assertEquals($rsp['response']['body']['Success'], 1);
+        $rsp = $obj->callApi();
+        $this->assertTrue(isset($rsp['response']['body']['Amenities']));
+        $this->assertGreaterThan(20, count($rsp['response']['body']['Amenities']));
     }
 }
