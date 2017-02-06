@@ -220,8 +220,8 @@ class MaApi extends MaBaseClass
                     $params_decoded = json_decode($params, TRUE);
                     $params_decoded = $this->validateApiParameters($this->keys, $params_decoded);
                     // Add URI method and version to payload
-                    $params['_method'] = $this->id;
-                    $params['_version'] = $requestor->version;
+                    $params_decoded['_method'] = $this->id;
+                    $params_decoded['_version'] = $requestor->version;
                     $params = json_encode($params_decoded);
                 }
                 break;
