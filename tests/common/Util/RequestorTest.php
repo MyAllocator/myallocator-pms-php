@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,8 +25,7 @@
  */
  
 use MyAllocator\phpsdk\src\Util\Requestor;
-use MyAllocator\phpsdk\src\Object\Auth as Auth;
- 
+
 class RequestorTest extends PHPUnit_Framework_TestCase
 {
     /**

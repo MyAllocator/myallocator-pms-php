@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\RoomAvailabilityList;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -46,11 +44,10 @@ class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -79,7 +76,7 @@ class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
         // No req args should fail
         $caught = false;
         try {
-            $rsp = $obj->callApi();
+            $obj->callApi();
         } catch (\exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);

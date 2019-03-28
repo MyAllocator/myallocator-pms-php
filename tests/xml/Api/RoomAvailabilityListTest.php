@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\xml;
  
 use MyAllocator\phpsdk\src\Api\RoomAvailabilityList;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -48,8 +46,7 @@ class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -82,8 +79,7 @@ class RoomAvailabilityListTest extends \PHPUnit_Framework_TestCase
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
                     <StartDate>2014-12-10</StartDate>

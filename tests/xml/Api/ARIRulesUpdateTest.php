@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,13 +25,11 @@
  */
 
 namespace MyAllocator\phpsdk\tests\xml;
- 
-use MyAllocator\phpsdk\src\Api\LoopBookingCreate;
-use MyAllocator\phpsdk\src\Object\Auth;
+
+use MyAllocator\phpsdk\src\Api\ARIRulesUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
+class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,18 +37,17 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopBookingCreate();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingCreate', get_class($obj));
+        $obj = new ARIRulesUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIRulesUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,7 +66,7 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingCreate($fxt);
+        $obj = new ARIRulesUpdate($fxt);
         $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
@@ -78,32 +75,25 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
 
         $auth = $fxt['auth'];
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <LoopBookingCreate>
+                <ARIRulesUpdate>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                    <StartDate>2014-12-12</StartDate>
-                    <EndDate>2014-12-14</EndDate>
-                    <Units>1</Units>
-                    <RoomTypeId>23651</RoomTypeId>
-                    <RateId>123</RateId>
-                    <RoomDayRate>100.00</RoomDayRate>
-                    <RoomDayDescription>A description</RoomDayDescription>
-                    <CustomerFName>Frank</CustomerFName>
-                    <CustomerLName>Blue</CustomerLName>
-                    <RoomDesc>A description</RoomDesc>
-                    <OccupantSmoker>false</OccupantSmoker>
-                    <OccupantNote>Please not by elevator!</OccupantNote>
-                    <OccupantFName>Frank</OccupantFName>
-                    <OccupantLName>Blue</OccupantLName>
-                    <Occupancy>1</Occupancy>
-                    <Policy>No smoking.</Policy>
-                    <ChannelRoomType>123</ChannelRoomType>
-                </LoopBookingCreate>
+                    <ARIRules>
+                        <ARIRule>
+                            <_Action>Upsert</_Action>
+                            <PMSRuleId>00009-boo</PMSRuleId>
+                            <RoomId>23651</RoomId>
+                            <Channel>boo</Channel>
+                            <Verb>BLOCK</Verb>
+                            <StartDate>2015-05-18</StartDate>
+                            <EndDate>2015-05-20</EndDate>
+                        </ARIRule>
+                    </ARIRules>
+                </ARIRulesUpdate>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

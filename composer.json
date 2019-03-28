@@ -10,10 +10,18 @@
             "name": "Nathan Helenihi",
             "email": "nathan.helenihi@cloudbeds.com",
             "role": "Developer"
+        },
+        {
+            "name": "Sterling Phillips",
+            "email": "sterling.phillips@cloudbeds.com",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*"

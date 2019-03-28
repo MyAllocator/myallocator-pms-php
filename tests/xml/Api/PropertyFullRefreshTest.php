@@ -24,12 +24,12 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\HelloVendorUser;
+use MyAllocator\phpsdk\src\Api\PropertyFullRefresh;
 use MyAllocator\phpsdk\src\Util\Common;
-
-class HelloVendorUserTest extends \PHPUnit_Framework_TestCase
+ 
+class PropertyFullRefreshTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -37,17 +37,16 @@ class HelloVendorUserTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new HelloVendorUser();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\HelloVendorUser', get_class($obj));
+        $obj = new PropertyFullRefresh();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyFullRefresh', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
-            'userId',
-            'userPassword',
             'vendorId',
             'vendorPassword',
+            'userToken'
         ));
         $data = array();
         $data[] = array($auth);
@@ -66,13 +65,30 @@ class HelloVendorUserTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        // Successful call
-        $obj = new HelloVendorUser($fxt);
-        $obj->setConfig('dataFormat', 'array');
-        $rsp = $obj->callApiWithParams(array(
-            'hello' => 'world'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['hello']));
-        $this->assertEquals('world', $rsp['response']['body']['hello']);
+        $obj = new PropertyFullRefresh($fxt);
+        $obj->setConfig('dataFormat', 'xml');
+    
+        if (!$obj->isEnabled()) {
+            $this->markTestSkipped('API is disabled!');
+        }
+
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <PropertyFullRefresh>
+                    <Auth>
+                        <UserToken>{$auth->userToken}</UserToken>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                </PropertyFullRefresh>
+        ";
+
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['response']['code']);
+        $this->assertFalse(
+            strpos($rsp['response']['body'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

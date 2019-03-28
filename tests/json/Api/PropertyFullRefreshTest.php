@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,34 +24,31 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\xml;
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\PropertyFullRefresh;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
+class PropertyFullRefreshTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @author nathanhelenihi
+     * @author sterlingphillips
      * @group api
      */
     public function testClass()
     {
-        $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
+        $obj = new PropertyFullRefresh();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyFullRefresh', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
-        ));
+       ));
         $data = array();
         $data[] = array($auth);
 
@@ -69,31 +66,17 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new AssociatePropertyToPMS($fxt);
-        $obj->setConfig('dataFormat', 'xml');
+        $obj = new PropertyFullRefresh($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $auth = $fxt['auth'];
-        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <AssociatePropertyToPMS>
-                    <Auth>
-                        <VendorId>{$auth->vendorId}</VendorId>
-                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
-                        <PropertyId>{$auth->propertyId}</PropertyId>
-                    </Auth>
-                </AssociatePropertyToPMS>
-        ";
+        // Successful call
+        $rsp = $obj->callApi();
 
-        $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['response']['code']);
-        $this->assertFalse(
-            strpos($rsp['response']['body'], '<Errors>'),
-            'Response contains errors!'
-        );
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

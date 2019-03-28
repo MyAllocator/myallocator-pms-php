@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,11 +26,10 @@
  
 namespace MyAllocator\phpsdk\tests\xml;
 
-use MyAllocator\phpsdk\src\Api\PropertyModify;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\PropertyUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+class PropertyUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +37,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new PropertyUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -67,7 +66,7 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
+        $obj = new PropertyUpdate($fxt);
         $obj->setConfig('dataFormat', 'xml');
     
         if (!$obj->isEnabled()) {
@@ -76,7 +75,7 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
 
         $auth = $fxt['auth'];
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <PropertyCreate>
+                <PropertyUpdate>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
@@ -88,7 +87,7 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
                     <Currency>USD</Currency>
                     <Country>US</Country>
                     <Breakfast>EX</Breakfast>
-                </PropertyCreate>
+                </PropertyUpdate>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

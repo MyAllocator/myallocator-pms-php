@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,44 +24,33 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\src\Api;
+namespace MyAllocator\phpsdk\tests\xml;
+ 
+use MyAllocator\phpsdk\src\Api\PropertyImageUpdate;
 
-/**
- * Update/Cancel/Uncancel a booking created using the loopback test channel.
- */
-class LoopBookingAction extends MaApi
+class PropertyImageUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string The api to call.
+     * @author nathanhelenihi
+     * @group api
      */
-    protected $id = 'LoopBookingAction';
+    public function testClass()
+    {
+        $obj = new PropertyImageUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyImageUpdate', get_class($obj));
+    }
+
+    public function fixtureAuthCfgObject()
+    {
+        return array();
+    }
 
     /**
-     * @var array Array of required and optional authentication and argument 
-     *      keys (string) for API method.
+     * @author nathanhelenihi
+     * @group api
      */
-    protected $keys = array(
-        'auth' => array(
-            'req' => array(
-                'Auth/VendorId',
-                'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
-            ),
-            'opt' => array()
-        ),
-        'args' => array(
-            'req' => array(
-                'OrderId',
-                'Actions'
-            ),
-            'opt' => array()
-        )
-    );
+    public function testCallApi()
+    {
+        $this->markTestSkipped('This call does not support XML.');
+    }
 }

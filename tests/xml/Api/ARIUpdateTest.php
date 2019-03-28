@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\xml;
  
 use MyAllocator\phpsdk\src\Api\ARIUpdate;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class ARIUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -48,8 +46,6 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
             'userToken',
             'propertyId'
         ));
@@ -79,15 +75,6 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
 
         $auth = $fxt['auth'];
 
-        //<loop_delay>10</loop_delay>
-        $options = "
-                <Options>
-                    <QueryForStatus>true</QueryForStatus>
-                    <loop_delay>30</loop_delay>
-                    <FailIfUpdateActive>false</FailIfUpdateActive>
-                </Options>
-        ";
-
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                 <ARIUpdate>
                     <Auth>
@@ -96,7 +83,11 @@ class ARIUpdateTest extends \PHPUnit_Framework_TestCase
                         <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                    ".$options."
+                    <Options>
+                        <QueryForStatus>true</QueryForStatus>
+                        <loop_delay>30</loop_delay>
+                        <FailIfUpdateActive>false</FailIfUpdateActive>
+                    </Options>
                     <Channels>
                         <Channel>loop</Channel>
                         <Channel>boo</Channel>

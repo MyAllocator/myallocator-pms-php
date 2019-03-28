@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,58 +24,34 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
-use MyAllocator\phpsdk\src\Object\Auth;
-use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
+use MyAllocator\phpsdk\src\Api\RoomImageUpdate;
+
+class RoomImageUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
      * @group api
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function testClass()
     {
-        $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
+        $obj = new RoomImageUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\RoomImageUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
-        $auth = Common::getAuthEnv(array(
-            'vendorId',
-            'vendorPassword',
-            'userToken',
-            'propertyId'
-        ));
-        $data = array();
-        $data[] = array($auth);
-
-        return $data;
+        return array();
     }
 
     /**
      * @author nathanhelenihi
      * @group api
-     * @dataProvider fixtureAuthCfgObject
      */
-    public function testCallApi(array $fxt)
+    public function testCallApi()
     {
-        if (!$fxt['from_env']) {
-            $this->markTestSkipped('Environment credentials not set.');
-        }
-
-        $obj = new AssociatePropertyToPMS($fxt);
-        $obj->setConfig('dataFormat', 'array');
-
-        if (!$obj->isEnabled()) {
-            $this->markTestSkipped('API is disabled!');
-        }
-
-        $rsp = $obj->callApi();
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->markTestSkipped('This call does not support XML.');
     }
 }

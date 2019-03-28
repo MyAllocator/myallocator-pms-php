@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,13 +24,12 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\PropertyModify;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\BookingCancel;
 use MyAllocator\phpsdk\src\Util\Common;
- 
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+
+class BookingCancelTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,8 +37,8 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new BookingCancel();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingCancel', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -67,23 +66,32 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
-        $obj->setConfig('dataFormat', 'array');
+        $obj = new BookingCancel($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Successful call
-        $rsp = $obj->callApiWithParams(array(
-            'PropertyName' => 'PHP SDK Hotel A',
-            'ExpiryDate' => '2015-01-20',
-            'Currency' => 'USD',
-            'Country' => 'US',
-            'Breakfast' => 'EX'
-        ));
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <BookingCancel>
+                    <Auth>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                   <MyAllocatorId>57333cd36dbf9a4f114dd781</MyAllocatorId>
+                   <CancellationReason>Guest's flight was cancelled</CancellationReason>
+                </BookingCancel>
+        ";
 
-        $this->assertTrue(isset($rsp['response']['body']['Success']));
-        $this->assertEquals($rsp['response']['body']['Success'], 1);
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['response']['code']);
+        $this->assertFalse(
+            strpos($rsp['response']['body'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }
