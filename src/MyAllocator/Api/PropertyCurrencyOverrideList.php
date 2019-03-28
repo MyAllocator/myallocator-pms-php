@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,40 +27,35 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Create a booking using the loopback test channel.
+ * List which currency exchange rate overrides the property has set.
+ *
+ * Currently only returns currency overrides set for the property's default currency.
  */
-class LoopBookingCreate extends MaApi
+class PropertyCurrencyOverrideList extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
-    protected $id = 'LoopBookingCreate';
+    protected $id = 'PropertyCurrencyOverrideList';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/UserToken',
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
             ),
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'Booking'
-            ),
-            'opt' => array()
+            'req' => array(),
+            'opt' => array(
+                'FromCurrency',
+            )
         )
     );
 }

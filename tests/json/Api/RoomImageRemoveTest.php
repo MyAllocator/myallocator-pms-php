@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\RoomImageRemove;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class RoomImageRemoveTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -46,11 +44,10 @@ class RoomImageRemoveTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -76,7 +73,7 @@ class RoomImageRemoveTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Valid order id and valid password should succeed
+        // Invalid room image id should fail
         $rsp = $obj->callApiWithParams(array(
             'RoomImage' => array(
                 'RoomImageId' => 3221

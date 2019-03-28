@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,7 +27,6 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\UserExists;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
  
 class UserExistsTest extends \PHPUnit_Framework_TestCase
@@ -45,9 +44,9 @@ class UserExistsTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userToken'
         ));
         $data = array();
         $data[] = array($auth);
@@ -76,7 +75,7 @@ class UserExistsTest extends \PHPUnit_Framework_TestCase
         // Exists by email (Omitting required UserId parameter)
         $caught = false;
         try {
-            $rsp = $obj->callApiWithParams(array(
+            $obj->callApiWithParams(array(
                 'CustomerEmail' => 'phpsdkuser@phpsdk.com'
             ));
         } catch (\exception $e) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,7 +27,6 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\RoomRemove;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
  
 class RoomRemoveTest extends \PHPUnit_Framework_TestCase
@@ -45,11 +44,10 @@ class RoomRemoveTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -78,7 +76,7 @@ class RoomRemoveTest extends \PHPUnit_Framework_TestCase
         // No optional args should fail (at least 1 required)
         $caught = false;
         try {
-            $rsp = $obj->callApiWithParams(array());
+            $obj->callApiWithParams(array());
         } catch (\exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);

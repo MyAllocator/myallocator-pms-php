@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -50,15 +50,15 @@
 
 //Required packages
 if (!function_exists('curl_init')) {
-  throw new Exception('MyAllocator needs the CURL PHP extension.');
+  throw new Exception('Myallocator needs the CURL PHP extension.');
 }
 
 if (!function_exists('json_decode')) {
-  throw new Exception('MyAllocator needs the JSON PHP extension.');
+  throw new Exception('Myallocator needs the JSON PHP extension.');
 }
 
 if (!function_exists('mb_detect_encoding')) {
-  throw new Exception('MyAllocator needs the Multibyte String PHP extension.');
+  throw new Exception('Myallocator needs the Multibyte String PHP extension.');
 }
 
 // Initial Dependencies

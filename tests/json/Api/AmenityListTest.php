@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,21 +27,23 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\AmenityList;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class AmenityListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
      * @group api
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function testClass()
     {
         $obj = new AmenityList();
         $this->assertEquals('MyAllocator\phpsdk\src\Api\AmenityList', get_class($obj));
     }
+    /**
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     */
 
     public function fixtureAuthCfgObject()
     {
@@ -58,6 +60,11 @@ class AmenityListTest extends \PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
+     * @param array $fxt Auth fixture
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      * @dataProvider fixtureAuthCfgObject
      */
     public function testCallApi(array $fxt)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -54,7 +54,7 @@ class ApiConnectionExceptionTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             throw new ApiConnectionException($this->message, $state);
-        } catch (Exception $e) {
+        } catch (ApiConnectionException $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiConnectionException', $e);
             $this->assertEquals($this->message, $e->getMessage());

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -34,12 +34,12 @@ namespace MyAllocator\phpsdk\src\Api;
 class UserExists extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
     protected $id = 'UserExists';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
@@ -51,11 +51,11 @@ class UserExists extends MaApi
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'UserId'
-            ),
+            'req' => array(),
+            'optMin' => 1,
             'opt' => array(
-                'CustomerEmail'
+                'CustomerEmail',
+                'UserId',
             )
         )
     );

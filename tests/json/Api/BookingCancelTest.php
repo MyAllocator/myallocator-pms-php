@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,31 +26,28 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\LoopBookingList;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\BookingCancel;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class LoopBookingListTest extends \PHPUnit_Framework_TestCase
+
+class BookingCancelTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @author nathanhelenihi
+     * @author sterlingphillips
      * @group api
      */
     public function testClass()
     {
-        $obj = new LoopBookingList();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingList', get_class($obj));
+        $obj = new BookingCancel();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingCancel', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,7 +66,7 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingList($fxt);
+        $obj = new BookingCancel($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
@@ -79,7 +76,7 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
         // No optional parameters should throw exception
         $caught = false;
         try {
-            $rsp = $obj->callApi();
+            $obj->callApi();
         } catch (\exception $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
@@ -89,25 +86,13 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
             $this->fail('should have thrown an exception');
         }
 
-        // Arrival parameters
+        // List Parameters
         $rsp = $obj->callApiWithParams(array(
-            'ArrivalStartDate' => '2014-12-08',
-            'ArrivalEndDate' => '2014-12-15'
+            'MyAllocatorId' => '57333cd36dbf9a4f114dd781',
+            'CancellationReason' => 'Guest\'s flight was cancelled'
         ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
 
-        // Modification parameters
-        $rsp = $obj->callApiWithParams(array(
-            'ModificationStartDate' => '2014-12-08',
-            'ModificationEndDate' => '2014-12-15'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
-
-        // Creation parameters
-        $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-12-08',
-            'CreationEndDate' => '2014-12-15'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

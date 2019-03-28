@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -64,7 +64,7 @@ class Auth
     public $userToken = null;
 
     /**
-     * @var string The MyAllocator property id.
+     * @var string The myallocator property id.
      */
     public $propertyId = null;
 
@@ -88,6 +88,11 @@ class Auth
     );
 
     /**
+     * @var boolean Enable/disable debug mode
+     */
+    public $debug = null;
+
+    /**
      * Map an API authentication key to the Auth object's
      * variable and return it.
      *
@@ -95,7 +100,7 @@ class Auth
      *
      * @return mixed The requested API variable.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuthKeyVar($key)
     {
@@ -115,7 +120,7 @@ class Auth
      *
      * @return string The authentication key.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuthKeyByVar($property)
     {

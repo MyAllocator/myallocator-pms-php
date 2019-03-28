@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\HelloVendor;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class HelloVendorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -70,7 +68,7 @@ class HelloVendorTest extends \PHPUnit_Framework_TestCase
         $obj = new HelloVendor();
         $obj->setConfig('dataFormat', 'array');
         try {
-            $rsp = $obj->callApiWithParams(array(
+            $obj->callApiWithParams(array(
                 'hello' => 'world'
             ));
         } catch (\exception $e) {

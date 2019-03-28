@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,22 +26,22 @@
 
 namespace MyAllocator\phpsdk\src\Util;
 use MyAllocator\phpsdk\src\MaBaseClass;
-use MyAllocator\phpsdk\src\Util\Common;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 use MyAllocator\phpsdk\src\Exception\ApiConnectionException;
 use MyAllocator\phpsdk\src\Exception\InvalidRequestException;
 
 /**
- * The Requestor class is responsible for preparing and sending an API reqest,
+ * The Requestor class is responsible for preparing and sending an API request,
  * as well as parsing and handling the response.
  */
 class Requestor extends MaBaseClass
 {
     /**
-     * @var string The MyAllocator API base url.
+     * @var string The myallocator API base url.
      */
     private $apiBase = 'api.myallocator.com';
+    private $apiProtocol = 'https';
 
     /**
      * @var string The API version. 
@@ -67,8 +67,21 @@ class Requestor extends MaBaseClass
         parent::__construct(array(
             'cfg' => $cfg
         ));
+
+        $api_version = $this->getConfig('version');
+        if (isset($api_version)) {
+            $this->version = $api_version;
+        }
+
         $this->debug_echo("\n\nConfiguration:\n");
         $this->debug_print_r($this->config);
+
+        if (defined('MYALLOCATOR_PMS_API_BASE_URL')) {
+            $this->apiBase = MYALLOCATOR_PMS_API_BASE_URL; 
+            $this->debug_echo("\nUsing custom BASE_URL (http): $this->apiBase\n");
+        } else {
+            $this->debug_echo("\nUsing standard BASE_URL (https): $this->apiBase\n");
+        }
     }
 
     /**
@@ -76,11 +89,14 @@ class Requestor extends MaBaseClass
      *
      * @param string $method HTTP method.
      * @param string $url API endpoint.
-     * @param array|null $params API parameters.
+     * @param array|string|null $params API parameters.
      *
      * @return mixed API response, code, headers (XML only).
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     public function request($method, $url, $params = null)
     {
@@ -101,6 +117,7 @@ class Requestor extends MaBaseClass
          */
         $this->debug_echo("\nRequest (".$this->config['dataFormat']."):\n");
         switch ($this->config['dataFormat']) {
+            /** @noinspection PhpMissingBreakStatementInspection */
             case 'array':
                 // Set data method
                 $this->state['method'] = $params['_method'];
@@ -108,7 +125,7 @@ class Requestor extends MaBaseClass
                 $this->debug_print_r($params); 
                 try {
                     $params = json_encode($params);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $msg = 'JSON Encode Error - Invalid parameters: '.serialize($params);
                     throw new ApiException($msg, $this->state);
                 }
@@ -118,7 +135,7 @@ class Requestor extends MaBaseClass
                 $this->debug_echo($params); 
                 // Generate absolute url
                 $absUrl = $this->apiUrl($url, 'json');
-                // Format params for curl request POSTFIELDS
+                // Format params for curl request POST FIELDS
                 $params = array('json' => $params);
                 // Send request
                 $this->curlRequest(
@@ -133,9 +150,7 @@ class Requestor extends MaBaseClass
                 $this->debug_echo($params); 
                 // Generate absolute url
                 $absUrl = $this->apiUrl($url, 'xml');
-                $this->debug_echo("\n\nURL:\n");
-                $this->debug_print_r($absUrl);
-                // Format params for curl request POSTFIELDS
+                // Format params for curl request POST FIELDS
                 $params = 'xmlRequestString='.urlencode($params);
                 // Send request
                 $this->curlRequest(
@@ -159,15 +174,15 @@ class Requestor extends MaBaseClass
      *
      * @param string $method HTTP method.
      * @param string $absUrl The absolute endpoint URL.
-     * @param array|null $params API parameters.
+     * @param array|string|null $params API parameters.
      *
      * @return mixed API response, code, headers.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function curlRequest($method, $absUrl, $params)
     {
-        $result = array();
         $opts = array();
         $curl = curl_init();
 
@@ -191,7 +206,11 @@ class Requestor extends MaBaseClass
 
         // Set request time if configured
         if (in_array('timeRequest', $this->config['dataResponse'])) {
-            $this->state['request']['time'] = new \DateTime();
+            try {
+                $this->state['request']['time'] = new \DateTime();
+            } catch (\Exception $exception){
+                throw new ApiException('Could not create timeRequest DateTime object');
+            }
         }
 
         // Sent request
@@ -199,7 +218,11 @@ class Requestor extends MaBaseClass
 
         // Set response time if configured
         if (in_array('timeResponse', $this->config['dataResponse'])) {
-            $this->state['response']['time'] = new \DateTime();
+            try {
+                $this->state['response']['time'] = new \DateTime();
+            } catch (\Exception $exception){
+                throw new ApiException('Could not create timeResponse DateTime object');
+            }
         }
 
         // Error handling
@@ -225,7 +248,9 @@ class Requestor extends MaBaseClass
      *
      * @return mixed API response. The format depends on dataFormat.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\APIAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     private function interpretResponseJSON()
     {
@@ -239,7 +264,7 @@ class Requestor extends MaBaseClass
                     $this->state['response']['body_raw'],
                     true
                 ); 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $msg = 'Invalid response body from API: '.$this->state['response']['body_raw']
                      . '(HTTP response code was '.$this->state['response']['code'].')';
                 throw new ApiException($msg, $this->state);
@@ -262,7 +287,9 @@ class Requestor extends MaBaseClass
     /**
      * Process a XML CURL response.
      *
-     * @return mixed API response. The format depends on dataFormat.
+     * @throws \MyAllocator\phpsdk\src\Exception\APIAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     private function interpretResponseXML()
     {
@@ -283,9 +310,9 @@ class Requestor extends MaBaseClass
      * Handle a CURL error resulting from a request.
      *
      * @param integer $errno The CURL error code.
-     * @param string $message The CURL error nessage.
+     * @param string $message The CURL error message.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
      */
     private function handleCurlError($errno, $message)
     {
@@ -294,11 +321,11 @@ class Requestor extends MaBaseClass
             case CURLE_COULDNT_CONNECT:
             case CURLE_COULDNT_RESOLVE_HOST:
             case CURLE_OPERATION_TIMEOUTED:
-                $msg = 'Could not connect to MyAllocator (' . $apiBase . '). '
+                $msg = 'Could not connect to myallocator (' . $apiBase . '). '
                      . 'Please check your internet connection and try again.';
                 break;
             default:
-                $msg = 'Unexpected error communicating with MyAllocator. '
+                $msg = 'Unexpected error communicating with myallocator. '
                      . 'If this problem persists,  let us know at '
                      . 'support@myallocator.com.';
         }
@@ -310,13 +337,9 @@ class Requestor extends MaBaseClass
     /**
      * Handle a HTTP error resulting from a request.
      *
-     * @param mixed $body The HTTP response body.
-     * @param integer $code The HTTP error code.
-     * @param string $resp The JSON encoded response body.
-     *
-     * @throws MyAllocator\phpsdk\src\Exception\InvalidRequestException
-     * @throws MyAllocator\phpsdk\src\Exception\APIAuthenticationException
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
+     * @throws \MyAllocator\phpsdk\src\Exception\APIAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function handleHttpError()
     {
@@ -345,7 +368,8 @@ class Requestor extends MaBaseClass
             return false;
         }
 
-        $absUrl = sprintf('https://%s/pms/v%d/%s/%s', 
+        $absUrl = sprintf('%s://%s/pms/v%d/%s/%s', 
+                          $this->apiProtocol,
                           $this->apiBase,
                           $this->version,
                           $format,
@@ -375,7 +399,7 @@ class Requestor extends MaBaseClass
     /**
      * URL encode URL array parameters.
      *
-     * @param array $arr The array to encode.
+     * @param array|string $arr The array to encode.
      * @param string $prefix A key prefix.
      *
      * @return string The URL encoded string.
@@ -399,7 +423,7 @@ class Requestor extends MaBaseClass
             }
 
             if (is_array($v)) {
-                $r[] = self::encode($v, $k, true);
+                $r[] = self::encode($v, $k);
             } else {
                 $r[] = urlencode($k) . '=' . urlencode($v);
             }
@@ -417,7 +441,7 @@ class Requestor extends MaBaseClass
      */
     private static function encodeObjects($d)
     {
-        if ($d instanceof Api) {
+        if ($d instanceof \MyAllocator\phpsdk\src\Api\MaApi) {
             return self::utf8(Common::getClassName(get_class($d)));
         } else if ($d === true) {
             return 'true';

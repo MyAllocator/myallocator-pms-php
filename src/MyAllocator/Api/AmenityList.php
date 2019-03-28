@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,17 +27,17 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * List of all supported amenities and their channel support.
+ * List all supported amenities and their channel support.
  */
 class AmenityList extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
     protected $id = 'AmenityList';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -34,38 +34,64 @@ namespace MyAllocator\phpsdk\src\Api;
 class PropertyCreate extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
     protected $id = 'PropertyCreate';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/UserToken',
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
             ),
             'opt' => array()
         ),
         'args' => array(
             'req' => array(
                 'PropertyName',
-                'ExpiryDate',
                 'Currency', // 3-letter ISO 4217 currency code
-                'Country' // 2-letter ISO 3166-1 alpha-2 country code
+                'Country', // 2-letter ISO 3166-1 alpha-2 country code
+                'Phone',
+                'AddressLine1',
+                'City',
+                'PostCode'
             ),
             'opt' => array(
-                'Breakfast'
+                'AddressLine2',
+                'BookingAdjust',
+                'BookingAdjustCancellation',
+                'BookingAdjustModification',
+                'BookingDownload',
+                'Breakfast',
+                'EmailBookNow',
+                'EmailChannelBooking',
+                'EmailChannelBookingMode',
+                'EmailDefault',
+                'Fax',
+                'InvoiceAddressLine1',
+                'InvoiceAddressLine2',
+                'InvoiceCity',
+                'InvoicePostCode',
+                'InvoiceState',
+                'InvoiceCountry',
+                'InvoiceCompanyName',
+                'InvoiceMainContactName',
+                'InvoiceAccountManagerName',
+                'InvoiceVatID',
+                'Latitude',
+                'Longitude',
+                'MaxLengthOfStay',
+                'MinLengthOfStay',
+                'State',
+                'TermsAccepted',
+                'TermsAcceptedByIP',
+                'Timezone',
+                'Website',
             )
         )
     );

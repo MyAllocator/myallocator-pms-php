@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,11 +25,10 @@
  */
 
 namespace MyAllocator\phpsdk\src\Exception;
-use MyAllocator\phpsdk\src\Exception\MaException;
 
 /**
  * The invalid request exception class. This exception is thrown when
- * a 404 not found is returned by the MyAllocator API.
+ * a 404 not found is returned by the myallocator API.
  */
 class InvalidRequestException extends MaException
 {

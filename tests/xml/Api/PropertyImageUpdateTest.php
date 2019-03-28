@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,43 +24,33 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\src\Api;
+namespace MyAllocator\phpsdk\tests\xml;
+ 
+use MyAllocator\phpsdk\src\Api\PropertyImageUpdate;
 
-/**
- * Associate an existing MyAllocator property account to a vendor account.
- */
-class AssociatePropertyToPMS extends MaApi
+class PropertyImageUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string The api to call.
+     * @author nathanhelenihi
+     * @group api
      */
-    protected $id = 'AssociatePropertyToPMS';
+    public function testClass()
+    {
+        $obj = new PropertyImageUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyImageUpdate', get_class($obj));
+    }
+
+    public function fixtureAuthCfgObject()
+    {
+        return array();
+    }
 
     /**
-     * @var array Array of required and optional authentication and argument 
-     *      keys (string) for API method.
+     * @author nathanhelenihi
+     * @group api
      */
-    protected $keys = array(
-        'auth' => array(
-            'req' => array(
-                'Auth/VendorId',
-                'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
-            ),
-            'opt' => array()
-        ),
-        'args' => array(
-            'req' => array(),
-            'opt' => array(
-                'PMSUserId'
-            )
-        )
-    );
+    public function testCallApi()
+    {
+        $this->markTestSkipped('This call does not support XML.');
+    }
 }

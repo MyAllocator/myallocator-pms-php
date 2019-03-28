@@ -14,10 +14,10 @@
         <exclude>broken</exclude>
     </groups>
     <testsuites>
-        <testsuite name="MyAllocator PHP SDK Common Test Suite">
+        <testsuite name="Myallocator PHP SDK Common Test Suite">
             <directory suffix=".php">./tests/common</directory>
         </testsuite>
-        <testsuite name="MyAllocator PHP SDK JSON API Test Suite">
+        <testsuite name="Myallocator PHP SDK JSON API Test Suite">
             <directory suffix=".php">./tests/json/Api</directory>
             <exclude>./tests/json/Api/PropertyCreateTest.php</exclude>
             <exclude>./tests/json/Api/PropertyModifyTest.php</exclude>
@@ -29,7 +29,7 @@
             <exclude>./tests/json/Api/BookingPaymentDownloadTest.php</exclude>
             <exclude>./tests/json/Api/LoopBookingCreateTest.php</exclude>
         </testsuite>
-        <testsuite name="MyAllocator PHP SDK XML API Test Suite">
+        <testsuite name="Myallocator PHP SDK XML API Test Suite">
             <directory suffix=".php">./tests/xml/Api/</directory>
             <exclude>./tests/xml/Api/PropertyCreateTest.php</exclude>
             <exclude>./tests/xml/Api/PropertyModifyTest.php</exclude>
