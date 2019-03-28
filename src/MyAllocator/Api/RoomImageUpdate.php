@@ -24,26 +24,39 @@
  * IN THE SOFTWARE.
  */
 
-/*
- * You may use require_once similar to below to autoload
- * the MyAllocator PHP SDK. Composer package install is
- * preferred.
+namespace MyAllocator\phpsdk\src\Api;
+
+/**
+ * Update's a room image order and description.
  */
+class RoomImageUpdate extends MaApi
+{
+    /**
+     * @var string The API endpoint to call.
+     */
+    protected $id = 'RoomImageUpdate';
 
-require_once(dirname(__FILE__) . '/MyAllocator.php');
-
-use MyAllocator\phpsdk\src\Api\HelloWorld;
-
-$params = array(
-    'Auth' => 'true',
-    'hello' => 'world'
-);
-
-try {
-    $api = new HelloWorld();
-    $api->setConfig('dataFormat', 'array');
-    $rsp = $api->callApiWithParams($params);
-} catch (Exception $e) {
-    $rsp = 'Oops: '.$e->getMessage();
+    /**
+     * @var array Array of required and optional authentication and argument
+     *      keys (string) for API method.
+     */
+    protected $keys = array(
+        'auth' => array(
+            'req' => array(
+                'Auth/PropertyId',
+                'Auth/UserToken',
+                'Auth/VendorId',
+                'Auth/VendorPassword',
+            ),
+            'opt' => array()
+        ),
+        'args' => array(
+            'req' => array(),
+            'optMin' => 1,
+            'opt' => array(
+                'RoomImage',
+                'RoomImages'
+            )
+        )
+    );
 }
-var_dump($rsp);

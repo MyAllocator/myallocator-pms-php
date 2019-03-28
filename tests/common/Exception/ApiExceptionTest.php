@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -54,7 +54,7 @@ class ApiExceptionTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             throw new ApiException($this->message, $state);
-        } catch (Exception $e) {
+        } catch (ApiException $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
             $this->assertEquals($this->message, $e->getMessage());

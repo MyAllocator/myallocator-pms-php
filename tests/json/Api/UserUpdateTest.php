@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,12 +26,10 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\BookingAction;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\UserUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class BookingActionTest extends \PHPUnit_Framework_TestCase
+class UserUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,18 +37,16 @@ class BookingActionTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new BookingAction();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingAction', get_class($obj));
+        $obj = new UserUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\UserUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'userToken',
             'vendorId',
-            'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
+            'vendorPassword'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,22 +65,21 @@ class BookingActionTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new BookingAction($fxt);
+        $obj = new UserUpdate($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Valid order id and valid password should succeed
+        // Successful call
         $rsp = $obj->callApiWithParams(array(
-            'OrderId' => '4304-87701676-62972',
-            'Actions' => array(
-                //array('UNCANCEL', array('reason' => 'a very good reason')),
-                array('CANCEL', array('reason' => 'a very good reason'))
-            )
+            'CustomerEmail' => 'phpsdkcustomer@phpsdk.com',
+            'CustomerFirstName' => 'John',
+            'CustomerLastName' => 'Doe',
         ));
-        $this->assertTrue(isset($rsp['response']['body']['@Results']));
-        $this->assertEquals($rsp['response']['body']['@Results'][0]['success'], 1);
+
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

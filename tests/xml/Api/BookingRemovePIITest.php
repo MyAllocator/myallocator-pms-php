@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,12 +26,10 @@
 
 namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\LoopBookingAction;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\BookingRemovePII;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
+
+class BookingRemovePIITest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,8 +37,8 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopBookingAction();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingAction', get_class($obj));
+        $obj = new BookingRemovePII();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingRemovePII', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -64,58 +62,28 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
-        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingAction($fxt);
+        $obj = new BookingRemovePII($fxt);
         $obj->setConfig('dataFormat', 'xml');
-    
+
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
         $auth = $fxt['auth'];
-
-        //Cancel booking
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <LoopBookingAction>
+                <BookingRemovePII>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserToken>{$auth->userToken}</UserToken>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserId>{$auth->userToken}</UserId>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                    <OrderId>6862C94E9DFA-42C9-4E11-D0F7-297C5F79</OrderId>
-                    <Actions>
-                        <Action>CANCEL?reason=hotelierwasmean</Action>
-                    </Actions>
-                </LoopBookingAction>
-        ";
-
-        $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['response']['code']);
-        $this->assertFalse(
-            strpos($rsp['response']['body'], '<Errors>'),
-            'Response contains errors!'
-        );
-
-        //Uncancel booking
-        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <LoopBookingAction>
-                    <Auth>
-                        <VendorId>{$auth->vendorId}</VendorId>
-                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserToken>{$auth->userToken}</UserToken>
-                        <PropertyId>{$auth->propertyId}</PropertyId>
-                    </Auth>
-                    <OrderId>6862C94E9DFA-42C9-4E11-D0F7-297C5F79</OrderId>
-                    <Actions>
-                        <Action>UNCANCEL?reason=changedmymind</Action>
-                    </Actions>
-                </LoopBookingAction>
+                   <MyAllocatorId>57333cd36dbf9a4f114dd781</MyAllocatorId>
+                </BookingRemovePII>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

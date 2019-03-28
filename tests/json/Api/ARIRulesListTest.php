@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,8 +25,8 @@
  */
 
 namespace MyAllocator\phpsdk\tests\json;
+
 use MyAllocator\phpsdk\src\Api\ARIRulesList;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
  
 class ARIRulesListTest extends \PHPUnit_Framework_TestCase
@@ -34,6 +34,7 @@ class ARIRulesListTest extends \PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function testClass()
     {
@@ -41,13 +42,16 @@ class ARIRulesListTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIRulesList', get_class($obj));
     }
 
+    /**
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     */
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userToken',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -58,6 +62,11 @@ class ARIRulesListTest extends \PHPUnit_Framework_TestCase
     /**
      * @author nathanhelenihi
      * @group api
+     * @param array $fxt Auth fixture
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      * @dataProvider fixtureAuthCfgObject
      */
     public function testCallApi(array $fxt)

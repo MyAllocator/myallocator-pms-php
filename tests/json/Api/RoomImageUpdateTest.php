@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,12 +27,10 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\LoopBookingList;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\RoomImageUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class LoopBookingListTest extends \PHPUnit_Framework_TestCase
+
+class RoomImageUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,18 +38,17 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopBookingList();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingList', get_class($obj));
+        $obj = new RoomImageUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\RoomImageUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,45 +67,23 @@ class LoopBookingListTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingList($fxt);
+        $obj = new RoomImageUpdate($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // No optional parameters should throw exception
-        $caught = false;
-        try {
-            $rsp = $obj->callApi();
-        } catch (\exception $e) {
-            $caught = true;
-            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
-        }
-
-        if (!$caught) {
-            $this->fail('should have thrown an exception');
-        }
-
-        // Arrival parameters
+        // Invalid room image id should fail
         $rsp = $obj->callApiWithParams(array(
-            'ArrivalStartDate' => '2014-12-08',
-            'ArrivalEndDate' => '2014-12-15'
+            'RoomImages' => array(
+                array(
+                    'RoomImageId' => '1234',
+                    'Description' => 'The garden',
+                    'SortOrder' => '1',
+                )
+            )
         ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
-
-        // Modification parameters
-        $rsp = $obj->callApiWithParams(array(
-            'ModificationStartDate' => '2014-12-08',
-            'ModificationEndDate' => '2014-12-15'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
-
-        // Creation parameters
-        $rsp = $obj->callApiWithParams(array(
-            'CreationStartDate' => '2014-12-08',
-            'CreationEndDate' => '2014-12-15'
-        ));
-        $this->assertTrue(isset($rsp['response']['body']['Bookings']));
+        $this->assertEquals($rsp['response']['body']['Success'], 1);
     }
 }

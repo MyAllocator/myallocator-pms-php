@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,40 +27,66 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Create a booking using the loopback test channel.
+ * Modify a property account.
+ *
+ * This API requires special vendor permissions.
  */
-class LoopBookingCreate extends MaApi
+class PropertyUpdate extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
-    protected $id = 'LoopBookingCreate';
+    protected $id = 'PropertyUpdate';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/UserToken',
                 'Auth/VendorId',
                 'Auth/VendorPassword',
                 'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
             ),
             'opt' => array()
         ),
         'args' => array(
-            'req' => array(
-                'Booking'
-            ),
-            'opt' => array()
+            'req' => array(),
+            'optMin' => 1,
+            'opt' => array(
+                'AddressLine2',
+                'BookingAdjust',
+                'BookingAdjustCancellation',
+                'BookingAdjustModification',
+                'BookingDownload',
+                'Breakfast',
+                'EmailBookNow',
+                'EmailChannelBooking',
+                'EmailChannelBookingMode',
+                'EmailDefault',
+                'Fax',
+                'InvoiceAddressLine1',
+                'InvoiceAddressLine2',
+                'InvoiceCity',
+                'InvoicePostCode',
+                'InvoiceState',
+                'InvoiceCountry',
+                'InvoiceCompanyName',
+                'InvoiceMainContactName',
+                'InvoiceAccountManagerName',
+                'InvoiceVatID',
+                'Latitude',
+                'Longitude',
+                'MaxLengthOfStay',
+                'MinLengthOfStay',
+                'State',
+                'TermsAccepted',
+                'TermsAcceptedByIP',
+                'Timezone',
+                'Website',
+            )
         )
     );
 }

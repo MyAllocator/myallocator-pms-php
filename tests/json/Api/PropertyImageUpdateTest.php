@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,14 +25,12 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\xml;
+namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\LoopARIList;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\PropertyImageUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class LoopARIListTest extends \PHPUnit_Framework_TestCase
+
+class PropertyImageUpateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,18 +38,17 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopARIList();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopARIList', get_class($obj));
+        $obj = new PropertyImageUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyImageUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,31 +67,23 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopARIList($fxt);
-        $obj->setConfig('dataFormat', 'xml');
+        $obj = new PropertyImageUpdate($fxt);
+        $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $auth = $fxt['auth'];
-        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <LoopARIList>
-                    <Auth>
-                        <VendorId>{$auth->vendorId}</VendorId>
-                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
-                        <PropertyId>{$auth->propertyId}</PropertyId>
-                    </Auth>
-                </LoopARIList>
-        ";
-
-        $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['response']['code']);
-        $this->assertFalse(
-            strpos($rsp['response']['body'], '<Errors>'),
-            'Response contains errors!'
-        );
+        // Valid order id and valid password should succeed
+        $rsp = $obj->callApiWithParams(array(
+            'PropertyImages' => array(
+                array(
+                    'PropertyImageId' => '1234',
+                    'Description' => 'The garden',
+                    'SortOrder' => '1',
+                )
+            )
+        ));
+        $this->assertEquals($rsp['response']['body']['Success'], 1);
     }
 }

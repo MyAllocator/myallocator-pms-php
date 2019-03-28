@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2019 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,7 +27,7 @@
 namespace MyAllocator\phpsdk\src;
 
 /**
- * The MyAllocator base class to be extended by API's and Utilities.
+ * The MyAllocator base class to be extended by APIs and Utilities.
  */
 class MaBaseClass
 {
@@ -37,7 +37,7 @@ class MaBaseClass
     protected $config = null;
 
     /**
-     * Class contructor attempts to assign configuration parameters.
+     * Class constructor attempts to assign configuration parameters.
      *
      * @param mixed $cfg API configuration potentially containing a
      *        'cfg' key with configurations to overwrite Config/Config.php.
@@ -57,8 +57,8 @@ class MaBaseClass
     /**
      * Set an API configuration key.
      *
-     * @param key $key The configuration key. 
-     * @param value $value The configuration key value. 
+     * @param string key $key The configuration key.
+     * @param string value $value The configuration key value.
      *
      * @return boolean|null Result of the set.
      */
@@ -73,7 +73,7 @@ class MaBaseClass
     /**
      * Get an API configuration value by key.
      *
-     * @param key $key The configuration key. 
+     * @param string key $key The configuration key.
      *
      * @return mixed|null The configuration value.
      */
@@ -119,6 +119,11 @@ class MaBaseClass
                 'type' => 'boolean',
                 'default' => false,
                 'valid' => array(true, false)
+            ),
+            'version' => array(
+                'type' => 'string',
+                'default' => '201408',
+                'valid' => array('201408', '201801')
             )
         );
 
@@ -166,7 +171,7 @@ class MaBaseClass
     /**
      * Dumps an object/variable if debugsEnabled is set to true.
      *
-     * @param mixed $obj The object or vairable to dump.
+     * @param mixed $obj The object or variable to dump.
      */
     protected function debug_var_dump($obj)
     {

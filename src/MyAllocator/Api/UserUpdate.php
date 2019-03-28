@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2019 MyAllocator
+ * Copyright (C) 2018 MyAllocator
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,26 +24,42 @@
  * IN THE SOFTWARE.
  */
 
-/*
- * You may use require_once similar to below to autoload
- * the MyAllocator PHP SDK. Composer package install is
- * preferred.
+namespace MyAllocator\phpsdk\src\Api;
+
+/**
+ * Update an existing user account.
+ *
+ * This API requires special vendor permissions.
  */
+class UserUpdate extends MaApi
+{
+    /**
+     * @var string The API endpoint to call.
+     */
+    protected $id = 'UserUpdate';
 
-require_once(dirname(__FILE__) . '/MyAllocator.php');
-
-use MyAllocator\phpsdk\src\Api\HelloWorld;
-
-$params = array(
-    'Auth' => 'true',
-    'hello' => 'world'
-);
-
-try {
-    $api = new HelloWorld();
-    $api->setConfig('dataFormat', 'array');
-    $rsp = $api->callApiWithParams($params);
-} catch (Exception $e) {
-    $rsp = 'Oops: '.$e->getMessage();
+    /**
+     * @var array Array of required and optional authentication and argument
+     *      keys (string) for API method.
+     */
+    protected $keys = array(
+        'auth' => array(
+            'req' => array(
+                'Auth/PropertyId',
+                'Auth/UserToken',
+                'Auth/VendorId',
+                'Auth/VendorPassword',
+            ),
+            'opt' => array()
+        ),
+        'args' => array(
+            'req' => array(
+                'CustomerEmail'
+            ),
+            'opt' => array(
+                'CustomerFirstName',
+                'CustomerLastName'
+            )
+        )
+    );
 }
-var_dump($rsp);
