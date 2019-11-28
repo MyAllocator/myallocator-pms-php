@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,12 +26,10 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\LoopBookingAction;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\UserUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
+class UserUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,17 +37,16 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopBookingAction();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingAction', get_class($obj));
+        $obj = new UserUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\UserUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
-            'vendorId',
-            'vendorPassword',
             'userToken',
-            'propertyId'
+            'vendorId',
+            'vendorPassword'
         ));
         $data = array();
         $data[] = array($auth);
@@ -64,40 +61,25 @@ class LoopBookingActionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
-        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingAction($fxt);
+        $obj = new UserUpdate($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Cancel a booking
-        $data = array(
-            'OrderId' => '6862C94E9DFA-42C9-4E11-D0F7-297C5F79',
-            'Actions' => array(
-                'CANCEL?reason=hotelierwasmean'
-            ),
-        );
+        // Successful call
+        $rsp = $obj->callApiWithParams(array(
+            'CustomerEmail' => 'phpsdkcustomer@phpsdk.com',
+            'CustomerFirstName' => 'John',
+            'CustomerLastName' => 'Doe',
+        ));
 
-        $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['body']['%Booking']));
-
-        // Uncancel a booking
-        $data = array(
-            'OrderId' => '6862C94E9DFA-42C9-4E11-D0F7-297C5F79',
-            'Actions' => array(
-                'UNCANCEL?reason=changedmymind'
-            ),
-        );
-
-        $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['body']['%Booking']));
-
-        // Modify to come at a later time
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

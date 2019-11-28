@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +28,8 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\PropertyImageCreate;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class PropertyImageCreateTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -46,11 +45,10 @@ class PropertyImageCreateTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);

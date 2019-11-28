@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -24,14 +24,12 @@
  * IN THE SOFTWARE.
  */
 
-namespace MyAllocator\phpsdk\tests\json;
+namespace MyAllocator\phpsdk\tests\xml;
  
-use MyAllocator\phpsdk\src\Api\LoopBookingCreate;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\PropertyChannelUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
+
+class PropertyChannelUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,8 +37,8 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopBookingCreate();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopBookingCreate', get_class($obj));
+        $obj = new PropertyChannelUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyChannelUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -64,42 +62,40 @@ class LoopBookingCreateTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
-        print_r($fxt);
         if (!$fxt['from_env']) {
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopBookingCreate($fxt);
-        $obj->setConfig('dataFormat', 'array');
+        $obj = new PropertyChannelUpdate($fxt);
+        $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Create a booking
-        $data = array(
-            'Booking' => array(
-                'StartDate' => '2014-12-10',
-                'EndDate' => '2014-12-13',
-                'Units' => '1',
-                'RoomTypeId' => '23651',
-                'RateId' => '123',
-                'RoomDayRate' => '100.00',
-                'RoomDayDescription' => 'A fun RoomDay!',
-                'CustomerFName' => 'Nathan',
-                'CustomerLName' => 'Meeper',
-                'RoomDesc' => 'A fun RoomDesc!',
-                'OccupantSmoker' => 'true',
-                'OccupantNote' => 'Please do not put me by the elevator. Thanks!',
-                'OccupantFName' => 'Nathan',
-                'OccupantLName' => 'Meeper',
-                'Occupancy' => '1',
-                'Policy' => 'No smoking.',
-                'ChannelRoomType' => '123'
-            )
-        );
+        $auth = $fxt['auth'];
+        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                <PropertyChannelUpdate>
+                    <Auth>
+                        <VendorId>{$auth->vendorId}</VendorId>
+                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
+                        <PropertyId>{$auth->propertyId}</PropertyId>
+                    </Auth>
+                    <Channels>
+                        <Channel>   
+                            <Channel>boo</Channel>
+                            <Currency>USD</Currency>
+                        </Channel>
+                    </Channels>
+                </PropertyChannelUpdate>
+        ";
 
-        $rsp = $obj->callApiWithParams($data);
-        $this->assertTrue(isset($rsp['response']['body']['Booking']));
+        $rsp = $obj->callApiWithParams($xml);
+        $this->assertEquals(200, $rsp['response']['code']);
+        $this->assertFalse(
+            strpos($rsp['response']['body'], '<Errors>'),
+            'Response contains errors!'
+        );
     }
 }

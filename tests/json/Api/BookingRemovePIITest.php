@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -26,30 +26,28 @@
 
 namespace MyAllocator\phpsdk\tests\json;
  
-use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
-use MyAllocator\phpsdk\src\Object\Auth;
+use MyAllocator\phpsdk\src\Api\BookingRemovePII;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
-class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
+
+class BookingRemovePIITest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @author nathanhelenihi
+     * @author sterlingphillips
      * @group api
      */
     public function testClass()
     {
-        $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
+        $obj = new BookingRemovePII();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\BookingRemovePII', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userToken',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -68,14 +66,32 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new AssociatePropertyToPMS($fxt);
+        $obj = new BookingRemovePII($fxt);
         $obj->setConfig('dataFormat', 'array');
 
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
-        $rsp = $obj->callApi();
+        // No optional parameters should throw exception
+        $caught = false;
+        try {
+            $obj->callApi();
+        } catch (\exception $e) {
+            $caught = true;
+            $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiException', $e);
+        }
+
+        if (!$caught) {
+            $this->fail('should have thrown an exception');
+        }
+
+        // List Parameters
+        $rsp = $obj->callApiWithParams(array(
+            'MyAllocatorId' => '57333cd36dbf9a4f114dd781',
+        ));
+
         $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 'true');
     }
 }

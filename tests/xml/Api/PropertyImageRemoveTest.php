@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\xml;
  
 use MyAllocator\phpsdk\src\Api\PropertyImageRemove;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class PropertyImageRemoveTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -48,8 +46,7 @@ class PropertyImageRemoveTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -76,15 +73,14 @@ class PropertyImageRemoveTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-        // Invalid booking id should fail
+        // Invalid property image id should fail
         $auth = $fxt['auth'];
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                 <PropertyImageRemove>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
                     <RemovePropertyImages>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -46,6 +46,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
+            'userToken' => '1313',
             'propertyId' => '1111',
             'PMSPropertyId' => '1212',
         ));
@@ -65,6 +66,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $fxt['vendorPassword'];
         $auth->userId = $fxt['userId'];
         $auth->userPassword = $fxt['userPassword'];
+        $auth->userToken = $fxt['userToken'];
         $auth->propertyId = $fxt['propertyId'];
         $auth->PMSPropertyId = $fxt['PMSPropertyId'];
 
@@ -72,6 +74,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($auth->vendorPassword, $fxt['vendorPassword']);
         $this->assertEquals($auth->userId, $fxt['userId']);
         $this->assertEquals($auth->userPassword, $fxt['userPassword']);
+        $this->assertEquals($auth->userToken, $fxt['userToken']);
         $this->assertEquals($auth->propertyId, $fxt['propertyId']);
         $this->assertEquals($auth->PMSPropertyId, $fxt['PMSPropertyId']);
     }
@@ -88,6 +91,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $fxt['vendorPassword'];
         $auth->userId = $fxt['userId'];
         $auth->userPassword = $fxt['userPassword'];
+        $auth->userToken = $fxt['userToken'];
         $auth->propertyId = $fxt['propertyId'];
         $auth->PMSPropertyId = $fxt['PMSPropertyId'];
 
@@ -96,6 +100,7 @@ class AuthTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($auth->vendorPassword, $auth->getAuthKeyVar('Auth/VendorPassword'));
         $this->assertEquals($auth->userId, $auth->getAuthKeyVar('Auth/UserId'));
         $this->assertEquals($auth->userPassword, $auth->getAuthKeyVar('Auth/UserPassword'));
+        $this->assertEquals($auth->userToken, $auth->getAuthKeyVar('Auth/UserToken'));
         $this->assertEquals($auth->propertyId, $auth->getAuthKeyVar('Auth/PropertyId'));
         $this->assertEquals($auth->PMSPropertyId, $auth->getAuthKeyVar('PMSPropertyId'));
 

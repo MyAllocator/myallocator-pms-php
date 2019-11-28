@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -23,15 +23,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
+ 
 namespace MyAllocator\phpsdk\tests\xml;
- 
-use MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS;
-use MyAllocator\phpsdk\src\Object\Auth;
+
+use MyAllocator\phpsdk\src\Api\PropertyCurrencyOverrideUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
+class PropertyCurrencyOverrideUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,8 +37,8 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new AssociatePropertyToPMS();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\AssociatePropertyToPMS', get_class($obj));
+        $obj = new PropertyCurrencyOverrideUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyCurrencyOverrideUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
@@ -48,8 +46,7 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -69,24 +66,40 @@ class AssociatePropertyToPMSTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new AssociatePropertyToPMS($fxt);
+        $obj = new PropertyCurrencyOverrideUpdate($fxt);
         $obj->setConfig('dataFormat', 'xml');
-
+    
         if (!$obj->isEnabled()) {
             $this->markTestSkipped('API is disabled!');
         }
 
         $auth = $fxt['auth'];
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <AssociatePropertyToPMS>
+                <PropertyCurrencyOverrideUpdate>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                </AssociatePropertyToPMS>
+                    <ExchangeRates>
+                        <ExchangeRate>
+                            <FromCurrency>EUR</FromCurrency>
+                            <ToCurrency>USD</ToCurrency>
+                            <Rate>1.12</Rate>
+                        </ExchangeRate>
+                        <ExchangeRate>
+                            <FromCurrency>EUR</FromCurrency>
+                            <ToCurrency>GBP</ToCurrency>
+                            <Rate>0.895514</Rate>
+                        </ExchangeRate>
+                        <ExchangeRate>
+                            <FromCurrency>EUR</FromCurrency>
+                            <ToCurrency>INR</ToCurrency>
+                            <Rate>auto</Rate>
+                        </ExchangeRate>
+                    </ExchangeRates>
+                </PropertyCurrencyOverrideUpdate>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

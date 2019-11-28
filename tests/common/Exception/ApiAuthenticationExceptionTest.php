@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -53,7 +53,7 @@ class ApiAuthenticationExceptionTest extends PHPUnit_Framework_TestCase
         $caught = false;
         try {
             throw new ApiAuthenticationException($this->message, $state);
-        } catch (Exception $e) {
+        } catch (ApiAuthenticationException $e) {
             $caught = true;
             $this->assertInstanceOf('MyAllocator\phpsdk\src\Exception\ApiAuthenticationException', $e);
             $this->assertEquals($this->message, $e->getMessage());

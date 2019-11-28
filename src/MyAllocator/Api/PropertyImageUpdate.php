@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,34 +27,26 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Modify a property account.
- *
- * This API requires special vendor permissions.
+ * Update a property image's order and description.
  */
-class PropertyModify extends MaApi
+class PropertyImageUpdate extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
-    protected $id = 'PropertyModify';
+    protected $id = 'PropertyImageUpdate';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/PropertyId',
+                'Auth/UserToken',
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
             ),
             'opt' => array()
         ),
@@ -62,17 +54,8 @@ class PropertyModify extends MaApi
             'req' => array(),
             'optMin' => 1,
             'opt' => array(
-                'PropertyName',
-                'ExpiryDate',
-                'Currency', // 3-letter ISO 4217 currency code
-                'Country', // 2-letter ISO 3166-1 alpha-2 country code
-                'Breakfast',
-                'BookingAdjust',
-                'BookingAdjustCancellation',
-                'BookingDownload',
-                'EmailDefault',
-                'EmailChannelBooking',
-                'EmailBookNow'
+                'PropertyImage',
+                'PropertyImages'
             )
         )
     );

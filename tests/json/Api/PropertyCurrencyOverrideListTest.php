@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -23,14 +23,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
- 
-namespace MyAllocator\phpsdk\tests\xml;
 
-use MyAllocator\phpsdk\src\Api\PropertyModify;
-use MyAllocator\phpsdk\src\Object\Auth;
-use MyAllocator\phpsdk\src\Util\Common;
+namespace MyAllocator\phpsdk\tests\json;
  
-class PropertyModifyTest extends \PHPUnit_Framework_TestCase
+use MyAllocator\phpsdk\src\Api\PropertyCurrencyOverrideList;
+use MyAllocator\phpsdk\src\Util\Common;
+
+class PropertyCurrencyOverrideListTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -38,17 +37,17 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new PropertyModify();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyModify', get_class($obj));
+        $obj = new PropertyCurrencyOverrideList();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\PropertyCurrencyOverrideList', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userToken',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -67,35 +66,13 @@ class PropertyModifyTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new PropertyModify($fxt);
-        $obj->setConfig('dataFormat', 'xml');
-    
-        if (!$obj->isEnabled()) {
-            $this->markTestSkipped('API is disabled!');
-        }
+        $obj = new PropertyCurrencyOverrideList($fxt);
+        $obj->setConfig('dataFormat', 'array');
+        $rsp = $obj->callApiWithParams(array(
+            'FromCurrency' => 'EUR'
+        ));
 
-        $auth = $fxt['auth'];
-        $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <PropertyCreate>
-                    <Auth>
-                        <VendorId>{$auth->vendorId}</VendorId>
-                        <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserToken>{$auth->userToken}</UserToken>
-                        <PropertyId>4547</PropertyId>
-                    </Auth>
-                    <PropertyName>PHP SDK Hotel H</PropertyName>
-                    <ExpiryDate>2014-12-20</ExpiryDate>
-                    <Currency>USD</Currency>
-                    <Country>US</Country>
-                    <Breakfast>EX</Breakfast>
-                </PropertyCreate>
-        ";
-
-        $rsp = $obj->callApiWithParams($xml);
-        $this->assertEquals(200, $rsp['response']['code']);
-        $this->assertFalse(
-            strpos($rsp['response']['body'], '<Errors>'),
-            'Response contains errors!'
-        );
+        $this->assertTrue(isset($rsp['response']['body']['Success']));
+        $this->assertEquals($rsp['response']['body']['Success'], 1);
     }
 }

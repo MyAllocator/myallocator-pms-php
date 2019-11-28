@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -28,7 +28,6 @@ namespace MyAllocator\phpsdk\src\Api;
 use MyAllocator\phpsdk\src\MaBaseClass;
 use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Requestor;
-use MyAllocator\phpsdk\src\Util\Common;
 use MyAllocator\phpsdk\src\Exception\ApiException;
 use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
 
@@ -48,7 +47,7 @@ class MaApi extends MaBaseClass
     protected $id = 'MaApi';
 
     /**
-     * @var \MyAllocator\Object\Auth Authentication object for requester.
+     * @var \MyAllocator\phpsdk\src\Object\Auth Authentication object for requester.
      */
     private $auth = null;
 
@@ -63,7 +62,7 @@ class MaApi extends MaBaseClass
     private $lastApiResponse = null;
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
@@ -78,7 +77,7 @@ class MaApi extends MaBaseClass
     );
 
     /**
-     * Class contructor attempts to assign authentication parameters
+     * Class constructor attempts to assign authentication parameters
      * from $cfg argument. Authentication parameters may be configured
      * via Auth object or array. The parent constructor handles
      * the included configuration parameters.
@@ -86,6 +85,8 @@ class MaApi extends MaBaseClass
      * @param mixed $cfg API configuration potentially containing an 
      *        'auth' key with authentication parameters/object or a
      *        'cfg' key containing configurations to overwrite Config/Config.php.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function __construct($cfg = null)
     {
@@ -99,7 +100,14 @@ class MaApi extends MaBaseClass
                 $this->auth = $cfg['auth'];
             } else if (is_array($cfg['auth'])) {
                 $auth = new Auth();
-                $auth_refl = new \ReflectionClass($auth);
+                $auth_refl = null;
+                try {
+                    $auth_refl = new \ReflectionClass($auth);
+                } catch (\Exception $exception){
+                    throw new ApiException(
+                        'Could not construct Auth ReflectionClass'
+                    );
+                }
                 $props = $auth_refl->getProperties(\ReflectionProperty::IS_PUBLIC);
 
                 foreach ($props as $prop) {
@@ -128,6 +136,11 @@ class MaApi extends MaBaseClass
      * Call the API using previously set parameters (if any).
      *
      * @return mixed API response.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     public function callApi()
     {
@@ -138,7 +151,13 @@ class MaApi extends MaBaseClass
      * Call the API using provided parameters (if any).
      *
      * @param array $params API request parameters.
+     *
      * @return mixed API response.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     public function callApiWithParams($params = null)
     {
@@ -148,11 +167,11 @@ class MaApi extends MaBaseClass
     /**
      * Get the authentication object.
      *
-     * @param string $errorOnNull If true, throw an exception if auth null.
+     * @param boolean $errorOnNull If true, throw an exception if auth null.
      *
-     * @return MyAllocator\phpsdk\src\Object\Auth API Authentication object.
+     * @return \MyAllocator\phpsdk\src\Object\Auth API Authentication object.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     public function getAuth($errorOnNull = false)
     {
@@ -169,7 +188,7 @@ class MaApi extends MaBaseClass
     /**
      * Set the authentication object for the API.
      *
-     * @param MyAllocator\phpsdk\src\Object\Auth API Authentication object.
+     * @param \MyAllocator\phpsdk\src\Object\Auth API Authentication object.
      */
     public function setAuth(Auth $auth)
     {
@@ -179,7 +198,7 @@ class MaApi extends MaBaseClass
     /**
      * Determine if the API is enabled.
      *
-     * @return booleam True if the API is enabled.
+     * @return boolean true if the API is enabled.
      */
     public function isEnabled()
     {
@@ -200,7 +219,13 @@ class MaApi extends MaBaseClass
      * Validate and process/send the API request.
      *
      * @param array $params API request parameters.
+     *
      * @return mixed API response.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiConnectionException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\InvalidRequestException
      */
     private function processRequest($params = null)
     {
@@ -217,11 +242,11 @@ class MaApi extends MaBaseClass
             case 'json':
                 // Validate and sanitize parameters (json decode/encode)
                 if ($this->config['paramValidationEnabled']) {
-                    $params_decoded = json_decode($params, TRUE);
+                    $params_decoded = json_decode($params, TRUE);//params are array, why do this?
                     $params_decoded = $this->validateApiParameters($this->keys, $params_decoded);
                     // Add URI method and version to payload
-                    $params_decoded['_method'] = $this->id;
-                    $params_decoded['_version'] = $requestor->version;
+                    $params['_method'] = $this->id;
+                    $params['_version'] = $requestor->version;
                     $params = json_encode($params_decoded);
                 }
                 break;
@@ -252,6 +277,8 @@ class MaApi extends MaBaseClass
 
     /**
      * Assert the API is enabled.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertEnabled()
     {
@@ -269,6 +296,9 @@ class MaApi extends MaBaseClass
      * @param array $params API specific parameters.
      *
      * @return array Validated API parameters.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function validateApiParameters($keys = null, $params = null)
     {
@@ -296,6 +326,8 @@ class MaApi extends MaBaseClass
 
     /**
      * Assert the API id is set by the API class.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertApiId()
     {
@@ -311,6 +343,8 @@ class MaApi extends MaBaseClass
      *
      * @param array $keys Array of required and optional 
      *  authentication and argument keys (string) for API method.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertKeysArrayValid($keys = null)
     {
@@ -331,7 +365,7 @@ class MaApi extends MaBaseClass
         ) {
             $msg = 'Invalid API keys provided. (HINT: Each '
                  . 'API class must define a $keys array with '
-                 . 'specific key requirements. (HINT: View an /Api/[file] '
+                 . 'specific key requirements. View an /Api/[file] '
                  . 'for an example.)';
             throw new ApiException($msg);
         }
@@ -345,7 +379,7 @@ class MaApi extends MaBaseClass
      *  authentication and argument keys (string) for API method.
      * @param array $params API specific parameters.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertKeysHasMinOptParams($keys, $params)
     {
@@ -370,9 +404,10 @@ class MaApi extends MaBaseClass
      * @param string $type The type of authentication parameters to
      *  process (optional or required).
      *
-     * @return array Paramters with authentication parameters of $type set.
+     * @return array Parameters with authentication parameters of $type set.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiAuthenticationException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function setAuthenticationParameters(
         $keys = null,
@@ -389,6 +424,7 @@ class MaApi extends MaBaseClass
 
             // Set authentication parameters
             $auth_group = false;
+            $auth_group_validated = false;
             foreach ($keys['auth'][$type] as $k) {
                 if (is_array($k) && !empty($k)) {
                     /*
@@ -418,7 +454,7 @@ class MaApi extends MaBaseClass
                             $params[$g] = $v;
                         }
                     }
-                } else {
+                } else if (is_string($k)) {
                     if (!isset($params[$k])) {
                         $v = $this->auth->getAuthKeyVar($k);
                         if (!$v) {
@@ -458,7 +494,9 @@ class MaApi extends MaBaseClass
      *
      * @param array $params API specific parameters.
      *
-     * @return array Paramters with authentication parameters set.
+     * @return array Parameters with authentication parameters set.
+     *
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function setAuthenticationParametersNoValidation($params = null)
     {
@@ -469,7 +507,14 @@ class MaApi extends MaBaseClass
 
         // Set parameters for previously configured auth properties
         // Get property list from auth class
-        $auth_refl = new \ReflectionClass($this->auth);
+        $auth_refl = null;
+        try {
+            $auth_refl = new \ReflectionClass($this->auth);
+        } catch (\Exception $exception){
+            throw new ApiException(
+                'Could not construct Auth ReflectionClass'
+            );
+        }
         $props = $auth_refl->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         /*
@@ -497,7 +542,7 @@ class MaApi extends MaBaseClass
      *  authentication and argument keys (string) for API method.
      * @param array $params API specific parameters.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException
      */
     private function assertReqParameters($keys, $params = null)
     {

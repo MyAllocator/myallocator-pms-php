@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -39,9 +39,9 @@ $params = array(
     'hello' => 'world'
 );
 
-$api = new HelloWorld();
-$api->setConfig('dataFormat', 'array');
 try {
+    $api = new HelloWorld();
+    $api->setConfig('dataFormat', 'array');
     $rsp = $api->callApiWithParams($params);
 } catch (Exception $e) {
     $rsp = 'Oops: '.$e->getMessage();

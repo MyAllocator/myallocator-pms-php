@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -37,11 +37,11 @@ abstract class Common
      * Get an auth object from the local ENV or test data.
      *
      * @param array $keys The authentication keys to set.
-     * @param string $debug Enable debug.
+     * @param boolean $debug Enable debug.
      *
      * @return array(Auth, string) Authentication object and bool if pulled from ENV.
      *
-     * @throws MyAllocator\phpsdk\src\Exception\ApiException If no keys supplied.
+     * @throws \MyAllocator\phpsdk\src\Exception\ApiException If no keys supplied.
      */
     public static function getAuthEnv($keys = null, $debug = false)
     {

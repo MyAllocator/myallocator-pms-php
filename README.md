@@ -1,20 +1,20 @@
 #myallocator-pms-php
 
-MyAllocator PMS PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the MyAllocator API to enable distribution for their customers.
+Myallocator PMS PHP SDK (JSON & XML). Property management systems (PMS) can use this SDK to quickly and reliably integrate with the myallocator API to enable distribution for their customers.
 
 Note, this is not the BuildToUs PHP SDK for OTA's. The BuildToUs PHP SDK can be found at https://github.com/MyAllocator/myallocator-ota-php
 
-MyAllocator API Version: 201408
+Myallocator API Version: 201408
 
-MyAllocator PHP SDK Documentation [http://myallocator.github.io/myallocator-pms-php-docs/]
+Myallocator PHP SDK Documentation [http://myallocator.github.io/myallocator-pms-php-docs/]
 
-MyAllocator API Documentation [http://myallocator.github.io/apidocs/]
+Myallocator API Documentation [http://myallocator.github.io/apidocs/]
 
-MyAllocator API Integration Guide [https://docs.google.com/document/d/1_OuI0Z6rTkkuA9xxlJUvhXlazJ9w_iqsp1QzIj4gb2U/edit?usp=sharing]
+Myallocator API Integration Guide [https://docs.google.com/document/d/1_OuI0Z6rTkkuA9xxlJUvhXlazJ9w_iqsp1QzIj4gb2U/edit?usp=sharing]
 
-MyAllocator [https://www.myallocator.com/]
+Myallocator [https://www.myallocator.com/]
 
-MyAllocator Development Support [devhelp@myallocator.com]
+Myallocator Development Support [devhelp@myallocator.com]
 
 ## Requirements
 
@@ -77,7 +77,7 @@ Edit require_once autoload in example_autoload.php in line 33 to:
 
     require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
-Run HelloWorld ping to MyAllocator:
+Run HelloWorld ping to myallocator:
 
     root@nate:/var/www/project# php example_autoload.php
     {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
@@ -102,7 +102,7 @@ Edit require_once autoload in example_autoload.php in line 33 to:
 
     require_once(dirname(__FILE__) . '/lib/myallocator-pms-php/src/MyAllocator.php');
 
-Run HelloWorld ping to MyAllocator:
+Run HelloWorld ping to myallocator:
 
     root@nate:/var/www/project# php example_autoload.php
     {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
@@ -122,7 +122,7 @@ The default configuration file can be found at at `src/MyAllocator/Config/Config
 The SDK supports parameter validation for array and json data formats, which can be configured via the `paramValidationEnabled` configuration in `src/MyAllocator/Config/Config.php`. If you prefer to send a raw request for performance, or other reasons, set this configuration to false. If parameter validation is enabled:
 
 1.  Required and optional Api keys are defined via $keys array in each Api class.
-2.  Top level required and optional keys are validated prior to sending a request to MyAllocator.
+2.  Top level required and optional keys are validated prior to sending a request to myallocator.
 3.  An ApiException is thrown if a required key is not present.
 4.  Top level keys not defined in $keys are stripped from parameters.
 5.  Minimum optional parameters are enforced.
@@ -139,19 +139,19 @@ The SDK supports three data in/out formats (array, json, xml), which can be conf
 
 `array` and `json` data formats are preferred vs. `xml`.
 
-Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to MyAllocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
+Note, parameter validation only supports array and json data formats. For json data validation, the data must be decoded and re-encoded after validation. For xml data, the raw request is sent to myallocator and raw response returned to you. Disable `paramValidationEnabled` in Config.php to skip parameter validation.
 
 #### dataResponse
 
 Define what data you prefer to be included in Api responses. The response 'body', 'code', and 'headers' keys are not configurable and will always be included in a response. Each piece of data may be useful if you intend to store request and response data locally. The following keys in the dataResponse array below will cause the related data to be returned in all responses:
 
     1. timeRequest - The time immediately before the request is sent
-        to MyAllocator (from Requestor). timeRequest is returned
+        to myallocator (from Requestor). timeRequest is returned
         as a DateTime object.
     2. timeResponse - The time immediately after the response is
-        received from MyAllocator (from Requestor). timeResponse is
+        received from myallocator (from Requestor). timeResponse is
         returned as a DateTime object.
-    3. request - The exact request data sent from MyAllocator including
+    3. request - The exact request data sent from myallocator including
         authentication and provided parameters. The request is returned
         in the configured dataFormat format. Note, for xml, the request
         is stored in the result prior to url encoding.
@@ -177,11 +177,11 @@ A successful request call will return an array with the following response struc
         )
     );
 
-`request['time']` *(optional)* is a DateTime object representing the time immediately before sending the request to MyAllocator.
+`request['time']` *(optional)* is a DateTime object representing the time immediately before sending the request to myallocator.
 
-`request['body']` *(optional)* is the request body sent to MyAllocator in your configured dataFormat.
+`request['body']` *(optional)* is the request body sent to myallocator in your configured dataFormat.
 
-`response['time']` *(optional)* is a DateTime object representing the time immediately after receiving the response from MyAllocator.
+`response['time']` *(optional)* is a DateTime object representing the time immediately after receiving the response from myallocator.
 
 `response['code']` is the HTTP response code.
 
@@ -189,7 +189,7 @@ A successful request call will return an array with the following response struc
 
 `response['body']` is the response body.
 
-Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information. Additionally, the `getState` method may be called for an exception to retreive the state information for the request up to the point of failure in the same format as the response structure above (request/response). For example, if an HTTP connection timeout exception occurs, you may acess the request time/body and response code/headers via `getState`.
+Requests may also return any of the exceptions defined in `src/MyAllocator/Exception/`. Be sure to wrap your API calls in try blocks. You may use the `getHttpStatus`, `getHttpBody`, and `getJsonBody` methods defined in `/Exception/MaException.php` within an exception block for information. Additionally, the `getState` method may be called for an exception to retrieve the state information for the request up to the point of failure in the same format as the response structure above (request/response). For example, if an HTTP connection timeout exception occurs, you may access the request time/body and response code/headers via `getState`.
 
 ## Tests
 

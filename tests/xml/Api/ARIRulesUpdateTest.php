@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,13 +25,11 @@
  */
 
 namespace MyAllocator\phpsdk\tests\xml;
- 
-use MyAllocator\phpsdk\src\Api\LoopARIList;
-use MyAllocator\phpsdk\src\Object\Auth;
+
+use MyAllocator\phpsdk\src\Api\ARIRulesUpdate;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
  
-class LoopARIListTest extends \PHPUnit_Framework_TestCase
+class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @author nathanhelenihi
@@ -39,18 +37,17 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
      */
     public function testClass()
     {
-        $obj = new LoopARIList();
-        $this->assertEquals('MyAllocator\phpsdk\src\Api\LoopARIList', get_class($obj));
+        $obj = new ARIRulesUpdate();
+        $this->assertEquals('MyAllocator\phpsdk\src\Api\ARIRulesUpdate', get_class($obj));
     }
 
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -69,7 +66,7 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Environment credentials not set.');
         }
 
-        $obj = new LoopARIList($fxt);
+        $obj = new ARIRulesUpdate($fxt);
         $obj->setConfig('dataFormat', 'xml');
 
         if (!$obj->isEnabled()) {
@@ -78,15 +75,25 @@ class LoopARIListTest extends \PHPUnit_Framework_TestCase
 
         $auth = $fxt['auth'];
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-                <LoopARIList>
+                <ARIRulesUpdate>
                     <Auth>
                         <VendorId>{$auth->vendorId}</VendorId>
                         <VendorPassword>{$auth->vendorPassword}</VendorPassword>
-                        <UserId>{$auth->userId}</UserId>
-                        <UserPassword>{$auth->userPassword}</UserPassword>
+                        <UserToken>{$auth->userToken}</UserToken>
                         <PropertyId>{$auth->propertyId}</PropertyId>
                     </Auth>
-                </LoopARIList>
+                    <ARIRules>
+                        <ARIRule>
+                            <_Action>Upsert</_Action>
+                            <PMSRuleId>00009-boo</PMSRuleId>
+                            <RoomId>23651</RoomId>
+                            <Channel>boo</Channel>
+                            <Verb>BLOCK</Verb>
+                            <StartDate>2015-05-18</StartDate>
+                            <EndDate>2015-05-20</EndDate>
+                        </ARIRule>
+                    </ARIRules>
+                </ARIRulesUpdate>
         ";
 
         $rsp = $obj->callApiWithParams($xml);

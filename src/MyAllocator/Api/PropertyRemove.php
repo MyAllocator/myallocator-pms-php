@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,46 +27,40 @@
 namespace MyAllocator\phpsdk\src\Api;
 
 /**
- * Querry bookings created using the loopback test channel.
+ * Use this call to remove (completely delete) a property from myallocator.
+ * This is obviously a dangerous call, so use with care.
+ *
+ * This API call requires special vendor permissions to be enabled by the
+ * myallocator team.
+ * Properties can only be removed if the user token belongs to the master
+ * user of the property.
+ * The last property of a user account can NOT be removed. Contact support
+ * to close off an account completely.
  */
-class LoopBookingList extends MaApi
+class PropertyRemove extends MaApi
 {
     /**
-     * @var string The api to call.
+     * @var string The API endpoint to call.
      */
-    protected $id = 'LoopBookingList';
+    protected $id = 'PropertyRemove';
 
     /**
-     * @var array Array of required and optional authentication and argument 
+     * @var array Array of required and optional authentication and argument
      *      keys (string) for API method.
      */
     protected $keys = array(
         'auth' => array(
             'req' => array(
+                'Auth/PropertyId',
+                'Auth/UserToken',
                 'Auth/VendorId',
                 'Auth/VendorPassword',
-                'Auth/PropertyId',
-                'UserCredentials' => array(
-                    'Auth/UserId',
-                    'Auth/UserPassword'
-                ),
-                'UserToken' => array(
-                    'Auth/UserToken'
-                )
             ),
             'opt' => array()
         ),
         'args' => array(
             'req' => array(),
-            'optMin' => 1,
-            'opt' => array(
-                'ArrivalStartDate',
-                'ArrivalEndDate',
-                'ModifcationStartDate',
-                'ModifcationEndDate',
-                'CreationStartDate',
-                'CreationEndDate'
-            )
+            'opt' => array()
         )
     );
 }

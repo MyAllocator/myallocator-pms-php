@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,7 +27,7 @@
 namespace MyAllocator\phpsdk\src\Exception;
 
 /**
- * The MyAllocator base exception class.
+ * The myallocator base exception class.
  */
 class MaException extends \Exception
 {
@@ -37,10 +37,10 @@ class MaException extends \Exception
     protected $state = null;
 
     /**
-     * The constructor may set request/response parameters.
+     * The constructor may set the state of an exception.
      *
      * @param string $msg The exception description.
-     * @param array $args The request/response parameters.
+     * @param array $state The state of the exception.
      */
     public function __construct($msg, $state = null)
     {

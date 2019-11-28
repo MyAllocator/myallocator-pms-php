@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -36,7 +36,7 @@ return array(
      *   1. Required and optional Api keys are defined as $keys
      *      array in each Api class.
      *   2. Top level required and optional keys are validated
-     *      prior to sending a request to MyAllocator.
+     *      prior to sending a request to myallocator.
      *   3. If a required key is not present, an ApiException is thrown.
      *   4. If a top level key that is not defined in $keys is present,
      *      it is removed.
@@ -50,7 +50,7 @@ return array(
 
     /*
      * The in/out data format from your code to this SDK. This data format
-     * governs the format of the request to MyAllocator and the
+     * governs the format of the request to myallocator and the
      * response to be returned to you. The following table
      * illustrates the formats used for the request flow based on
      * dataFormat.
@@ -65,7 +65,7 @@ return array(
      * For json data validation, the data must be decoded and re-encoded after
      * validation. If you do not wish to experience the cost, disable
      * 'paramValidationEnabled' above. For xml data, the raw request is sent
-     * to MyAllocator and raw response returned to you.
+     * to myallocator and raw response returned to you.
      *
      * Available values: 'array', 'json', 'xml'
      */
@@ -81,12 +81,12 @@ return array(
      * in all responses:
      *
      *      1. timeRequest - The time immediately before the request is sent
-     *          to MyAllocator (from Requestor). timeRequest is returned
+     *          to myallocator (from Requestor). timeRequest is returned
      *          as a DateTime object.
      *      2. timeResponse - The time immediately after the response is
-     *          received from MyAllocator (from Requestor). timeResponse is
+     *          received from myallocator (from Requestor). timeResponse is
      *          returned as a DateTime object.
-     *      3. request - The exact request data sent from MyAllocator including
+     *      3. request - The exact request data sent from myallocator including
      *          authentication and provided parameters. The request is returned
      *          in the configured dataFormat format. Note, for xml, the request
      *          is stored in the result prior to url encoding.

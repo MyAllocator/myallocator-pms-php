@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -156,6 +156,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
             'vendorPassword' => '888',
             'userId' => '999',
             'userPassword' => '1010',
+            'userToken' => '1313',
             'propertyId' => '1111',
             'PMSPropertyId' => '1212',
             'debug' => false
@@ -166,6 +167,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
         $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
         $auth->userId = $cfg_set['auth']['userId'];
         $auth->userPassword = $cfg_set['auth']['userPassword'];
+        $auth->userToken = $cfg_set['auth']['userToken'];
         $auth->propertyId = $cfg_set['auth']['propertyId'];
         $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
         $auth->debug = $cfg_set['auth']['debug'];
@@ -179,6 +181,7 @@ class MaApiTest extends PHPUnit_Framework_TestCase
                 'opt' => array(
                     'Auth/UserId',
                     'Auth/UserPassword',
+                    'Auth/UserToken',
                 )
             ),
             'args' => array(

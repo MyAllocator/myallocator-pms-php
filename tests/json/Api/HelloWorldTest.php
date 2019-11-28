@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,8 +27,8 @@
 namespace MyAllocator\phpsdk\tests\json;
  
 use MyAllocator\phpsdk\src\Api\HelloWorld;
-use MyAllocator\phpsdk\src\Object\Auth;
- 
+use MyAllocator\phpsdk\src\Util\Common;
+
 class HelloWorldTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -43,33 +43,14 @@ class HelloWorldTest extends \PHPUnit_Framework_TestCase
 
     public function fixtureAuthCfgObject()
     {
-        $cfg_set['auth'] = array(
-            'vendorId' => '777',
-            'vendorPassword' => '888',
-            'userId' => '999',
-            'userPassword' => '1010',
-            'propertyId' => '1111',
-            'PMSPropertyId' => '1212',
-            'debug' => false
-        );
-
-        $auth = new Auth();
-        $auth->vendorId = $cfg_set['auth']['vendorId'];
-        $auth->vendorPassword = $cfg_set['auth']['vendorPassword'];
-        $auth->userId = $cfg_set['auth']['userId'];
-        $auth->userPassword = $cfg_set['auth']['userPassword'];
-        $auth->propertyId = $cfg_set['auth']['propertyId'];
-        $auth->PMSPropertyId = $cfg_set['auth']['PMSPropertyId'];
-        $auth->debug = $cfg_set['auth']['debug'];
-
-        $data = array();
-        $data[] = array(array(
-            'auth' => $auth,
-            'params' => array(
-                'Auth' => 'wee',
-                'hello' => 'world'
-            )
+        $auth = Common::getAuthEnv(array(
+            'userId',
+            'userPassword',
+            'vendorId',
+            'vendorPassword',
         ));
+        $data = array();
+        $data[] = array($auth);
 
         return $data;
     }
@@ -81,9 +62,16 @@ class HelloWorldTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallApi(array $fxt)
     {
+        if (!$fxt['from_env']) {
+            $this->markTestSkipped('Environment credentials not set.');
+        }
+
+        // Successful call
         $obj = new HelloWorld($fxt);
         $obj->setConfig('dataFormat', 'array');
-        $rsp = $obj->callApiWithParams($fxt['params']);
+        $rsp = $obj->callApiWithParams(array(
+            'hello' => 'world'
+        ));
         $this->assertTrue(isset($rsp['response']['body']['hello']));
         $this->assertEquals('world', $rsp['response']['body']['hello']);
     }

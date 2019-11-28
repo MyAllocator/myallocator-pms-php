@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -27,10 +27,8 @@
 namespace MyAllocator\phpsdk\tests\xml;
  
 use MyAllocator\phpsdk\src\Api\PropertyImageList;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
-use MyAllocator\phpsdk\src\Exception\ApiAuthenticationException;
- 
+
 class PropertyImageListTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -48,9 +46,7 @@ class PropertyImageListTest extends \PHPUnit_Framework_TestCase
         $auth = Common::getAuthEnv(array(
             'vendorId',
             'vendorPassword',
-            'userId',
-            'userPassword',
-            //'userToken',
+            'userToken',
             'propertyId'
         ));
         $data = array();
@@ -81,8 +77,7 @@ class PropertyImageListTest extends \PHPUnit_Framework_TestCase
         $xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                 <PropertyImageList>
                  <Auth>
-                   <UserId>{$auth->userId}</UserId>
-                   <UserPassword>{$auth->userPassword}</UserPassword>
+                   <UserToken>{$auth->userToken}</UserToken>
                    <PropertyId>{$auth->propertyId}</PropertyId>
                    <VendorId>{$auth->vendorId}</VendorId>
                    <VendorPassword>{$auth->vendorPassword}</VendorPassword>

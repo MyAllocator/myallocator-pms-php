@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014 MyAllocator
+ * Copyright (C) 2020 Digital Arbitrage, Inc
  *
  * A copy of the LICENSE can be found in the LICENSE file within
  * the root directory of this library.  
@@ -25,8 +25,8 @@
  */
 
 namespace MyAllocator\phpsdk\tests\json;
+
 use MyAllocator\phpsdk\src\Api\ARIRulesUpdate;
-use MyAllocator\phpsdk\src\Object\Auth;
 use MyAllocator\phpsdk\src\Util\Common;
  
 class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
@@ -44,12 +44,10 @@ class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
     public function fixtureAuthCfgObject()
     {
         $auth = Common::getAuthEnv(array(
+            'propertyId',
+            'userToken',
             'vendorId',
             'vendorPassword',
-            //'userId',
-            //'userPassword',
-            'userToken',
-            'propertyId'
         ));
         $data = array();
         $data[] = array($auth);
@@ -75,53 +73,6 @@ class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('API is disabled!');
         }
 
-/*
-        $data = array(
-            'ARIRuleDelete' => array(
-                array(
-                    'PMSRuleId' => '00001-boo',
-                    'RoomId' => '23651',
-                    'Channel' => 'boo',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-03-01',
-                    'EndDate' => '2015-03-30'
-                ),
-                array(
-                    'PMSRuleId' => '00001-exp',
-                    'RoomId' => '23651',
-                    'Channel' => 'exp',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-03-01',
-                    'EndDate' => '2015-03-30'
-                ),
-                array(
-                    'PMSRuleId' => '00002-boo',
-                    'RoomId' => '23651',
-                    'Channel' => 'boo',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-05-01',
-                    'EndDate' => '2015-05-30'
-                ),
-                array(
-                    'PMSRuleId' => '00003-exp',
-                    'RoomId' => '23651',
-                    'Channel' => 'exp',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-04-01',
-                    'EndDate' => '2015-06-30'
-                ),
-                array(
-                    'PMSRuleId' => '00004-loop',
-                    'RoomId' => '23651',
-                    'Channel' => 'loop',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-04-01',
-                    'EndDate' => '2015-04-30'
-                )
-            )
-        );
-*/
-
         $data = array(
             'ARIRules' => array(
                 array(
@@ -132,73 +83,7 @@ class ARIRulesUpdateTest extends \PHPUnit_Framework_TestCase
                     'Verb' => 'BLOCK',
                     'StartDate' => '2015-05-18',
                     'EndDate' => '2015-05-20'
-                ),/*
-                array(
-                    '_Action' => 'Append',
-                    'PMSRuleId' => '00002-loop',
-                    'RoomId' => '23651',
-                    'Channel' => 'loop',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-03-20',
-                    'EndDate' => '2015-04-10'
-                ),*/
-                /*
-                /*array(
-                    '_Action' => 'Append',
-                    'PMSRuleId' => '00001-loop',
-                    'RoomId' => '23651',
-                    'Channel' => 'loop',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-02-20',
-                    'EndDate' => '2015-03-10'
-                ),*//*
-                array(
-                    '_Action' => 'Append',
-                    'PMSRuleId' => '00006-boo',
-                    'RoomId' => '23651',
-                    'Channel' => 'boo',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-04-01',
-                    'EndDate' => '2015-04-30'
-                ),*/
-                /*array(
-                    '_Action' => 'Update',
-                    'PMSRuleId' => '00001-boo',
-                    'RoomId' => '23651',
-                    'Channel' => 'boo',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-03-05',
-                    'EndDate' => '2015-03-10'
                 ),
-                array(
-                    '_Action' => 'Update',
-                    'PMSRuleId' => '00006-boo',
-                    'RoomId' => '23651',
-                    'Channel' => 'boo',
-                    'Verb' => 'BLOCK',
-                    'StartDate' => '2015-04-05',
-                    'EndDate' => '2015-04-10'
-                ),*/
-                /*array(
-                    '_Action' => 'Delete',
-                    'PMSRuleId' => '00006-boo'
-                ),*/
-                /*array(
-                    '_Action' => 'Delete',
-                    'PMSRuleId' => '00001-exp'
-                ),
-                array(
-                    '_Action' => 'Delete',
-                    'PMSRuleId' => '00002-boo'
-                ),
-                array(
-                    '_Action' => 'Delete',
-                    'PMSRuleId' => '00003-exp'
-                ),
-                array(
-                    '_Action' => 'Delete',
-                    'PMSRuleId' => '00004-loop'
-                )*/
             )
         );
 
