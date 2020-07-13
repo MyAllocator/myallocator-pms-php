@@ -31,6 +31,9 @@
             "MyAllocator\\phpsdk\\src\\": "src/MyAllocator",
             "MyAllocator\\phpsdk\\tests\\json\\": "tests/json",
             "MyAllocator\\phpsdk\\tests\\xml\\": "tests/xml"
-        }
+        },
+        "exclude-from-classmap": [
+            "/tests/"
+        ]
     }
 }
