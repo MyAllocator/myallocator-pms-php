@@ -244,9 +244,6 @@ class MaApi extends MaBaseClass
                 if ($this->config['paramValidationEnabled']) {
                     $params_decoded = json_decode($params, TRUE);//params are array, why do this?
                     $params_decoded = $this->validateApiParameters($this->keys, $params_decoded);
-                    // Add URI method and version to payload
-                    $params['_method'] = $this->id;
-                    $params['_version'] = $requestor->version;
                     $params = json_encode($params_decoded);
                 }
                 break;
@@ -257,9 +254,6 @@ class MaApi extends MaBaseClass
                 } else {
                     $params = $this->setAuthenticationParametersNoValidation($params);
                 }
-                // Add URI method and version to payload
-                $params['_method'] = $this->id;
-                $params['_version'] = $requestor->version;
                 break;
             default:
                 throw new ApiException(
