@@ -80,7 +80,7 @@ Edit require_once autoload in example_autoload.php in line 33 to:
 Run HelloWorld ping to myallocator:
 
     root@nate:/var/www/project# php example_autoload.php
-    {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
+    {"Auth" : "true", hello" : "world"}
 
 #### Installation and usage example with manual installation:
 
@@ -105,7 +105,7 @@ Edit require_once autoload in example_autoload.php in line 33 to:
 Run HelloWorld ping to myallocator:
 
     root@nate:/var/www/project# php example_autoload.php
-    {"Auth" : "true", hello" : "world", "_method" : "HelloWorld", "_version" : "201408"}
+    {"Auth" : "true", hello" : "world"}
 
 #### Simple usage example:
 

@@ -120,7 +120,7 @@ class Requestor extends MaBaseClass
             /** @noinspection PhpMissingBreakStatementInspection */
             case 'array':
                 // Set data method
-                $this->state['method'] = $params['_method'];
+                $this->state['method'] = $method;
                 // Encode parameters
                 $this->debug_print_r($params); 
                 try {
